@@ -11,4 +11,12 @@
     <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="10.0.2" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="ui\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include=".github\workflows\deployment.yaml" />
+  </ItemGroup>
+
 </Project>
