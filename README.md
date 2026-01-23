@@ -1,2 +1,2 @@
 # bookmark-manager-app
-Fully-functional bookmark manager with add, edit, archive, search, and filter features.
+Fully functional bookmark manager with creation, edit, archive, search, and filter features.
