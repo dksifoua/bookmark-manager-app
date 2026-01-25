@@ -1,0 +1,13 @@
+@bookmark_manager_app_HostAddress = http://localhost:5140
+
+### Register Elsa
+POST {{bookmark_manager_app_HostAddress}}/api/auth/register
+Content-Type: application/json
+Accept: application/json
+
+{
+  "fullName": "Elsa",
+  "email": "elsa.sifoua@gmail.com",
+  "password": "Password123",
+  "confirmedPassword": "Password123"
+}
