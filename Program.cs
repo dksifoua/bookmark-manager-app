@@ -1,11 +1,14 @@
+using System.Text;
 using BookmarkManagerApp.Exceptions;
 using BookmarkManagerApp.Exceptions.Handlers;
 using BookmarkManagerApp.Persistence;
 using BookmarkManagerApp.Repositories;
 using BookmarkManagerApp.Services;
 using FluentValidation;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using Scalar.AspNetCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -22,7 +25,7 @@ builder.Services.AddProblemDetails(options =>
     };
 });
 
-builder.Services.AddExceptionHandler<ResourceAlreadyExistsExceptionHandler>();
+builder.Services.AddExceptionHandler<BadRequestExceptionHandler>();
 builder.Services.AddExceptionHandler<ValidationExceptionHandler>();
 builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
 
@@ -39,6 +42,21 @@ builder.Services.AddScoped<UserService>();
 builder.Services.AddScoped<AuthService>();
 
 builder.Services.AddValidatorsFromAssemblyContaining<Program>();
+
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>
+{
+    options.TokenValidationParameters = new TokenValidationParameters
+    {
+        ValidateIssuer = true,
+        ValidateAudience = false,
+        ValidateLifetime = true,
+        ValidateIssuerSigningKey = true,
+        ValidIssuer = builder.Configuration["JwtSettings:Issuer"],
+        ValidAudience = builder.Configuration["JwtSettings:Audience"],
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["JwtSettings:Key"] ?? string.Empty)),
+    };
+});
+builder.Services.AddAuthorization();
 
 builder.Services.AddControllers();
 
@@ -63,6 +81,7 @@ app.UseExceptionHandler(new ExceptionHandlerOptions
     SuppressDiagnosticsCallback = context => context.Exception is ApiException
 });
 app.UseHttpsRedirection();
+app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();
 

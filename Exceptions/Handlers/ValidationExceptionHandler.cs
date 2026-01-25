@@ -20,7 +20,7 @@ public sealed class ValidationExceptionHandler(ILogger<ValidationExceptionHandle
         httpContext.Response.StatusCode = StatusCodes.Status400BadRequest;
         await httpContext.Response.WriteAsJsonAsync(new ValidationProblemDetails
         {
-            Status = 400,
+            Status = StatusCodes.Status400BadRequest,
             Title = "Validation Failed",
             Errors = badRequestException.Errors
         }, cancellationToken);

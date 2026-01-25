@@ -12,6 +12,18 @@ Accept: application/json
   "confirmedPassword": "Password123"
 }
 
+### Register an existing user
+POST {{bookmark_manager_app_HostAddress}}/api/auth/register
+Content-Type: application/json
+Accept: application/json
+
+{
+    "fullName": "Dimitri",
+    "email": "dimitri.sifoua@gmail.com",
+    "password": "Password123",
+    "confirmedPassword": "Password123"
+}
+
 ### Register a user with empty fields
 POST {{bookmark_manager_app_HostAddress}}/api/auth/register
 Content-Type: application/json

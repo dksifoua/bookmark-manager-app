@@ -28,11 +28,11 @@ public class BookmarkDbContext(DbContextOptions<BookmarkDbContext> options) : Db
     private static void SeedAdminUser(DbContextOptionsBuilder optionsBuilder)
     {
         var passwordHasher = new PasswordHasher<IdentityUser>();
-        
+
         const string fullname = "Dimitri Sifoua";
         const string email = "dimitri.sifoua@gmail.com";
         const string password = "Password123";
-            
+
         var hashedPassword = passwordHasher.HashPassword(new IdentityUser(), password);
         optionsBuilder
             .UseAsyncSeeding(async (context, _, cancellationToken) =>
