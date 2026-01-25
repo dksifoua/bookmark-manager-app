@@ -17,11 +17,18 @@
     src: url("./assets/fonts/Manrope/static/Manrope-SemiBold.ttf") format("truetype");
 }
 
+@font-face {
+    font-family: "Roboto Bold";
+    src: url("./assets/fonts/Roboto/static/Roboto-Bold.ttf") format("truetype");
+}
+
 @theme {
     --font-manrope-bold: "Manrope Bold";
     --font-manrope-medium: "Manrope Medium";
     --font-manrope-semibold: "Manrope SemiBold";
-
+    
+    --font-roboto-bold: "Roboto Bold";
+    
     --color-neutral-900: #051513;
     --color-neutral-800: #4C5C59;
     --color-neutral-500: #899492;
@@ -84,7 +91,7 @@
         font-family: var(--font-manrope-medium), serif;
     }
 
-    :root.dark {
+    .dark {
         background-color: var(--color-neutral-d-900);
         color: var(--color-neutral-d-0);
     }
@@ -153,5 +160,13 @@
         font-size: 12px;
         line-height: 140%;
         letter-spacing: 0;
+    }
+    
+    .logo-text {
+        font-family: var(--font-roboto-bold), serif;
+        font-size: 20rem;
+        line-height: 100%;
+        letter-spacing: -1%;
+        color: var(--color-neutral-900);
     }
 }
