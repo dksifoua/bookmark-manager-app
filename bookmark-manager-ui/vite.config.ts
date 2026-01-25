@@ -13,7 +13,7 @@ export default defineConfig({
         }),
         tailwindcss(),
     ],
-    base: "/bookmark-app-ui/",
+    base: "/bookmark-manager-app/",
     resolve: {
         alias: {
             "@": path.resolve(__dirname, "src/")
