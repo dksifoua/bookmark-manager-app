@@ -1,26 +1,16 @@
 import type { JSX } from "react"
-import BookmarkIcon from "@/assets/images/icon-bookmark.svg"
+import { Logo } from "@/components/auth/Logo"
+import { Link } from "react-router"
 
 export function SignInFormContainer(): JSX.Element {
 
     return (
-        <div className="min-h-screen flex items-center justify-center">
-            <div
-                className="w-85.75 md:w-md mx-auto flex flex-col gap-y-8 px-5 md:px-8 py-8 md:py-10 rounded-12 bg-neutral-0">
-                <Logo/>
-                <FormHeader/>
-                <FormFields/>
-                <FormFooter/>
-            </div>
-        </div>
-    )
-}
-
-function Logo(): JSX.Element {
-    return (
-        <div className="flex flex-row gap-x-2 items-center">
-            <img src={BookmarkIcon} alt="Bookmark Icon" className="w-8 h-8"/>
-            <p className="text-logo">Bookmark Manager</p>
+        <div
+            className="w-85.75 md:w-md mx-auto flex flex-col gap-y-8 px-5 md:px-8 py-8 md:py-10 rounded-12 bg-neutral-0">
+            <Logo/>
+            <FormHeader/>
+            <FormFields/>
+            <FormFooter/>
         </div>
     )
 }
@@ -63,7 +53,7 @@ function FormFooter(): JSX.Element {
                 Forgot password? <a href="#" className="text-preset-4 text-neutral-900">Reset it</a>
             </p>
             <p className="text-preset-4-md text-neutral-800">
-                Don't have an account? <a href="#" className="text-preset-4 text-neutral-900">Sign up</a>
+                Don't have an account? <Link to="../register" className="text-preset-4 text-neutral-900">Sign up</Link>
             </p>
         </div>
     )
