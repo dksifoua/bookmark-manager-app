@@ -1,5 +1,6 @@
 using BookmarkManagerApp.Models;
 using BookmarkManagerApp.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BookmarkManagerApp.Controllers;
@@ -10,6 +11,7 @@ public class UserController(UserService userService) : ControllerBase
 {
     
     [HttpGet]
+    [Authorize]
     public async Task<ActionResult<IEnumerable<User>>> GetAllAsync() 
     {
         var users = await userService.GetAllUsersAsync();
