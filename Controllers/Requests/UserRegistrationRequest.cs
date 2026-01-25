@@ -1,5 +1,3 @@
-using System.Net.Mail;
-using BookmarkManagerApp.Exceptions;
 using BookmarkManagerApp.Services.Commands;
 
 namespace BookmarkManagerApp.Controllers.Requests;

@@ -21,7 +21,7 @@ public sealed class BadRequestExceptionHandler(ILogger<ValidationExceptionHandle
         await httpContext.Response.WriteAsJsonAsync(new ProblemDetails
         {
             Status = 400,
-            Title = "Bad Request",
+            Title = "Validation Failed",
             Detail = badRequestException.Message
         }, cancellationToken);
 

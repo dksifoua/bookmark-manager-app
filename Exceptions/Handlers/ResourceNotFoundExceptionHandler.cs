@@ -20,7 +20,7 @@ public class ResourceNotFoundExceptionHandler(ILogger<ValidationExceptionHandler
         httpContext.Response.StatusCode = StatusCodes.Status404NotFound;
         await httpContext.Response.WriteAsJsonAsync(new ProblemDetails
         {
-            Status = 404,
+            Status = StatusCodes.Status404NotFound,
             Title = "Resource Not Found",
             Detail = notFoundException.Message
         }, cancellationToken);
