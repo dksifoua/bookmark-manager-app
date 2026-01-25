@@ -1,0 +1,157 @@
+@import "tailwindcss";
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+@font-face {
+    font-family: "Manrope Bold";
+    src: url("./assets/fonts/Manrope/static/Manrope-Bold.ttf") format("truetype");
+}
+
+@font-face {
+    font-family: "Manrope Medium";
+    src: url("./assets/fonts/Manrope/static/Manrope-Medium.ttf") format("truetype");
+}
+
+@font-face {
+    font-family: "Manrope SemiBold";
+    src: url("./assets/fonts/Manrope/static/Manrope-SemiBold.ttf") format("truetype");
+}
+
+@theme {
+    --font-manrope-bold: "Manrope Bold";
+    --font-manrope-medium: "Manrope Medium";
+    --font-manrope-semibold: "Manrope SemiBold";
+
+    --color-neutral-900: #051513;
+    --color-neutral-800: #4C5C59;
+    --color-neutral-500: #899492;
+    --color-neutral-400: #COCFCC;
+    --color-neutral-300: #DDE9E7;
+    --color-neutral-100: #E8F0EF;
+    --color-neutral-0: #FFFFFF;
+
+    --color-neutral-d-900: #001414;
+    --color-neutral-d-800: #001F1F;
+    --color-neutral-d-600: #002E2D;
+    --color-neutral-d-500: #004241;
+    --color-neutral-d-400: #004746;
+    --color-neutral-d-300: #00706E;
+    --color-neutral-d-100: #B1B9B9;
+    --color-neutral-d-0: #FFFFFF;
+
+    --color-teal-700: #014745;
+    --color-teal-800: #013C3B;
+
+    --color-red-600: #FD4740;
+    --color-red-800: #CB0A04;
+
+    --spacing-0: 0;
+    --spacing-025: 2px;
+    --spacing-050: 4px;
+    --spacing-075: 6px;
+    --spacing-100: 8px;
+    --spacing-125: 10px;
+    --spacing-150: 12px;
+    --spacing-200: 16px;
+    --spacing-250: 20px;
+    --spacing-300: 24px;
+    --spacing-400: 32px;
+    --spacing-500: 40px;
+    --spacing-600: 48px;
+    --spacing-800: 64px;
+    --spacing-1000: 80px;
+    --spacing-1200: 96px;
+    --spacing-1400: 112px;
+    --spacing-1600: 128px;
+    --spacing-1800: 140px;
+
+    --radius-0: 0;
+    --radius-4: 4px;
+    --radius-6: 6px;
+    --radius-8: 8px;
+    --radius-10: 10px;
+    --radius-12: 12px;
+    --radius-16: 16px;
+    --radius-20: 20px;
+    --radius-24: 24px;
+    --radius-full: 999px;
+}
+
+@layer base {
+    :root {
+        background-color: var(--color-neutral-100);
+        color: var(--color-neutral-900);
+        font-family: var(--font-manrope-medium), serif;
+    }
+
+    :root.dark {
+        background-color: var(--color-neutral-d-900);
+        color: var(--color-neutral-d-0);
+    }
+
+    body {
+        @apply min-w-93.75 max-w-360 min-h-screen mx-auto
+    }
+
+    #root {
+        @apply w-full h-full flex flex-col gap-y-2.5 px-4 md:p-0
+    }
+}
+
+@layer components {
+    .text-preset-1 {
+        font-family: var(--font-manrope-bold), serif;
+        font-size: 24px;
+        line-height: 140%;
+        letter-spacing: 0;
+    }
+
+    .text-preset-2 {
+        font-family: var(--font-manrope-bold), serif;
+        font-size: 20px;
+        line-height: 120%;
+        letter-spacing: 0;
+    }
+
+    .text-preset-2-sb {
+        font-family: var(--font-manrope-semibold), serif;
+        font-size: 20px;
+        line-height: 120%;
+        letter-spacing: 0;
+    }
+
+    .text-preset-3-sb {
+        font-family: var(--font-manrope-semibold), serif;
+        font-size: 16px;
+        line-height: 140%;
+        letter-spacing: 0;
+    }
+
+    .text-preset-3-md {
+        font-family: var(--font-manrope-medium), serif;
+        font-size: 16px;
+        line-height: 130%;
+        letter-spacing: 0;
+    }
+
+    .text-preset-4 {
+        font-family: var(--font-manrope-semibold), serif;
+        font-size: 14px;
+        line-height: 140%;
+        letter-spacing: 0;
+    }
+
+    .text-preset-4-md {
+        font-family: var(--font-manrope-medium), serif;
+        font-size: 14px;
+        line-height: 150%;
+        letter-spacing: 0;
+    }
+
+    .text-preset-5 {
+        font-family: var(--font-manrope-medium), serif;
+        font-size: 12px;
+        line-height: 140%;
+        letter-spacing: 0;
+    }
+}
