@@ -10,7 +10,7 @@ public sealed class ValidationExceptionHandler(ILogger<ValidationExceptionHandle
         Exception exception,
         CancellationToken cancellationToken)
     {
-        if (exception is not ValidationException badRequestException)
+        if (exception is not CustomValidationException badRequestException)
         {
             return false;
         }

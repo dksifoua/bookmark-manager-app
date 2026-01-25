@@ -1,5 +1,6 @@
 using BookmarkManagerApp.Models;
 using BookmarkManagerApp.Persistence.Interceptors;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
 namespace BookmarkManagerApp.Persistence;
@@ -7,6 +8,7 @@ namespace BookmarkManagerApp.Persistence;
 public class BookmarkDbContext(DbContextOptions<BookmarkDbContext> options) : DbContext(options)
 {
     public DbSet<User> Users => Set<User>();
+    public DbSet<Bookmark> Bookmarks => Set<Bookmark>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -20,16 +22,25 @@ public class BookmarkDbContext(DbContextOptions<BookmarkDbContext> options) : Db
     {
         optionsBuilder.AddInterceptors(new CreationTimeInterceptor(), new LastModifiedTimeInterceptor());
 
+        SeedAdminUser(optionsBuilder);
+    }
+
+    private static void SeedAdminUser(DbContextOptionsBuilder optionsBuilder)
+    {
+        var passwordHasher = new PasswordHasher<IdentityUser>();
+        
         const string fullname = "Dimitri Sifoua";
         const string email = "dimitri.sifoua@gmail.com";
         const string password = "Password123";
+            
+        var hashedPassword = passwordHasher.HashPassword(new IdentityUser(), password);
         optionsBuilder
             .UseAsyncSeeding(async (context, _, cancellationToken) =>
             {
                 var adminUser = await context.Set<User>().FirstOrDefaultAsync(x => x.Email == email, cancellationToken);
                 if (adminUser != null) return;
 
-                adminUser = new User { FullName = fullname, Email = email, Password = password };
+                adminUser = new User { FullName = fullname, Email = email, Password = hashedPassword };
                 await context.Set<User>().AddAsync(adminUser, cancellationToken);
                 await context.SaveChangesAsync(cancellationToken);
             })
@@ -38,7 +49,7 @@ public class BookmarkDbContext(DbContextOptions<BookmarkDbContext> options) : Db
                 var adminUser = context.Set<User>().FirstOrDefault(x => x.Email == email);
                 if (adminUser != null) return;
 
-                adminUser = new User { FullName = fullname, Email = email, Password = password };
+                adminUser = new User { FullName = fullname, Email = email, Password = hashedPassword };
                 context.Set<User>().Add(adminUser);
                 context.SaveChanges();
             });

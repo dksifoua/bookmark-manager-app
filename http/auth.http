@@ -11,3 +11,39 @@ Accept: application/json
   "password": "Password123",
   "confirmedPassword": "Password123"
 }
+
+### Register a user with empty fields
+POST {{bookmark_manager_app_HostAddress}}/api/auth/register
+Content-Type: application/json
+Accept: application/json
+
+{
+    "fullName": " ",
+    "email": " ",
+    "password": "",
+    "confirmedPassword": ""
+}
+
+### Register a user with an invalid email
+POST {{bookmark_manager_app_HostAddress}}/api/auth/register
+Content-Type: application/json
+Accept: application/json
+
+{
+    "fullName": "John Doe",
+    "email": "invalid-email",
+    "password": "Password123",
+    "confirmedPassword": "Password123"
+}
+
+### Register a user non matching passwords
+POST {{bookmark_manager_app_HostAddress}}/api/auth/register
+Content-Type: application/json
+Accept: application/json
+
+{
+    "fullName": "John Doe",
+    "email": "john.doe@mail.com",
+    "password": "Password123",
+    "confirmedPassword": "Password1234"
+}

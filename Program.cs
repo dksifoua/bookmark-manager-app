@@ -3,6 +3,7 @@ using BookmarkManagerApp.Exceptions.Handlers;
 using BookmarkManagerApp.Persistence;
 using BookmarkManagerApp.Repositories;
 using BookmarkManagerApp.Services;
+using FluentValidation;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Scalar.AspNetCore;
@@ -10,6 +11,7 @@ using Scalar.AspNetCore;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddOpenApi();
+
 builder.Services.AddProblemDetails(options =>
 {
     options.CustomizeProblemDetails = context =>
@@ -19,18 +21,24 @@ builder.Services.AddProblemDetails(options =>
         context.ProblemDetails.Instance = $"{context.HttpContext.Request.Method} {context.HttpContext.Request.Path}";
     };
 });
+
 builder.Services.AddExceptionHandler<ResourceAlreadyExistsExceptionHandler>();
 builder.Services.AddExceptionHandler<ValidationExceptionHandler>();
 builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
+
 builder.Services.AddDbContext<BookmarkDbContext>(options =>
 {
     var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
     options.UseNpgsql(connectionString);
 });
+
+builder.Services.AddSingleton<PasswordHasher<IdentityUser>>();
+
 builder.Services.AddScoped<UserRepository>();
 builder.Services.AddScoped<UserService>();
-builder.Services.AddSingleton<PasswordHasher<IdentityUser>>();
 builder.Services.AddScoped<AuthService>();
+
+builder.Services.AddValidatorsFromAssemblyContaining<Program>();
 
 builder.Services.AddControllers();
 
