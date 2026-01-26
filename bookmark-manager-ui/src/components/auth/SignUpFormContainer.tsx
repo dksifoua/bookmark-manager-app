@@ -1,5 +1,5 @@
 import type { JSX } from "react"
-import { Logo } from "@/components/auth/Logo"
+import { Logo } from "@/components/Logo"
 import { Link } from "react-router"
 
 export function SignUpFormContainer(): JSX.Element {
