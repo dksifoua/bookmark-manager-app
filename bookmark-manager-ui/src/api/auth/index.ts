@@ -5,7 +5,7 @@ export async function login({ email, password }: { email: string, password: stri
     const apiUrl = Bun.env.BOOKMARK_MANAGER_API_URL
     if (!apiUrl) throw new Error("BOOKMARK_MANAGER_API_URL environment variable is not set")
 
-    const response = await fetch(`${apiUrl}/api/auth/login`, {
+    const response = await fetch(`${apiUrl}/auth/login`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, password }),
