@@ -4,6 +4,7 @@ import { Route, Routes } from "react-router"
 import { AuthLayout } from "@/components/auth/AuthLayout"
 import { SignUpFormContainer } from "@/components/auth/SignUpFormContainer"
 import { HomeLayout } from "@/components/home/HomeLayout"
+import { ProtectedRoute } from "@/components/ProtectedRoute"
 
 export function App(): JSX.Element {
 
@@ -11,7 +12,9 @@ export function App(): JSX.Element {
         <>
             <Routes>
                 <Route path="/bookmark-manager-app">
-                    <Route index element={<HomeLayout/>}/>
+                    <Route element={<ProtectedRoute/>}>
+                        <Route index element={<HomeLayout/>}/>
+                    </Route>
                     
                     <Route element={<AuthLayout/>}>
                         <Route path="login" element={<SignInFormContainer/>}/>
