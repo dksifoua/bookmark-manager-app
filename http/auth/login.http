@@ -29,3 +29,13 @@ Accept: application/json
     "email": "not.exist@mail.com",
     "password": "Password123"
 }
+
+### Login with and invalid email
+POST {{bookmark_manager_app_HostAddress}}/api/auth/login
+Content-Type: application/json
+Accept: application/json
+
+{
+    "email": "invalid-email",
+    "password": "Password123"
+}

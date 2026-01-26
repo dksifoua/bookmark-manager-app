@@ -23,7 +23,7 @@ public class AuthController(
     }
 
     [HttpPost("login")]
-    public async Task<ActionResult<IDictionary<string, string>>> LoginAsync(UserLoginRequest userLoginRequest)
+    public async Task<ActionResult<JwtToken>> LoginAsync(UserLoginRequest userLoginRequest)
     {
         await userLoginValidator.ValidateAndThrowAsync(userLoginRequest);
         return Ok(await authService.AuthenticateUserAsync(userLoginRequest.ToCommand()));

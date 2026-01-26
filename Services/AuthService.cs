@@ -27,13 +27,13 @@ public class AuthService(
         return await userRepository.CreateAsync(user);
     }
 
-    public async Task<IDictionary<string, string>> AuthenticateUserAsync(LoginUserCommand command)
+    public async Task<JwtToken> AuthenticateUserAsync(LoginUserCommand command)
     {
         var user = await userRepository.GetByEmailAsync(command.Email);
-        if (user == null) throw new ResourceNotFoundException($"User with email '{command.Email}' not found.");
-
-        var isPasswordValid = await VerifyHashedPassword(user.Password, command.Password);
-        if (!isPasswordValid) throw new BadRequestException("Invalid credentials.");
+        if (user == null || !await VerifyHashedPassword(user.Password, command.Password))
+        {
+            throw new UnauthorizedException("Email or password is incorrect.");
+        }
 
         return await GenerateJwtToken(user);
     }
@@ -46,7 +46,7 @@ public class AuthService(
             passwordHasher.VerifyHashedPassword(new IdentityUser(), hashedPassword, providedPassword) ==
             PasswordVerificationResult.Success);
 
-    private async Task<IDictionary<string, string>> GenerateJwtToken(User user)
+    private async Task<JwtToken> GenerateJwtToken(User user)
     {
         var secretKey = configuration["JwtSettings:Key"] ?? string.Empty;
         var issuer = configuration["JwtSettings:Issuer"];
@@ -61,11 +61,12 @@ public class AuthService(
 
         var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secretKey));
         var credentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
+        var expiresAt = DateTime.UtcNow.AddMinutes(durationInMinutes);
 
         var tokenDescriptor = new SecurityTokenDescriptor
         {
             Subject = new ClaimsIdentity(claims),
-            Expires = DateTime.UtcNow.AddMinutes(durationInMinutes),
+            Expires = expiresAt,
             Issuer = issuer,
             Audience = audience,
             SigningCredentials = credentials
@@ -74,10 +75,8 @@ public class AuthService(
         var tokenHandler = new JwtSecurityTokenHandler();
         var token = tokenHandler.CreateToken(tokenDescriptor);
 
-        return await Task.FromResult<IDictionary<string, string>>(new Dictionary<string, string>
-        {
-            { "token", tokenHandler.WriteToken(token) },
-            { "expires", tokenDescriptor.Expires.ToString() ?? string.Empty }
-        });
+        return await Task.FromResult(new JwtToken(tokenHandler.WriteToken(token), expiresAt));
     }
 }
+
+public record JwtToken(string Token, DateTime ExpiresAt);
