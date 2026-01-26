@@ -2,13 +2,20 @@ import { type JSX, useState } from "react"
 import { Logo } from "@/components/Logo"
 import HomeIcon from "@/assets/images/icon-home.svg"
 import ArchiveIcon from "@/assets/images/icon-archive.svg"
+import CloseIcon from "@/assets/images/icon-close.svg"
 
-export function Sidebar(): JSX.Element {
+export function Sidebar({ openSidebar }: { openSidebar?: () => void }): JSX.Element {
 
     return (
-        <div className="xl:w-74 min-h-screen flex flex-col bg-neutral-0 border border-neutral-300">
-            <div className="xl:h-19.5 flex items-center justify-center pt-5 pb-2.5">
+        <div className="w-74 h-screen flex flex-col bg-neutral-0 border border-neutral-300">
+            <div className="xl:h-19.5 flex items-center justify-center pt-5 pb-2.5 relative">
                 <Logo/>
+                {
+                    openSidebar && 
+                    <button onClick={openSidebar} className="xl:hidden absolute top-2.5 right-2.5 cursor-pointer">
+                        <img src={CloseIcon} alt="Close Icon" className="w-8 h-8"/>
+                    </button>
+                }
             </div>
             <Navigation/>
             <div className="flex flex-col px-4">
