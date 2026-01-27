@@ -11,15 +11,13 @@ export function App(): JSX.Element {
     return (
         <>
             <Routes>
-                <Route path="/bookmark-manager-app">
-                    <Route element={<ProtectedRoute/>}>
-                        <Route index element={<HomeLayout/>}/>
-                    </Route>
-                    
-                    <Route element={<AuthLayout/>}>
-                        <Route path="login" element={<SignInFormContainer/>}/>
-                        <Route path="register" element={<SignUpFormContainer/>}/>
-                    </Route>
+                <Route element={<ProtectedRoute/>}>
+                    <Route index element={<HomeLayout/>}/>
+                </Route>
+
+                <Route element={<AuthLayout/>}>
+                    <Route path="login" element={<SignInFormContainer/>}/>
+                    <Route path="register" element={<SignUpFormContainer/>}/>
                 </Route>
             </Routes>
         </>

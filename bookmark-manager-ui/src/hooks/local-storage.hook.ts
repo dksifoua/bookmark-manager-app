@@ -6,9 +6,19 @@ export function useLocalStorage<T>(key: string, initialValue: Nullable<T> = null
     setLocalStorageValue: (newValue: Nullable<T>) => void,
     getLocalStorageValue: () => Nullable<T>
 } {
-    const [value, setValue] = useState<Nullable<T>>(initialValue)
+    const [value, setValue] = useState<Nullable<T>>(() => {
+        const storedValue = localStorage.getItem(key)
+        if (storedValue === null) return initialValue
+        
+        try {
+            return JSON.parse(storedValue) as Nullable<T>
+        } catch (error) {
+            localStorage.removeItem(key)
+            return initialValue
+        }
+    })
 
-    function setLocalStorageValue(newValue: Nullable<T>) {
+    function setLocalStorageValue(newValue: Nullable<T>): void {
         setValue(newValue)
         localStorage.setItem(key, JSON.stringify(newValue))
     }
