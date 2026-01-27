@@ -2,7 +2,7 @@ using BookmarkManagerApp.Services.Commands;
 
 namespace BookmarkManagerApp.Controllers.Requests;
 
-public record UserRegistrationRequest(string FullName, string Email, string Password, string ConfirmedPassword)
+public record UserRegistrationRequest(string Fullname, string Email, string Password)
 {
-    public RegisterUserCommand ToCommand() => new(FullName, Email, Password);
+    public RegisterUserCommand ToCommand() => new(Fullname, Email, Password);
 }

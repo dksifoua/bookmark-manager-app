@@ -1,6 +1,7 @@
-import type { JSX } from "react"
+import type { FormEvent, JSX } from "react"
 import { Logo } from "@/components/Logo"
 import { Link } from "react-router"
+import { useAuthContext } from "@/hooks/auth.hook"
 
 export function SignUpFormContainer(): JSX.Element {
 
@@ -26,25 +27,37 @@ function FormHeader(): JSX.Element {
 }
 
 function FormFields(): JSX.Element {
+    const { register } = useAuthContext()
 
+    function handleRegistration(event: FormEvent<HTMLFormElement>): void {
+        event.preventDefault()
+        
+        const formData = new FormData(event.currentTarget)
+        const fullname = formData.get("fullname") as string
+        const email = formData.get("email") as string
+        const password = formData.get("password") as string
+        
+        register(fullname, email, password)
+    }
+    
     return (
-        <form className="flex flex-col gap-y-4">
+        <form onSubmit={handleRegistration} className="flex flex-col gap-y-4">
             <div className="flex flex-col gap-y-1.5">
                 <label htmlFor="fullname" className="text-preset-4 color-neutral-900">Full Name</label>
-                <input type="text" id="fullname" autoComplete="off" required={true}
+                <input type="text" id="fullname" name="fullname" autoComplete="off" required={true}
                        className="h-11.25 p-3 bg-neutral-0 border border-neutral-500 rounded-8"/>
             </div>
             <div className="flex flex-col gap-y-1.5">
                 <label htmlFor="email" className="text-preset-4 color-neutral-900">Email</label>
-                <input type="email" id="email" autoComplete="off" required={true}
+                <input type="email" id="email" name="email" autoComplete="off" required={true}
                        className="h-11.25 p-3 bg-neutral-0 border border-neutral-500 rounded-8"/>
             </div>
             <div className="flex flex-col gap-y-1.5">
                 <label htmlFor="password" className="text-preset-4 color-neutral-900">Password</label>
-                <input type="password" id="password" autoComplete="off" required={true}
+                <input type="password" id="password" name="password" autoComplete="off" required={true}
                        className="h-11.25 p-3 bg-neutral-0 border border-neutral-500 rounded-8"/>
             </div>
-            <button className="h-11.5 flex px-4 py-3 bg-teal-700 rounded-8 items-center justify-center cursor-pointer">
+            <button type="submit" className="h-11.5 flex px-4 py-3 bg-teal-700 rounded-8 items-center justify-center cursor-pointer">
                 <p className="text-preset-3 text-neutral-0">Create account</p>
             </button>
         </form>

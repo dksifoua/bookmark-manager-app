@@ -1,6 +1,5 @@
 using BookmarkManagerApp.Controllers.Requests;
 using BookmarkManagerApp.Controllers.Responses;
-using BookmarkManagerApp.Models;
 using BookmarkManagerApp.Services;
 using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
@@ -17,18 +16,21 @@ public class AuthController(
     : ControllerBase
 {
     [HttpPost("register")]
-    public async Task<ActionResult<User>> RegisterAsync(UserRegistrationRequest userRegistrationRequest)
+    public async Task<ActionResult<UserRegistrationResponse>> RegisterAsync(
+        UserRegistrationRequest userRegistrationRequest)
     {
         await userRegistrationValidator.ValidateAndThrowAsync(userRegistrationRequest);
+        
         var user = await authService.RegisterUserAsync(userRegistrationRequest.ToCommand());
-        return CreatedAtAction(null, new { id = user.UserId }, user);
+        return CreatedAtRoute(nameof(UserController.GetUserByIdAsync), new { id = user.UserId },
+            new UserRegistrationResponse(user.Fullname, user.Email));
     }
 
     [HttpPost("login")]
     public async Task<ActionResult<UserLoginResponse>> LoginAsync(UserLoginRequest userLoginRequest)
     {
         await userLoginValidator.ValidateAndThrowAsync(userLoginRequest);
-        
+
         var jwtToken = await authService.AuthenticateUserAsync(userLoginRequest.ToCommand());
         var durationInMinutes = configuration.GetValue("JwtSettings:DurationInMinutes", 5);
         var cookieOptions = new CookieOptions
@@ -38,11 +40,11 @@ public class AuthController(
             SameSite = SameSiteMode.Strict,
             MaxAge = TimeSpan.FromMinutes(durationInMinutes)
         };
-        
+
         Response.Cookies.Append("token", jwtToken.Token, cookieOptions);
         return Ok(new UserLoginResponse(jwtToken.Fullname, jwtToken.Email));
     }
-    
+
     [HttpPost("logout")]
     public ActionResult Logout()
     {

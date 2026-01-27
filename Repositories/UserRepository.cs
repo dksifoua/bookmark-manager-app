@@ -21,4 +21,9 @@ public class UserRepository(BookmarkDbContext context)
     {
         return await context.Set<User>().FirstOrDefaultAsync(x => x.Email == email);
     }
+    
+    public async Task<User?> GetByIdAsync(long userId)
+    {
+        return await context.Set<User>().FirstOrDefaultAsync(x => x.UserId == userId);
+    }
 }

@@ -34,6 +34,8 @@ jobs:
       - name: Build project
         working-directory: ./bookmark-manager-ui
         run: bun run build
+        env:
+          VITE_BOOKMARK_MANAGER_API_URL: {{ .vars.VITE_BOOKMARK_MANAGER_API_URL }}
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v4

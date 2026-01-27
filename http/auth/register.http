@@ -6,10 +6,9 @@ Content-Type: application/json
 Accept: application/json
 
 {
-  "fullName": "Elsa",
+  "fullname": "Elsa Sifoua",
   "email": "elsa.sifoua@gmail.com",
-  "password": "Password123",
-  "confirmedPassword": "Password123"
+  "password": "Password123"
 }
 
 ### Register an existing user
@@ -18,10 +17,9 @@ Content-Type: application/json
 Accept: application/json
 
 {
-    "fullName": "Dimitri",
+    "fullname": "Dimitri",
     "email": "dimitri.sifoua@gmail.com",
-    "password": "Password123",
-    "confirmedPassword": "Password123"
+    "password": "Password123"
 }
 
 ### Register a user with empty fields
@@ -30,10 +28,9 @@ Content-Type: application/json
 Accept: application/json
 
 {
-    "fullName": " ",
+    "fullname": " ",
     "email": " ",
-    "password": "",
-    "confirmedPassword": ""
+    "password": ""
 }
 
 ### Register a user with an invalid email
@@ -42,10 +39,9 @@ Content-Type: application/json
 Accept: application/json
 
 {
-    "fullName": "John Doe",
-    "email": "invalid-email",
-    "password": "Password123",
-    "confirmedPassword": "Password123"
+    "fullname": "John Doe",
+    "email": "john.doe@mail.com",
+    "password": "Password123"
 }
 
 ### Register a user non matching passwords
@@ -54,8 +50,7 @@ Content-Type: application/json
 Accept: application/json
 
 {
-    "fullName": "John Doe",
+    "fullname": "John Doe",
     "email": "john.doe@mail.com",
-    "password": "Password123",
-    "confirmedPassword": "Password1234"
+    "password": "Password123"
 }
