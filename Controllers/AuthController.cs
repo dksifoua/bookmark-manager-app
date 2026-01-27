@@ -2,6 +2,7 @@ using BookmarkManagerApp.Controllers.Requests;
 using BookmarkManagerApp.Controllers.Responses;
 using BookmarkManagerApp.Services;
 using FluentValidation;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BookmarkManagerApp.Controllers;
@@ -46,6 +47,7 @@ public class AuthController(
     }
 
     [HttpPost("logout")]
+    [Authorize]
     public ActionResult Logout()
     {
         var cookieOptions = new CookieOptions

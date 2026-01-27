@@ -1,9 +1,11 @@
+using System.Security.Claims;
 using System.Text;
 using BookmarkManagerApp.Exceptions;
 using BookmarkManagerApp.Exceptions.Handlers;
 using BookmarkManagerApp.Persistence;
 using BookmarkManagerApp.Repositories;
 using BookmarkManagerApp.Services;
+using BookmarkManagerApp.Services.Utils;
 using FluentValidation;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
@@ -55,8 +57,11 @@ builder.Services.AddDbContext<BookmarkDbContext>(options =>
 builder.Services.AddSingleton<PasswordHasher<IdentityUser>>();
 
 builder.Services.AddScoped<UserRepository>();
+builder.Services.AddScoped<BookmarkRepository>();
+
 builder.Services.AddScoped<UserService>();
 builder.Services.AddScoped<AuthService>();
+builder.Services.AddScoped<BookmarkService>();
 
 builder.Services.AddValidatorsFromAssemblyContaining<Program>();
 
@@ -72,8 +77,40 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJw
         ValidAudience = builder.Configuration["JwtSettings:Audience"],
         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["JwtSettings:Key"] ?? string.Empty)),
     };
+    
+    options.MapInboundClaims = false; // Disable Microsoft MapInboundClaims to keep JWT claim names as is.
+    
+    options.Events = new JwtBearerEvents
+    {
+        OnMessageReceived = context =>
+        {
+            if (context.Request.Cookies.TryGetValue("token", out var token))
+            {
+                context.Token = token;
+            }
+            return Task.CompletedTask;
+        },
+        OnAuthenticationFailed = context =>
+        {
+            if (context.Exception is SecurityTokenExpiredException)
+            {
+                context.Response.Headers.Append("Token-Expired", "true");
+            }
+            var logger = context.HttpContext.RequestServices.GetRequiredService<ILogger<Program>>();
+            logger.LogWarning("Authentication failed: {ExceptionMessage}", context.Exception.Message);
+
+            return Task.CompletedTask;
+        }
+    };
 });
 builder.Services.AddAuthorization();
+builder.Services.AddHttpContextAccessor();
+builder.Services.AddScoped<ClaimsPrincipal>(sp =>
+{
+    var accessor = sp.GetRequiredService<IHttpContextAccessor>();
+    return accessor.HttpContext?.User ?? new ClaimsPrincipal(new ClaimsIdentity());
+});
+builder.Services.AddScoped<UserContext>();
 
 builder.Services.AddControllers();
 
