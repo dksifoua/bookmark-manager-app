@@ -7,6 +7,7 @@ export type AuthContextType = {
     authUser: Nullable<AuthContextUser>,
     login: (email: string, password: string) => void,
     logout: () => void,
+    register: (fullname: string,  email: string, password: string) => void,
 }
 
 export const AuthContext = createContext<Nullable<AuthContextType>>(null)

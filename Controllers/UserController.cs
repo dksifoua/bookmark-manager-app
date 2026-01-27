@@ -6,15 +6,26 @@ using Microsoft.AspNetCore.Mvc;
 namespace BookmarkManagerApp.Controllers;
 
 [ApiController]
+[Authorize]
 [Route("/api/users")]
 public class UserController(UserService userService) : ControllerBase
 {
     
     [HttpGet]
-    [Authorize]
-    public async Task<ActionResult<IEnumerable<User>>> GetAllAsync() 
+    public async Task<ActionResult<IEnumerable<User>>> GetAllUsersAsync() 
     {
         var users = await userService.GetAllUsersAsync();
         return Ok(users);
+    }
+
+    [HttpGet("{id:long}", Name = nameof(GetUserByIdAsync))]
+    public async Task<ActionResult<User>> GetUserByIdAsync(long id)
+    {
+        var user = await userService.GetUserByIdAsync(id);
+        if (user == null)
+        {
+            return NotFound();
+        }
+        return Ok(user);
     }
 }

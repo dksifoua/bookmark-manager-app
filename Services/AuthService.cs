@@ -19,7 +19,7 @@ public class AuthService(
     {
         if (await userRepository.ExistsByEmailAsync(command.Email))
         {
-            throw new BadRequestException($"User with email '{command.Email}' already exists.");
+            throw new ConflictException($"User with email '{command.Email}' already exists.");
         }
 
         var hashedPassword = await HashPassword(command.Password);

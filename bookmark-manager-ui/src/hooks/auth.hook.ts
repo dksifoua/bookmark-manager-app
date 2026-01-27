@@ -3,8 +3,11 @@ import { AuthContext, type AuthContextType, type AuthContextUser } from "@/conte
 import { useLocalStorage } from "@/hooks/local-storage.hook"
 import type { Nullable } from "@/types"
 import { useNavigate } from "react-router"
-import { authLogin, authLogout } from "@/api/auth"
-import { type LoginResponse, SuccessfulLoginApiResponseSchema } from "@/api/auth/schema"
+import { authLogin, authLogout, authRegister } from "@/api/auth"
+import {
+    type LoginResponse, type RegistrationResponse, SuccessfulLoginApiResponseSchema,
+    SuccessfulRegistrationApiResponseSchema
+} from "@/api/auth/schema"
 
 export function useAuthContext(): AuthContextType {
     const context = useContext(AuthContext)
@@ -49,10 +52,24 @@ export function useAuth(): AuthContextType {
                 console.log("Logout failed:", error)
             })
     }
+    
+    function register(fullname: string, email: string,  password: string): void {
+        authRegister({ fullname, email, password })
+            .then((response: RegistrationResponse) => {
+                const parsedSuccessful = SuccessfulRegistrationApiResponseSchema.safeParse(response)
+                if (parsedSuccessful.success) {
+                    login(email, password)
+                }
+            })
+            .catch((error) => {
+                console.log("Registration failed:", error)
+            })
+    }
 
     return {
         authUser: user,
         login,
-        logout
+        logout,
+        register
     }
 }
