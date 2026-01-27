@@ -15,7 +15,7 @@ export default defineConfig({
         tailwindcss(),
         svgr(),
     ],
-    base: "/bookmark-manager-app/",
+    base: "/bookmark-manager-app",
     resolve: {
         alias: {
             "@": path.resolve(__dirname, "src/")

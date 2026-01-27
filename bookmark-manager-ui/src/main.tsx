@@ -5,9 +5,15 @@ import { App } from "@/App.tsx"
 import { BrowserRouter } from "react-router"
 import { AuthProvider } from "@/providers/AuthProvider"
 
+const basename = import.meta.env.BASE_URL
+
 createRoot(document.getElementById("root")!).render(
     <StrictMode>
-        <BrowserRouter>
+        <BrowserRouter basename={
+            basename.endsWith('/') 
+                ? basename.slice(0, -1) 
+                : basename
+        }>
             <AuthProvider>
                 <App/>
             </AuthProvider>

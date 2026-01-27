@@ -1,6 +1,7 @@
-import type { JSX } from "react"
+import { type FormEvent, type JSX, useState } from "react"
 import { Logo } from "@/components/Logo"
 import { Link } from "react-router"
+import { useAuthContext } from "@/hooks/auth.hook"
 
 export function SignInFormContainer(): JSX.Element {
 
@@ -25,20 +26,33 @@ function FormHeader(): JSX.Element {
 }
 
 function FormFields(): JSX.Element {
+    const [email, setEmail] = useState<string>("dimitri.sifoua@gmail.com")
+    const [password, setPassword] = useState<string>("Password123")
+    
+    const { login } = useAuthContext()
+    
+    function handleLogin(event: FormEvent<HTMLFormElement>): void {
+        event.preventDefault()
+        
+        const data = new FormData(event.currentTarget)
+        login(data.get("email") as string, data.get("password") as string)
+    }
 
     return (
-        <form className="flex flex-col gap-y-4">
+        <form onSubmit={handleLogin} className="flex flex-col gap-y-4">
             <div className="flex flex-col gap-y-1.5">
                 <label htmlFor="email" className="text-preset-4 color-neutral-900">Email</label>
-                <input type="email" id="email" autoComplete="off" required={true}
+                <input type="email" id="email" name="email" autoComplete="off" required={true}
+                       value={email} onChange={(event): void => setEmail(event.target.value)}
                        className="h-11.25 p-3 bg-neutral-0 border border-neutral-500 rounded-8"/>
             </div>
             <div className="flex flex-col gap-y-1.5">
                 <label htmlFor="password" className="text-preset-4 color-neutral-900">Password</label>
-                <input type="password" id="password" autoComplete="off" required={true}
+                <input type="password" id="password" name="password" autoComplete="off" required={true}
+                       value={password} onChange={(event): void => setPassword(event.target.value)}
                        className="h-11.25 p-3 bg-neutral-0 border border-neutral-500 rounded-8"/>
             </div>
-            <button className="h-11.5 flex px-4 py-3 bg-teal-700 rounded-8 items-center justify-center cursor-pointer">
+            <button type="submit" className="h-11.5 flex px-4 py-3 bg-teal-700 rounded-8 items-center justify-center cursor-pointer">
                 <p className="text-preset-3 text-neutral-0">Log in</p>
             </button>
         </form>
