@@ -28,17 +28,17 @@ jobs:
           bun-version: 1.3.6
 
       - name: Install dependencies
-        working-directory: ./bookmark-manager-app-ui
+        working-directory: ./bookmark-manager-ui
         run: bun install
 
       - name: Build project
-        working-directory: ./bookmark-manager-app-ui
+        working-directory: ./bookmark-manager-ui
         run: bun run build
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v4
         with:
-          path: ./bookmark-manager-app-ui/dist
+          path: ./bookmark-manager-ui/dist
 
   deploy:
     runs-on: ubuntu-latest
