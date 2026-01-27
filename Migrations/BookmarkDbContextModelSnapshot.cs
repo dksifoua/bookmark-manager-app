@@ -95,7 +95,7 @@ namespace BookmarkManagerApp.Migrations
                         .HasMaxLength(320)
                         .HasColumnType("character varying(320)");
 
-                    b.Property<string>("FullName")
+                    b.Property<string>("Fullname")
                         .IsRequired()
                         .HasMaxLength(200)
                         .HasColumnType("character varying(200)");

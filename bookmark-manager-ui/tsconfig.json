@@ -6,7 +6,6 @@
                 "src/*"
             ]
         },
-        "types": ["bun"]
     },
     "files": [],
     "references": [

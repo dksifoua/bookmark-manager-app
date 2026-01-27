@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace BookmarkManagerApp.Migrations
 {
     [DbContext(typeof(BookmarkDbContext))]
-    [Migration("20260125083052_InitialCreate")]
+    [Migration("20260127102824_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -98,7 +98,7 @@ namespace BookmarkManagerApp.Migrations
                         .HasMaxLength(320)
                         .HasColumnType("character varying(320)");
 
-                    b.Property<string>("FullName")
+                    b.Property<string>("Fullname")
                         .IsRequired()
                         .HasMaxLength(200)
                         .HasColumnType("character varying(200)");
