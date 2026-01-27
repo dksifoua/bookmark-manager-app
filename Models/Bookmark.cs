@@ -4,7 +4,7 @@ public class Bookmark : BaseModel
 {
     public long? BookmarkId { get; init; }
     
-    public long? UserId { get; init; }
+    public long UserId { get; init; }
     
     public string Title { get; init; } = string.Empty;
     

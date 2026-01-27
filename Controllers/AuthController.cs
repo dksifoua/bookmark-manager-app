@@ -12,15 +12,15 @@ namespace BookmarkManagerApp.Controllers;
 public class AuthController(
     AuthService authService,
     IConfiguration configuration,
-    IValidator<UserRegistrationRequest> userRegistrationValidator,
-    IValidator<UserLoginRequest> userLoginValidator)
+    IValidator<UserRegistrationRequest> userRegistrationRequestValidator,
+    IValidator<UserLoginRequest> userLoginRequestValidator)
     : ControllerBase
 {
     [HttpPost("register")]
     public async Task<ActionResult<UserRegistrationResponse>> RegisterAsync(
         UserRegistrationRequest userRegistrationRequest)
     {
-        await userRegistrationValidator.ValidateAndThrowAsync(userRegistrationRequest);
+        await userRegistrationRequestValidator.ValidateAndThrowAsync(userRegistrationRequest);
         
         var user = await authService.RegisterUserAsync(userRegistrationRequest.ToCommand());
         return CreatedAtRoute(nameof(UserController.GetUserByIdAsync), new { id = user.UserId },
@@ -30,7 +30,7 @@ public class AuthController(
     [HttpPost("login")]
     public async Task<ActionResult<UserLoginResponse>> LoginAsync(UserLoginRequest userLoginRequest)
     {
-        await userLoginValidator.ValidateAndThrowAsync(userLoginRequest);
+        await userLoginRequestValidator.ValidateAndThrowAsync(userLoginRequest);
 
         var jwtToken = await authService.AuthenticateUserAsync(userLoginRequest.ToCommand());
         var durationInMinutes = configuration.GetValue("JwtSettings:DurationInMinutes", 5);

@@ -3,9 +3,9 @@ using FluentValidation;
 
 namespace BookmarkManagerApp.Controllers.Validators;
 
-public class UserRegistrationValidator : DefaultValidator<UserRegistrationRequest>
+public class UserRegistrationRequestValidator : DefaultRequestValidator<UserRegistrationRequest>
 {
-    public UserRegistrationValidator()
+    public UserRegistrationRequestValidator()
     {
         RuleFor(x => x.Fullname).NotEmpty().MinimumLength(3).MaximumLength(200);
         RuleFor(x => x.Email).NotEmpty().EmailAddress().MaximumLength(320);

@@ -13,6 +13,7 @@ public sealed class GlobalExceptionHandler(
         logger.LogError(exception, "Unhandled exception occurred. TraceId: {TraceId}", httpContext.TraceIdentifier);
 
         var (httpStatusCode, title) = MapException(exception);
+        httpContext.Response.StatusCode = httpStatusCode;
         var problemDetails = new ProblemDetails
         {
             Status = httpStatusCode,
