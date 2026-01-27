@@ -6,6 +6,7 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <RootNamespace>BookmarkManagerApp</RootNamespace>
     <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+    <InterceptorsNamespaces>$(InterceptorsNamespaces);Microsoft.AspNetCore.OpenApi.Generated</InterceptorsNamespaces>
   </PropertyGroup>
 
   <ItemGroup>
@@ -35,26 +36,17 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Remove="bookmark-manager-app-ui\**" />
+    <Compile Remove="bookmark-manager-ui\**" />
     <Compile Remove=".github\**" />
   </ItemGroup>
 
   <ItemGroup>
-    <EmbeddedResource Remove="bookmark-manager-app-ui\**" />
     <EmbeddedResource Remove=".github\**" />
   </ItemGroup>
 
   <ItemGroup>
-    <None Remove="bookmark-manager-app-ui\**" />
     <None Remove=".github\**" />
     <None Remove=".gitignore" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <_ContentIncludedByDefault Remove="bookmark-manager-app-ui\package.json" />
-    <_ContentIncludedByDefault Remove="bookmark-manager-app-ui\tsconfig.app.json" />
-    <_ContentIncludedByDefault Remove="bookmark-manager-app-ui\tsconfig.json" />
-    <_ContentIncludedByDefault Remove="bookmark-manager-app-ui\tsconfig.node.json" />
   </ItemGroup>
 
 </Project>

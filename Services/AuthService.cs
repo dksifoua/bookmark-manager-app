@@ -23,7 +23,7 @@ public class AuthService(
         }
 
         var hashedPassword = await HashPassword(command.Password);
-        var user = new User { FullName = command.FullName, Email = command.Email, Password = hashedPassword };
+        var user = new User { Fullname = command.FullName, Email = command.Email, Password = hashedPassword };
         return await userRepository.CreateAsync(user);
     }
 
@@ -57,16 +57,16 @@ public class AuthService(
         {
             new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
             new Claim(JwtRegisteredClaimNames.Sub, user.Email),
+            new Claim(JwtRegisteredClaimNames.Name, user.Fullname),
         };
 
         var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secretKey));
         var credentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
-        var expiresAt = DateTime.UtcNow.AddMinutes(durationInMinutes);
 
         var tokenDescriptor = new SecurityTokenDescriptor
         {
             Subject = new ClaimsIdentity(claims),
-            Expires = expiresAt,
+            Expires = DateTime.UtcNow.AddMinutes(durationInMinutes),
             Issuer = issuer,
             Audience = audience,
             SigningCredentials = credentials
@@ -75,8 +75,8 @@ public class AuthService(
         var tokenHandler = new JwtSecurityTokenHandler();
         var token = tokenHandler.CreateToken(tokenDescriptor);
 
-        return await Task.FromResult(new JwtToken(tokenHandler.WriteToken(token), expiresAt));
+        return await Task.FromResult(new JwtToken(tokenHandler.WriteToken(token), user.Fullname, user.Email));
     }
 }
 
-public record JwtToken(string Token, DateTime ExpiresAt);
+public record JwtToken(string Token, string Fullname, string Email);

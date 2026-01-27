@@ -1,7 +1,7 @@
 import type { Nullable } from "@/types"
 import { createContext } from "react"
 
-export type AuthContextUser = { fullname: string, email: string, token: string, expiresAt: Date }
+export type AuthContextUser = { fullname: string, email: string }
 
 export type AuthContextType = {
     authUser: Nullable<AuthContextUser>,

@@ -22,7 +22,7 @@ namespace BookmarkManagerApp.Migrations
                 {
                     UserId = table.Column<long>(type: "bigint", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    FullName = table.Column<string>(type: "character varying(200)", maxLength: 200, nullable: false),
+                    Fullname = table.Column<string>(type: "character varying(200)", maxLength: 200, nullable: false),
                     Email = table.Column<string>(type: "character varying(320)", maxLength: 320, nullable: false),
                     Password = table.Column<string>(type: "character varying(255)", maxLength: 255, nullable: false),
                     CreationTime = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: false),

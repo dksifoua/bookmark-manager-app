@@ -13,8 +13,7 @@
         ],
         "module": "ESNext",
         "types": [
-            "node",
-            "bun"
+            "node"
         ],
         "skipLibCheck": true,
         /* Bundler mode */

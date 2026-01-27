@@ -13,6 +13,21 @@ using Scalar.AspNetCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("CorsPolicy", policy =>
+    {
+        var allowedOrigins = builder.Configuration.GetSection("AllowedCorsOrigins").Get<string[]>();
+        if (allowedOrigins != null)
+        {
+            policy.WithOrigins(allowedOrigins)
+                .AllowCredentials()
+                .AllowAnyMethod()
+                .AllowAnyHeader();
+        }
+    });
+});
+
 builder.Services.AddOpenApi();
 
 builder.Services.AddProblemDetails(options =>
@@ -68,6 +83,8 @@ app.MapGet("/", (IConfiguration configuration) =>
     var appVersion = configuration["AppSettings:ApplicationVersion"];
     return Results.Ok(new { appName, appVersion });
 });
+
+app.UseCors("CorsPolicy");
 
 
 if (app.Environment.IsDevelopment())
