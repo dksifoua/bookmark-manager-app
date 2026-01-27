@@ -1,6 +1,29 @@
 @bookmark_manager_app_HostAddress = http://localhost:5140/api/bookmarks
 
-### Get all bookmarks
+### Retrieve all bookmarks
 GET {{bookmark_manager_app_HostAddress}}
 Accept: application/json
-Cookie: token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiIwMWE3YjY0ZS05MDY4LTRkZmItYWUxNy1kNTE2YjdjNmUwODAiLCJzdWIiOiIxIiwiZW1haWwiOiJkaW1pdHJpLnNpZm91YUBnbWFpbC5jb20iLCJuYW1lIjoiRGltaXRyaSBTaWZvdWEiLCJuYmYiOjE3Njk1MzU3ODAsImV4cCI6MTc2OTUzOTM4MCwiaWF0IjoxNzY5NTM1NzgwLCJpc3MiOiJCb29rbWFya01hbmFnZXJBcGkiLCJhdWQiOiJCb29rbWFya01hbmFnZXJBcGlVc2VycyJ9.CQNHR5x1sVcjBwoJbUBKXFdUw_y-2Rt-LFvDvoyR0bQ; max-age=3600; path=/; samesite=strict; httponly
+Cookie: token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiJkNThjZjdlYy1mZWRkLTQxMTQtYTczOS1jZDNlOTFkOTE3MjciLCJzdWIiOiIxIiwiZW1haWwiOiJkaW1pdHJpLnNpZm91YUBnbWFpbC5jb20iLCJuYW1lIjoiRGltaXRyaSBTaWZvdWEiLCJuYmYiOjE3Njk1NDYwMjYsImV4cCI6MTc2OTU0OTYyNiwiaWF0IjoxNzY5NTQ2MDI2LCJpc3MiOiJCb29rbWFya01hbmFnZXJBcGkiLCJhdWQiOiJCb29rbWFya01hbmFnZXJBcGlVc2VycyJ9.7Cn97BNjtX047TgqURJOGCAQfykU1lMiV5pErQQvgEU; max-age=3600; path=/; samesite=strict; httponly
+
+### Create a bookmark
+POST {{bookmark_manager_app_HostAddress}}
+Content-Type: application/json
+Accept: application/json
+Cookie: token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiJkNThjZjdlYy1mZWRkLTQxMTQtYTczOS1jZDNlOTFkOTE3MjciLCJzdWIiOiIxIiwiZW1haWwiOiJkaW1pdHJpLnNpZm91YUBnbWFpbC5jb20iLCJuYW1lIjoiRGltaXRyaSBTaWZvdWEiLCJuYmYiOjE3Njk1NDYwMjYsImV4cCI6MTc2OTU0OTYyNiwiaWF0IjoxNzY5NTQ2MDI2LCJpc3MiOiJCb29rbWFya01hbmFnZXJBcGkiLCJhdWQiOiJCb29rbWFya01hbmFnZXJBcGlVc2VycyJ9.7Cn97BNjtX047TgqURJOGCAQfykU1lMiV5pErQQvgEU; max-age=3600; path=/; samesite=strict; httponly
+
+{
+    "title": "GitHub",
+    "url": "https://github.com",
+    "description": "Where the world builds software. Millions of developers and companies build, ship, and maintain their software on GitHub."
+}
+
+### Retrieve a bookmark
+GET {{bookmark_manager_app_HostAddress}}/2
+Accept: application/json
+Cookie: token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiJkNThjZjdlYy1mZWRkLTQxMTQtYTczOS1jZDNlOTFkOTE3MjciLCJzdWIiOiIxIiwiZW1haWwiOiJkaW1pdHJpLnNpZm91YUBnbWFpbC5jb20iLCJuYW1lIjoiRGltaXRyaSBTaWZvdWEiLCJuYmYiOjE3Njk1NDYwMjYsImV4cCI6MTc2OTU0OTYyNiwiaWF0IjoxNzY5NTQ2MDI2LCJpc3MiOiJCb29rbWFya01hbmFnZXJBcGkiLCJhdWQiOiJCb29rbWFya01hbmFnZXJBcGlVc2VycyJ9.7Cn97BNjtX047TgqURJOGCAQfykU1lMiV5pErQQvgEU; max-age=3600; path=/; samesite=strict; httponly
+
+### Delete a bookmark
+DELETE {{bookmark_manager_app_HostAddress}}/2
+Content-Type: application/json
+Accept: application/json
+Cookie: token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiJkNThjZjdlYy1mZWRkLTQxMTQtYTczOS1jZDNlOTFkOTE3MjciLCJzdWIiOiIxIiwiZW1haWwiOiJkaW1pdHJpLnNpZm91YUBnbWFpbC5jb20iLCJuYW1lIjoiRGltaXRyaSBTaWZvdWEiLCJuYmYiOjE3Njk1NDYwMjYsImV4cCI6MTc2OTU0OTYyNiwiaWF0IjoxNzY5NTQ2MDI2LCJpc3MiOiJCb29rbWFya01hbmFnZXJBcGkiLCJhdWQiOiJCb29rbWFya01hbmFnZXJBcGlVc2VycyJ9.7Cn97BNjtX047TgqURJOGCAQfykU1lMiV5pErQQvgEU; max-age=3600; path=/; samesite=strict; httponly

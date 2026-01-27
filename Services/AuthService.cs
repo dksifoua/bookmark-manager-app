@@ -29,7 +29,7 @@ public class AuthService(
 
     public async Task<JwtToken> AuthenticateUserAsync(LoginUserCommand command)
     {
-        var user = await userRepository.GetByEmailAsync(command.Email);
+        var user = await userRepository.RetrieveByEmailAsync(command.Email);
         if (user == null || !await VerifyHashedPassword(user.Password, command.Password))
         {
             throw new UnauthorizedException("Email or password is incorrect.");

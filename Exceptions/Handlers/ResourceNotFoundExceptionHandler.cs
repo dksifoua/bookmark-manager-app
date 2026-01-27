@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace BookmarkManagerApp.Exceptions.Handlers;
 
-public class ResourceNotFoundExceptionHandler(ILogger<ValidationExceptionHandler> logger) : IExceptionHandler
+public class ResourceNotFoundExceptionHandler(ILogger<ResourceNotFoundException> logger) : IExceptionHandler
 {
     public async ValueTask<bool> TryHandleAsync(
         HttpContext httpContext,

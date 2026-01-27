@@ -10,8 +10,7 @@ public class BookmarkConfiguration : IEntityTypeConfiguration<Bookmark>
     {
         builder.ToTable("bookmarks");
         builder.HasKey(x => x.BookmarkId);
-        builder.HasIndex(x => new { x.UserId, x.Title }).IsUnique();
-        builder.HasIndex(x => new { x.UserId, x.Url }).IsUnique();
+        builder.HasIndex(x => new { x.UserId, x.Title, x.Url }).IsUnique();
 
         builder.Property(x => x.Title).IsRequired().HasMaxLength(200);
         builder.Property(x => x.Url).IsRequired().HasMaxLength(2048);
