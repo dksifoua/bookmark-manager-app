@@ -129,7 +129,13 @@ app.UseCors("CorsPolicy");
 if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
-    app.MapScalarApiReference();
+    app.MapScalarApiReference(options =>
+    {
+        options
+            .WithTitle("Bookmark Manager API")
+            .WithTheme(ScalarTheme.Kepler)
+            .ExpandAllTags();
+    });
 }
 
 // Suppress diagnostics only for specific exception types (ApiException)

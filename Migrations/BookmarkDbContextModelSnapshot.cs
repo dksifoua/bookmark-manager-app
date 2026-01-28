@@ -64,18 +64,65 @@ namespace BookmarkManagerApp.Migrations
                         .HasMaxLength(2048)
                         .HasColumnType("character varying(2048)");
 
-                    b.Property<long?>("UserId")
+                    b.Property<long>("UserId")
                         .HasColumnType("bigint");
 
                     b.HasKey("BookmarkId");
 
-                    b.HasIndex("UserId", "Title")
-                        .IsUnique();
-
-                    b.HasIndex("UserId", "Url")
+                    b.HasIndex("UserId", "Title", "Url")
                         .IsUnique();
 
                     b.ToTable("bookmarks", "bookmark-manager");
+                });
+
+            modelBuilder.Entity("BookmarkManagerApp.Models.BookmarkTag", b =>
+                {
+                    b.Property<long>("BookmarkId")
+                        .HasColumnType("bigint");
+
+                    b.Property<long>("TagId")
+                        .HasColumnType("bigint");
+
+                    b.Property<DateTimeOffset>("CreationTime")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTimeOffset?>("LastModifiedTime")
+                        .ValueGeneratedOnUpdate()
+                        .HasColumnType("timestamp with time zone");
+
+                    b.HasKey("BookmarkId", "TagId");
+
+                    b.HasIndex("TagId");
+
+                    b.ToTable("bookmark_tags", "bookmark-manager");
+                });
+
+            modelBuilder.Entity("BookmarkManagerApp.Models.Tag", b =>
+                {
+                    b.Property<long>("TagId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("TagId"));
+
+                    b.Property<DateTimeOffset>("CreationTime")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTimeOffset?>("LastModifiedTime")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(25)
+                        .HasColumnType("character varying(25)");
+
+                    b.HasKey("TagId");
+
+                    b.HasIndex("Name")
+                        .IsUnique();
+
+                    b.ToTable("tags", "bookmark-manager");
                 });
 
             modelBuilder.Entity("BookmarkManagerApp.Models.User", b =>
@@ -117,14 +164,86 @@ namespace BookmarkManagerApp.Migrations
                     b.ToTable("users", "bookmark-manager");
                 });
 
+            modelBuilder.Entity("BookmarkManagerApp.Models.Visit", b =>
+                {
+                    b.Property<long>("VisitId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("VisitId"));
+
+                    b.Property<long>("BookmarkId")
+                        .HasColumnType("bigint");
+
+                    b.Property<DateTimeOffset>("CreationTime")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTimeOffset?>("LastModifiedTime")
+                        .ValueGeneratedOnUpdate()
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTimeOffset>("VisitTime")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.HasKey("VisitId");
+
+                    b.HasIndex("BookmarkId");
+
+                    b.ToTable("visits", "bookmark-manager");
+                });
+
             modelBuilder.Entity("BookmarkManagerApp.Models.Bookmark", b =>
                 {
                     b.HasOne("BookmarkManagerApp.Models.User", "User")
                         .WithMany("Bookmarks")
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("User");
+                });
+
+            modelBuilder.Entity("BookmarkManagerApp.Models.BookmarkTag", b =>
+                {
+                    b.HasOne("BookmarkManagerApp.Models.Bookmark", "Bookmark")
+                        .WithMany("BookmarkTags")
+                        .HasForeignKey("BookmarkId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("BookmarkManagerApp.Models.Tag", "Tag")
+                        .WithMany("BookmarkTags")
+                        .HasForeignKey("TagId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Bookmark");
+
+                    b.Navigation("Tag");
+                });
+
+            modelBuilder.Entity("BookmarkManagerApp.Models.Visit", b =>
+                {
+                    b.HasOne("BookmarkManagerApp.Models.Bookmark", "Bookmark")
+                        .WithMany("Visits")
+                        .HasForeignKey("BookmarkId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Bookmark");
+                });
+
+            modelBuilder.Entity("BookmarkManagerApp.Models.Bookmark", b =>
+                {
+                    b.Navigation("BookmarkTags");
+
+                    b.Navigation("Visits");
+                });
+
+            modelBuilder.Entity("BookmarkManagerApp.Models.Tag", b =>
+                {
+                    b.Navigation("BookmarkTags");
                 });
 
             modelBuilder.Entity("BookmarkManagerApp.Models.User", b =>

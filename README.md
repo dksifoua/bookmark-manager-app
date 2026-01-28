@@ -27,6 +27,10 @@ Users are able to:
 - Toggle between light and dark color themes
 - View the optimal layout for the interface depending on their device's screen size
 
+## Database diagram
+
+![Database diagram](images/database-diagram.png)
+
 ## Launch the application locally
 
 ## Tech Stack
