@@ -19,5 +19,10 @@ public class BookmarkConfiguration : IEntityTypeConfiguration<Bookmark>
         builder.Property(x => x.IsArchived).HasDefaultValue(false);
         builder.Property(x => x.CreationTime).ValueGeneratedOnAdd();
         builder.Property(x => x.LastModifiedTime).ValueGeneratedOnUpdate();
+        
+        builder.HasOne(x => x.User)
+            .WithMany(x => x.Bookmarks)
+            .HasForeignKey(x => x.UserId)
+            .OnDelete(DeleteBehavior.Cascade);
     }
 }

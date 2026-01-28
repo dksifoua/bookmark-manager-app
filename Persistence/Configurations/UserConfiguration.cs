@@ -17,10 +17,5 @@ public class UserConfiguration : IEntityTypeConfiguration<User>
         builder.Property(x => x.Password).IsRequired().HasMaxLength(255);
         builder.Property(x => x.CreationTime).ValueGeneratedOnAdd();
         builder.Property(x => x.LastModifiedTime).ValueGeneratedOnUpdate();
-
-        builder.HasMany(x => x.Bookmarks)
-            .WithOne(x => x.User)
-            .HasForeignKey(x => x.UserId)
-            .OnDelete(DeleteBehavior.Cascade);
     }
 }

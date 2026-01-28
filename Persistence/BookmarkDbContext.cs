@@ -9,6 +9,7 @@ public class BookmarkDbContext(DbContextOptions<BookmarkDbContext> options) : Db
 {
     public DbSet<User> Users => Set<User>();
     public DbSet<Bookmark> Bookmarks => Set<Bookmark>();
+    public DbSet<Visit> Visits => Set<Visit>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

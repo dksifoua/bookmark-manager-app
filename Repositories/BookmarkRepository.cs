@@ -1,4 +1,3 @@
-using BookmarkManagerApp.Exceptions;
 using BookmarkManagerApp.Models;
 using BookmarkManagerApp.Persistence;
 using Microsoft.EntityFrameworkCore;

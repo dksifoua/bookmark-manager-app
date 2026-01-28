@@ -17,4 +17,7 @@ public class Bookmark : BaseModel
     public bool IsArchived { get; init; } = false;
     
     public User? User { get; init; }
+    
+    public ICollection<Visit> Visits { get; init; } = new List<Visit>();
+    public ICollection<BookmarkTag> BookmarkTags { get; init; } = new List<BookmarkTag>();
 }
