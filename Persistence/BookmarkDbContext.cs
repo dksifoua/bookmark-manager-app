@@ -10,6 +10,8 @@ public class BookmarkDbContext(DbContextOptions<BookmarkDbContext> options) : Db
     public DbSet<User> Users => Set<User>();
     public DbSet<Bookmark> Bookmarks => Set<Bookmark>();
     public DbSet<Visit> Visits => Set<Visit>();
+    public DbSet<Tag> Tags => Set<Tag>();
+    public DbSet<BookmarkTag> BookmarkTags => Set<BookmarkTag>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
