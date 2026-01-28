@@ -6,7 +6,10 @@ using BookmarkManagerApp.Services.Utils;
 
 namespace BookmarkManagerApp.Services;
 
-public class BookmarkService(BookmarkRepository bookmarkRepository, UserContext userContext)
+public class BookmarkService(
+    BookmarkRepository bookmarkRepository,
+    TagRepository tagRepository,
+    UserContext userContext)
 {
     public async Task<Bookmark> CreateBookmarkAsync(CreateBookmarkCommand command)
     {
@@ -15,10 +18,37 @@ public class BookmarkService(BookmarkRepository bookmarkRepository, UserContext 
             throw new ConflictException("A bookmark with the same title and/or URL already exists for the user");
         }
 
-        return await bookmarkRepository.CreateAsync(new Bookmark
+        var bookmark = new Bookmark
         {
-            UserId = userContext.UserId, Title = command.Title, Url = command.Url, Description = command.Description
-        });
+            UserId = userContext.UserId,
+            Title = command.Title,
+            Url = command.Url,
+            Description = command.Description
+        };
+
+        var tagnames = (command.Tagnames ?? []).Distinct()
+            .Select(x => x.Trim().ToLowerInvariant())
+            .Where(x => x.Length > 0)
+            .Distinct()
+            .ToArray();
+
+        if (tagnames.Length == 0) return await bookmarkRepository.CreateAsync(bookmark);
+        
+        var existingTags = await tagRepository.RetrieveByNames(tagnames);
+        var existingTagsByNames = existingTags.ToDictionary(tag => tag.Name);
+
+        foreach (var tagName in tagnames)
+        {
+            if (!existingTagsByNames.TryGetValue(tagName, out var tag))
+            {
+                tag = await tagRepository.CreateWithoutCommitAsync(new Tag { Name = tagName });
+                existingTagsByNames[tagName] = tag;
+            }
+                
+            bookmark.BookmarkTags.Add(new BookmarkTag { Tag = tag });
+        }
+
+        return await bookmarkRepository.CreateAsync(bookmark);  
     }
 
     public async Task DeleteBookmarkAsync(long bookmarkId)

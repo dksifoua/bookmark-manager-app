@@ -1,5 +1,5 @@
-using System.Security.Claims;
 using BookmarkManagerApp.Controllers.Requests;
+using BookmarkManagerApp.Controllers.Responses;
 using BookmarkManagerApp.Models;
 using BookmarkManagerApp.Services;
 using FluentValidation;
@@ -11,31 +11,43 @@ namespace BookmarkManagerApp.Controllers;
 [ApiController]
 [Authorize]
 [Route("/api/bookmarks")]
-public class BookmarkController(BookmarkService bookmarkService, IValidator<CreateBookmarkRequest> createBookmarkRequestValidator) : ControllerBase
+public class BookmarkController(
+    BookmarkService bookmarkService,
+    IValidator<CreateBookmarkRequest> createBookmarkRequestValidator) : ControllerBase
 {
-    
     [HttpPost]
     public async Task<ActionResult<Bookmark>> CreateAsync(CreateBookmarkRequest request)
     {
         await createBookmarkRequestValidator.ValidateAndThrowAsync(request);
-        
+
         var bookmark = await bookmarkService.CreateBookmarkAsync(request.ToCommand());
-        return CreatedAtRoute(nameof(RetrieveByIdAsync), new { id = bookmark.BookmarkId }, bookmark);
+        var createBookmarkResponse = new CreateBookmarkResponse
+        (
+            bookmark.Title, 
+            bookmark.Url, 
+            bookmark.Description,
+            bookmark.BookmarkTags
+                .Where(x => x.Tag != null)
+                .Select(x => x.Tag!.Name)
+                .ToArray()
+        );
+
+        return CreatedAtRoute(nameof(RetrieveByIdAsync), new { id = bookmark.BookmarkId }, createBookmarkResponse);
     }
-    
+
     [HttpGet]
     public async Task<ActionResult<IEnumerable<Bookmark>>> RetrieveAllAsync()
     {
         var bookmarks = await bookmarkService.RetrieveAllBookmarksByUserIdAsync();
         return Ok(bookmarks);
     }
-    
+
     [HttpGet("{id:long}", Name = nameof(RetrieveByIdAsync))]
     public async Task<ActionResult<Bookmark>> RetrieveByIdAsync(long id)
     {
         return Ok(await bookmarkService.RetrieveBookmarkByIdAsync(id));
     }
-    
+
     [HttpDelete("{id:long}")]
     public async Task DeleteAsync(long id)
     {
