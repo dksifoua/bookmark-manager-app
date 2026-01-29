@@ -1,4 +1,4 @@
-import { type JSX, useRef, useState } from "react"
+import { type JSX, useEffect, useRef, useState } from "react"
 import { useCloseModal } from "@/hooks/modal.hook"
 import { useAuthContext } from "@/hooks/auth.hook"
 import MenuHamburgerIcon from "@/assets/images/icon-menu-hamburger.svg"
@@ -11,6 +11,11 @@ import LogoutIcon from "@/assets/images/icon-logout.svg"
 import AvatarImage from "@/assets/images/image-avatar.webp"
 
 export function Header({ openSidebar }: { openSidebar: () => void }): JSX.Element {
+    const { me } = useAuthContext()
+
+    useEffect(() => {
+        me()
+    }, [])
 
     return (
         <div
@@ -59,7 +64,7 @@ function ButtonGroup(): JSX.Element {
             </button>
             {
                 isDropdownOpen &&
-                <div className="absolute right-0 top-14">
+                <div className="absolute right-0 top-14 z-10">
                     <AvatarDropdown/>
                 </div>
             }

@@ -14,7 +14,7 @@ export function Sidebar({ openSidebar }: { openSidebar?: () => void }): JSX.Elem
         queryKey: ["tags"],
         queryFn: fetchBookmarkTagCount,
         select: (tags: BookmarkTagCount[]): BookmarkTagCount[] =>
-            tags.sort((a: BookmarkTagCount, b: BookmarkTagCount): number => a.name.localeCompare(b.name))
+            [...tags].sort((a: BookmarkTagCount, b: BookmarkTagCount): number => a.name.localeCompare(b.name))
     })
 
     return (

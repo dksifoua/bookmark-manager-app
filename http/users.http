@@ -1,6 +1,12 @@
-@bookmark_manager_app_HostAddress = http://localhost:5140
+@bookmark_manager_app_HostAddress = http://localhost:5140/api/users
+@bookmark_manager_app_JwtCookie = token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiJmYTA5M2FlZC04MDU1LTQ2OWMtOGZiNC02NTliZDQ3N2ViODEiLCJzdWIiOiIxIiwiZW1haWwiOiJkaW1pdHJpLnNpZm91YUBnbWFpbC5jb20iLCJuYW1lIjoiRGltaXRyaSBTaWZvdWEiLCJuYmYiOjE3Njk2OTcwNTAsImV4cCI6MTc2OTcwMDY1MCwiaWF0IjoxNzY5Njk3MDUwLCJpc3MiOiJCb29rbWFya01hbmFnZXJBcGkiLCJhdWQiOiJCb29rbWFya01hbmFnZXJBcGlVc2VycyJ9.wR7viKyy06mMsY0E1rAlPfNb7VvKa9701jNtxUO8hHc; max-age=3600; path=/; samesite=strict; httponly
 
 ### Get all users
-GET {{bookmark_manager_app_HostAddress}}/api/users
+GET {{bookmark_manager_app_HostAddress}}
 Accept: application/json
-Cookie: token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiI1MzE4MGQwZS02NTQyLTRlMzAtOTAwNS0yZThlNzk0ZmUwMDUiLCJzdWIiOiJkaW1pdHJpLnNpZm91YUBnbWFpbC5jb20iLCJuYW1lIjoiRGltaXRyaSBTaWZvdWEiLCJuYmYiOjE3Njk1MzIwNTMsImV4cCI6MTc2OTUzNTY1MywiaWF0IjoxNzY5NTMyMDUzLCJpc3MiOiJCb29rbWFya01hbmFnZXJBcGkiLCJhdWQiOiJCb29rbWFya01hbmFnZXJBcGlVc2VycyJ9.5H5OA6Hz6zozkQ4kLYR_QHnmJV5-xN8-_pQRb_oFD5o; max-age=3600; path=/; samesite=strict; httponly
+Cookie: {{bookmark_manager_app_JwtCookie}}
+
+### Get the connected user
+GET {{bookmark_manager_app_HostAddress}}/me
+Accept: application/json
+Cookie: {{bookmark_manager_app_JwtCookie}}
