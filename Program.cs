@@ -65,6 +65,8 @@ builder.Services.AddScoped<BookmarkTagRepository>();
 builder.Services.AddScoped<UserService>();
 builder.Services.AddScoped<AuthService>();
 builder.Services.AddScoped<BookmarkService>();
+builder.Services.AddScoped<TagService>();
+builder.Services.AddScoped<BookmarkTagService>();
 
 builder.Services.AddValidatorsFromAssemblyContaining<Program>();
 

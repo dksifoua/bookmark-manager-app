@@ -35,23 +35,23 @@ public class BookmarkController(
         return CreatedAtRoute(nameof(RetrieveByIdAsync), new { id = bookmark.BookmarkId }, createBookmarkResponse);
     }
 
+    [HttpDelete("{id:long}")]
+    public async Task DeleteAsync(long id)
+    {
+        await bookmarkService.DeleteBookmarkAsync(id);
+        NoContent();
+    }
+
     [HttpGet]
-    public async Task<ActionResult<IEnumerable<Bookmark>>> RetrieveAllAsync()
+    public async Task<ActionResult<IEnumerable<RetrieveAllBookmarksResponse>>> RetrieveAllAsync()
     {
         var bookmarks = await bookmarkService.RetrieveAllBookmarksByUserIdAsync();
-        return Ok(bookmarks);
+        return Ok(bookmarks.Select(RetrieveAllBookmarksResponse.FromBookmark));
     }
 
     [HttpGet("{id:long}", Name = nameof(RetrieveByIdAsync))]
     public async Task<ActionResult<Bookmark>> RetrieveByIdAsync(long id)
     {
         return Ok(await bookmarkService.RetrieveBookmarkByIdAsync(id));
-    }
-
-    [HttpDelete("{id:long}")]
-    public async Task DeleteAsync(long id)
-    {
-        await bookmarkService.DeleteBookmarkAsync(id);
-        Ok();
     }
 }

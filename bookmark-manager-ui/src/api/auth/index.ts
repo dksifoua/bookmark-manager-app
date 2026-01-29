@@ -35,7 +35,7 @@ export async function authLogout(): Promise<void> {
         method: "POST",
         credentials: "include"
     })
-    if (response.status !== 200) {
+    if (![200, 401].includes(response.status)) {
         throw new Error(`Unexpected status code: ${response.status}`)
     }
 }
