@@ -12,7 +12,7 @@ export function useLocalStorage<T>(key: string, initialValue: Nullable<T> = null
         
         try {
             return JSON.parse(storedValue) as Nullable<T>
-        } catch (error) {
+        } catch {
             localStorage.removeItem(key)
             return initialValue
         }

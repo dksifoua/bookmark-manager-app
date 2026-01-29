@@ -14,6 +14,15 @@ public class TagRepository(BookmarkDbContext context)
     
     public async Task<IEnumerable<Tag>> RetrieveByNames(IEnumerable<string> names)
     {
-        return await context.Tags.Where(t => names.Contains(t.Name)).ToListAsync();
+        return await context.Tags.AsNoTracking().Where(t => names.Contains(t.Name)).ToListAsync();
+    }
+
+    public async Task<IEnumerable<Tag>> RetrieveAllByUserIdAsync(long userId)
+    {
+        return await context.Tags
+            .AsNoTracking()
+            .Where(t => t.BookmarkTags.Any(bt => bt.Bookmark!.UserId == userId))
+            .Distinct()
+            .ToListAsync();
     }
 }

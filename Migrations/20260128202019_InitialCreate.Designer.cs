@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace BookmarkManagerApp.Migrations
 {
     [DbContext(typeof(BookmarkDbContext))]
-    [Migration("20260128001431_InitialCreate")]
+    [Migration("20260128202019_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />

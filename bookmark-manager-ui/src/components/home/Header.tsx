@@ -106,7 +106,7 @@ function AvatarDropdown(): JSX.Element {
             <div className="flex px-2 py-1 border border-neutral-100 items-center">
                 <button
                     onClick={logout}
-                    className="flex flex-row gap-x-2.5 p-2 items-center cursor-pointer"
+                    className="w-full flex flex-row gap-x-2.5 p-2 items-center cursor-pointer"
                 >
                     <img src={LogoutIcon} alt="Logout Icon" className="w-4 h-4"/>
                     <p className="text-preset-4 text-neutral-800">Logout</p>

@@ -14,7 +14,9 @@ public class BookmarkRepository(BookmarkDbContext context)
     }
 
     public async Task<bool> ExistsByUserIdAndTitleAndUrl(long userId, string title, string url) =>
-        await context.Bookmarks.AsNoTracking().AnyAsync(b => b.UserId == userId && b.Title == title && b.Url == url);
+        await context.Bookmarks
+            .AsNoTracking()
+            .AnyAsync(b => b.UserId == userId && b.Title == title && b.Url == url);
 
     public async Task DeleteAsync(Bookmark bookmark)
     {
@@ -23,7 +25,13 @@ public class BookmarkRepository(BookmarkDbContext context)
     }
     
     public async Task<IEnumerable<Bookmark>> RetrieveAllByUserIdAsync(long userId) =>
-        await context.Bookmarks.AsNoTracking().Where(b => b.UserId == userId).ToListAsync();
+        await context.Bookmarks
+            .AsNoTracking()
+            .Where(b => b.UserId == userId)
+            .Include(b => b.Visits)
+            .Include(b => b.BookmarkTags)
+            .ThenInclude(bt => bt.Tag)
+            .ToListAsync();
     
     public async Task<Bookmark?> RetrieveByIdAsync(long bookmarkId) =>
         await context.Bookmarks.FindAsync(bookmarkId);

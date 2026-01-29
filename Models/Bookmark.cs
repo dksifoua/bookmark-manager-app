@@ -12,9 +12,9 @@ public class Bookmark : BaseModel
     
     public string Description { get; init; } = string.Empty;
     
-    public bool IsPinned { get; init; } = false;
+    public bool IsPinned { get; init; }
     
-    public bool IsArchived { get; init; } = false;
+    public bool IsArchived { get; init; }
     
     public User? User { get; init; }
     

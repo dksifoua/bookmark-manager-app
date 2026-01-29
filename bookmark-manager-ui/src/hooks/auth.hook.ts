@@ -42,14 +42,14 @@ export function useAuth(): AuthContextType {
 
     function logout(): void {
         authLogout()
-            .then(() => {
+            .catch((error) => {
+                console.log("Logout failed:", error)
+            })
+            .finally(() => {
                 setUser(null)
                 setLocalStorageValue(null)
 
                 navigate("login", { replace: true })
-            })
-            .catch((error) => {
-                console.log("Logout failed:", error)
             })
     }
     
