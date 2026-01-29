@@ -1,6 +1,8 @@
 import { create } from "zustand/react"
 import { devtools } from "zustand/middleware"
 
+export type BookmarkSortBy = "recently-added" | "recently-visited" | "most-visited"
+
 export type GlobalStore = {
     headerTitle: string
     filterArchivedBookmarks: boolean
@@ -10,6 +12,8 @@ export type GlobalStore = {
     removeTagFilter: (tag: string) => void
     tag2checked: Record<string, boolean>
     setTag2checked: (name: string, checked: boolean) => void
+    bookmarkSortBy: BookmarkSortBy
+    setBookmarkSortBy: (bookmarkSortBy: BookmarkSortBy) => void
 }
 
 export const useGlobalStore = create<GlobalStore>()(
@@ -57,6 +61,8 @@ export const useGlobalStore = create<GlobalStore>()(
             const tag2checked = { ...store.tag2checked, [name]: checked }
 
             return { tag2checked }
-        })
+        }),
+        bookmarkSortBy: "recently-added",
+        setBookmarkSortBy: (bookmarkSortBy: BookmarkSortBy) => set({ bookmarkSortBy })
     }))
 )
