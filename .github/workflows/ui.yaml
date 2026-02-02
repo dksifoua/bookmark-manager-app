@@ -1,6 +1,10 @@
 name: UI
 on:
-  push:
+  workflow_run:
+    workflows:
+      - API
+    types:
+      - completed
     branches:
       - main
 
@@ -16,7 +20,9 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
+  environment: github-pages
   build:
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository

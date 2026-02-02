@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 
-namespace BookmarkManagerApp.Exceptions.Handlers;
+namespace bookmark_manager_app.Exceptions.Handlers;
 
 public sealed class BadRequestExceptionHandler(ILogger<ValidationExceptionHandler> logger) : IExceptionHandler
 {
