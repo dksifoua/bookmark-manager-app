@@ -1,6 +1,6 @@
 import { z } from "zod"
 
-export const BookmarkApiResponseSchema = z.object({
+export const FetchBookmarkApiResponseSchema = z.object({
     bookmarkId: z.number(),
     title: z.string(),
     url: z.url(),
@@ -9,7 +9,7 @@ export const BookmarkApiResponseSchema = z.object({
     isArchived: z.boolean(),
     tags: z.array(z.string()),
     creationTime: z.coerce.date(),
-    visitCount: z.number(),
-    lastVisitTime: z.coerce.date().nullable()
+    visitsCount: z.number(),
+    lastVisitTime: z.coerce.date()
 })
-export type BookmarkResponse = z.infer<typeof BookmarkApiResponseSchema>
+export type Bookmark = z.infer<typeof FetchBookmarkApiResponseSchema>

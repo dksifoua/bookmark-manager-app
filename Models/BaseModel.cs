@@ -1,4 +1,4 @@
-namespace BookmarkManagerApp.Models;
+namespace bookmark_manager_app.Models;
 
 public abstract class BaseModel
 {

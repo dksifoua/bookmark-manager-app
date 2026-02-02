@@ -1,8 +1,3 @@
-using BookmarkManagerApp.Services.Commands;
+namespace bookmark_manager_app.Controllers.Requests;
 
-namespace BookmarkManagerApp.Controllers.Requests;
-
-public record UserLoginRequest(string Email, string Password)
-{
-    public LoginUserCommand ToCommand() => new (Email, Password);
-}
+public record UserLoginRequest(string Email, string Password);

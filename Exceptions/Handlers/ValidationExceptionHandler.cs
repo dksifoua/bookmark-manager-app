@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 
-namespace BookmarkManagerApp.Exceptions.Handlers;
+namespace bookmark_manager_app.Exceptions.Handlers;
 
 public sealed class ValidationExceptionHandler(ILogger<ValidationExceptionHandler> logger) : IExceptionHandler
 {
@@ -10,19 +10,19 @@ public sealed class ValidationExceptionHandler(ILogger<ValidationExceptionHandle
         Exception exception,
         CancellationToken cancellationToken)
     {
-        if (exception is not CustomValidationException badRequestException)
+        if (exception is not CustomValidationException validationException)
         {
             return false;
         }
 
-        logger.LogWarning("Validation failed: {Message}", badRequestException.Message);
+        logger.LogWarning("Validation Error: {Message}", validationException.Message);
 
-        httpContext.Response.StatusCode = StatusCodes.Status400BadRequest;
+        httpContext.Response.StatusCode = validationException.HttpStatusCode;
         await httpContext.Response.WriteAsJsonAsync(new ValidationProblemDetails
         {
-            Status = StatusCodes.Status400BadRequest,
-            Title = "Validation Failed",
-            Errors = badRequestException.Errors
+            Status = validationException.HttpStatusCode,
+            Title = "Validation Error",
+            Errors= validationException.Errors
         }, cancellationToken);
 
         return true;

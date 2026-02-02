@@ -1,8 +1,8 @@
-using BookmarkManagerApp.Models;
+using bookmark_manager_app.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace BookmarkManagerApp.Persistence.Configurations;
+namespace bookmark_manager_app.Persistence.Configurations;
 
 public class VisitConfiguration : IEntityTypeConfiguration<Visit>
 {
@@ -10,6 +10,7 @@ public class VisitConfiguration : IEntityTypeConfiguration<Visit>
     {
         builder.ToTable("visits");
         builder.HasKey(x => x.VisitId);
+        builder.HasIndex(x => new { x.BookmarkId, x.VisitTime }).IsUnique();
         
         builder.Property(x => x.VisitTime).IsRequired();
         builder.Property(x => x.CreationTime).ValueGeneratedOnAdd();

@@ -3,18 +3,18 @@ import { Logo } from "@/components/Logo"
 import HomeIcon from "@/assets/images/icon-home.svg"
 import ArchiveIcon from "@/assets/images/icon-archive.svg"
 import CloseIcon from "@/assets/images/icon-close.svg"
-import type { BookmarkTagCount } from "@/api/tags/schema"
-import { fetchBookmarkTagCount } from "@/api/tags"
 import { useQuery } from "@tanstack/react-query"
+import { fetchTagCount } from "@/api/tags"
+import type { TagCount } from "@/api/tags/schema"
 import { type GlobalStore, useGlobalStore } from "@/store"
 import { useShallow } from "zustand/react/shallow"
 
 export function Sidebar({ openSidebar }: { openSidebar?: () => void }): JSX.Element {
     const { data: tags, isLoading } = useQuery({
         queryKey: ["tags"],
-        queryFn: fetchBookmarkTagCount,
-        select: (tags: BookmarkTagCount[]): BookmarkTagCount[] =>
-            [...tags].sort((a: BookmarkTagCount, b: BookmarkTagCount): number => a.name.localeCompare(b.name))
+        queryFn: fetchTagCount,
+        select: (tags: TagCount[]): TagCount[] =>
+            [...tags].sort((a: TagCount, b: TagCount): number => a.name.localeCompare(b.name))
     })
 
     return (
@@ -34,8 +34,8 @@ export function Sidebar({ openSidebar }: { openSidebar?: () => void }): JSX.Elem
                 {
                     isLoading
                         ? <p className="px-3 text-preset-3 text-neutral-800">Loading tags...</p>
-                        : tags?.map((tag: BookmarkTagCount): JSX.Element =>
-                            <Tag key={tag.id} name={tag.name} count={tag.count} archivedCount={tag.archivedCount}/>)
+                        : tags?.map((tag: TagCount): JSX.Element =>
+                            <Tag key={tag.id} tag={tag}/>)
                 }
             </div>
         </div>
@@ -46,8 +46,7 @@ function Navigation(): JSX.Element {
     const [selected, setSelected] = useState<"home" | "archived">("home")
     const { setFilterArchivedBookmarks } = useGlobalStore(
         useShallow((store: GlobalStore) => ({
-            filterArchivedBookmarks: store.filterArchivedBookmarks,
-            setFilterArchivedBookmarks: store.setFilterArchivedBookmarks,
+            setFilterArchivedBookmarks: store.setFilterArchivedBookmarks
         }))
     )
 
@@ -85,16 +84,17 @@ function Navigation(): JSX.Element {
     )
 }
 
-function Tag({ name, count, archivedCount }: { name: string, count: number, archivedCount: number }): JSX.Element {
-    const { filterArchivedBookmarks, addFilter, removeFilter, checked, setChecked } = useGlobalStore(
+function Tag({ tag }: { tag: TagCount }): JSX.Element {
+    const { tagFilters, addFilter, removeFilter, filterArchivedBookmarks } = useGlobalStore(
         useShallow((store: GlobalStore) => ({
-            filterArchivedBookmarks: store.filterArchivedBookmarks,
+            tagFilters: store.tagFilters,
             addFilter: store.addTagFilter,
             removeFilter: store.removeTagFilter,
-            checked: store.tag2checked[name],
-            setChecked: store.setTag2checked
+            filterArchivedBookmarks: store.filterArchivedBookmarks
         }))
     )
+
+    const { name, count, archivedCount } = tag
 
     function handleCheck(event: ChangeEvent<HTMLInputElement>): void {
         if (event.target.checked) {
@@ -102,13 +102,12 @@ function Tag({ name, count, archivedCount }: { name: string, count: number, arch
         } else {
             removeFilter(name)
         }
-        setChecked(name, event.target.checked)
     }
 
     return (
         <div className="h-10.5 flex flex-row gap-x-3 px-3 py-2 items-center justify-between">
             <label className="w-full flex flex-row gap-x-2 items-center justify-start">
-                <input type="checkbox" checked={checked ?? false} onChange={handleCheck}
+                <input type="checkbox" checked={tagFilters.includes(name)} onChange={handleCheck}
                        className={`size-4 border border-neutral-500 cursor-pointer`}
                 />
                 <span className="text-preset-3 text-neutral-800">{name}</span>

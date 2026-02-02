@@ -1,4 +1,4 @@
-import { type FormEvent, type JSX, useState } from "react"
+import { type JSX, type SyntheticEvent, useState } from "react"
 import { Logo } from "@/components/Logo"
 import { Link } from "react-router"
 import { useAuthContext } from "@/hooks/auth.hook"
@@ -28,18 +28,19 @@ function FormHeader(): JSX.Element {
 function FormFields(): JSX.Element {
     const [email, setEmail] = useState<string>("dimitri.sifoua@gmail.com")
     const [password, setPassword] = useState<string>("Password123")
-    
-    const { login } = useAuthContext()
-    
-    function handleLogin(event: FormEvent<HTMLFormElement>): void {
-        event.preventDefault()
-        
-        const data = new FormData(event.currentTarget)
-        login(data.get("email") as string, data.get("password") as string)
-    }
 
+    const { login, error } = useAuthContext()
+
+    function handleSubmit(event: SyntheticEvent<HTMLFormElement>): void {
+        event.preventDefault()
+        console.log("Form submitted with email:", email, "and password:", password)
+        
+        const formData = new FormData(event.currentTarget)
+        login(formData.get("email") as string, formData.get("password") as string)
+    }
+    
     return (
-        <form onSubmit={handleLogin} className="flex flex-col gap-y-4">
+        <form onSubmit={handleSubmit} className="flex flex-col gap-y-4">
             <div className="flex flex-col gap-y-1.5">
                 <label htmlFor="email" className="text-preset-4 color-neutral-900">Email</label>
                 <input type="email" id="email" name="email" autoComplete="off" required={true}
@@ -52,7 +53,14 @@ function FormFields(): JSX.Element {
                        value={password} onChange={(event): void => setPassword(event.target.value)}
                        className="h-11.25 p-3 bg-neutral-0 border border-neutral-500 rounded-8"/>
             </div>
-            <button type="submit" className="h-11.5 flex px-4 py-3 bg-teal-700 rounded-8 items-center justify-center cursor-pointer">
+            {
+                error !== null &&
+                <div className="flex flex-col gap-y-1.5">
+                    <span className="text-red-800">{error.detail}</span>
+                </div>
+            }
+            <button type="submit"
+                    className="h-11.5 flex px-4 py-3 bg-teal-700 rounded-8 items-center justify-center cursor-pointer">
                 <p className="text-preset-3 text-neutral-0">Log in</p>
             </button>
         </form>

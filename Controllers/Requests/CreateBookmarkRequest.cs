@@ -1,8 +1,8 @@
-using BookmarkManagerApp.Services.Commands;
+using bookmark_manager_app.Services;
 
-namespace BookmarkManagerApp.Controllers.Requests;
+namespace bookmark_manager_app.Controllers.Requests;
 
-public record CreateBookmarkRequest(string Title, string Url, string Description, IEnumerable<string>? Tags)
+public record CreateBookmarkRequest(string Title, string Url, string Description, string[] Tags)
 {
-    public CreateBookmarkCommand ToCommand() => new(Title, Url, Description, Tags);
+    public CreateBookmarkCommand ToCommand() => new CreateBookmarkCommand(Title, Url, Description, Tags);
 }

@@ -10,8 +10,8 @@ const basename = import.meta.env.BASE_URL
 createRoot(document.getElementById("root")!).render(
     <StrictMode>
         <BrowserRouter basename={
-            basename.endsWith('/') 
-                ? basename.slice(0, -1) 
+            basename.endsWith('/')
+                ? basename.slice(0, -1)
                 : basename
         }>
             <AuthProvider>

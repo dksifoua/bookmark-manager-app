@@ -1,28 +1,28 @@
-using BookmarkManagerApp.Controllers.Requests;
-using BookmarkManagerApp.Controllers.Responses;
-using BookmarkManagerApp.Services;
+using bookmark_manager_app.Controllers.Requests;
+using bookmark_manager_app.Controllers.Responses;
+using bookmark_manager_app.Services;
 using FluentValidation;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-namespace BookmarkManagerApp.Controllers;
+namespace bookmark_manager_app.Controllers;
 
 [ApiController]
-[Route("/api/auth")]
+[Route("api/auth")]
 public class AuthController(
     AuthService authService,
-    IConfiguration configuration,
     IValidator<UserRegistrationRequest> userRegistrationRequestValidator,
-    IValidator<UserLoginRequest> userLoginRequestValidator)
-    : ControllerBase
+    IValidator<UserLoginRequest> userLoginRequestValidator,
+    IConfiguration configuration) : ControllerBase
 {
     [HttpPost("register")]
-    public async Task<ActionResult<UserRegistrationResponse>> RegisterAsync(
+    public async Task<ActionResult<UserRegistrationResponse>> RegisterUserAsync(
         UserRegistrationRequest userRegistrationRequest)
     {
         await userRegistrationRequestValidator.ValidateAndThrowAsync(userRegistrationRequest);
-        
-        var user = await authService.RegisterUserAsync(userRegistrationRequest.ToCommand());
+
+        var user = await authService.RegisterAsync(userRegistrationRequest.Fullname, userRegistrationRequest.Email,
+            userRegistrationRequest.Password);
         return CreatedAtRoute(nameof(UserController.GetUserByIdAsync), new { id = user.UserId },
             new UserRegistrationResponse(user.Fullname, user.Email));
     }
@@ -32,8 +32,8 @@ public class AuthController(
     {
         await userLoginRequestValidator.ValidateAndThrowAsync(userLoginRequest);
 
-        var jwtToken = await authService.AuthenticateUserAsync(userLoginRequest.ToCommand());
-        var durationInMinutes = configuration.GetValue("JwtSettings:DurationInMinutes", 5);
+        var jwtToken = await authService.AuthenticateUserAsync(userLoginRequest.Email, userLoginRequest.Password);
+        var durationInMinutes = configuration.GetValue("Jwt:DurationInMinutes", 5);
         var cookieOptions = new CookieOptions
         {
             HttpOnly = true,
@@ -47,7 +47,6 @@ public class AuthController(
     }
 
     [HttpPost("logout")]
-    [Authorize]
     public ActionResult Logout()
     {
         var cookieOptions = new CookieOptions

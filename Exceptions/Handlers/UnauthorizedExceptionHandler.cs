@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 
-namespace BookmarkManagerApp.Exceptions.Handlers;
+namespace bookmark_manager_app.Exceptions.Handlers;
 
 public class UnauthorizedExceptionHandler(ILogger<ValidationExceptionHandler> logger) : IExceptionHandler
 {
@@ -17,10 +17,10 @@ public class UnauthorizedExceptionHandler(ILogger<ValidationExceptionHandler> lo
 
         logger.LogWarning("Unauthorized: {Message}", unauthorizedException.Message);
 
-        httpContext.Response.StatusCode = StatusCodes.Status401Unauthorized;
+        httpContext.Response.StatusCode = unauthorizedException.HttpStatusCode;
         await httpContext.Response.WriteAsJsonAsync(new ProblemDetails
         {
-            Status = StatusCodes.Status401Unauthorized,
+            Status = unauthorizedException.HttpStatusCode,
             Title = "Unauthorized",
             Detail = unauthorizedException.Message
         }, cancellationToken);

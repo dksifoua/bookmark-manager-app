@@ -1,10 +1,9 @@
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 
-namespace BookmarkManagerApp.Exceptions.Handlers;
+namespace bookmark_manager_app.Exceptions.Handlers;
 
-public sealed class GlobalExceptionHandler(
-    ILogger<GlobalExceptionHandler> logger,
+public sealed class GlobalExceptionHandler( ILogger<GlobalExceptionHandler> logger,
     IProblemDetailsService problemDetailsService) : IExceptionHandler
 {
     public async ValueTask<bool> TryHandleAsync(HttpContext httpContext, Exception exception,
@@ -37,7 +36,7 @@ public sealed class GlobalExceptionHandler(
 
     private static (int StatusCode, string Title) MapException(Exception exception) => exception switch
     {
-        ApiException apiException => ((int)apiException.HttpStatusCode, apiException.Message),
+        ApiException apiException => (apiException.HttpStatusCode, apiException.Message),
         ArgumentNullException => (StatusCodes.Status400BadRequest, "Invalid argument provided."),
         ArgumentException => (StatusCodes.Status400BadRequest, "Invalid argument provided."),
         UnauthorizedAccessException => (StatusCodes.Status401Unauthorized, "Unauthorized."),

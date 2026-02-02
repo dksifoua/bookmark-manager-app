@@ -1,14 +1,14 @@
-using BookmarkManagerApp.Models;
-using BookmarkManagerApp.Repositories;
-using BookmarkManagerApp.Services.Utils;
+using bookmark_manager_app.Exceptions;
+using bookmark_manager_app.Models;
+using bookmark_manager_app.Repositories;
 
-namespace BookmarkManagerApp.Services;
+namespace bookmark_manager_app.Services;
 
-public class UserService(UserRepository userRepository, UserContext userContext)
+public class UserService (UserRepository userRepository)
 {
-    public async Task<IEnumerable<User>> GetAllUsersAsync() => await userRepository.RetrieveAllAsync();
-    
-    public async Task<User?> GetUserByIdAsync(long userId) => await userRepository.RetrieveByIdAsync(userId);
-
-    public async Task<User?> GetCurrentUserAsync() => await userRepository.RetrieveByIdAsync(userContext.UserId);
+    public async Task<User> GetUserByIdAsync(long userId)
+    {
+        var user = await userRepository.GetByIdAsync(userId);
+        return user ?? throw new NotFoundException("User ID not found");
+    }
 }

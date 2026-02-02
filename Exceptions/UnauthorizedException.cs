@@ -1,5 +1,3 @@
-using System.Net;
+namespace bookmark_manager_app.Exceptions;
 
-namespace BookmarkManagerApp.Exceptions;
-
-public class UnauthorizedException(string message) : ApiException(message, HttpStatusCode.Unauthorized);
+public class UnauthorizedException(string message) : ApiException(message, StatusCodes.Status401Unauthorized);

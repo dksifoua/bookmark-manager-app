@@ -1,0 +1,85 @@
+@bookmark_manager_app_HostAddress = http://localhost:5140/api
+@cookie = token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiIxYzFlMTM4Ny0xN2EzLTRkNDktYjFmNC0zZDQ0MjAxZjY0NDAiLCJzdWIiOiIxIiwiZW1haWwiOiJkaW1pdHJpLnNpZm91YUBnbWFpbC5jb20iLCJuYW1lIjoiRGltaXRyaSBTaWZvdWEiLCJuYmYiOjE3Njk5OTIzMjYsImV4cCI6MTc2OTk5NTkyNiwiaWF0IjoxNzY5OTkyMzI2LCJpc3MiOiJib29rbWFyay1tYW5hZ2VyLWFwaSIsImF1ZCI6ImJvb2ttYXJrLW1hbmFnZXItY2xpZW50In0.7W3NjIV1CDh52fAlP1qTMRABC-Wd6tyh5-2TXNtWdYk; max-age=3600; path=/; samesite=strict; httponly
+
+###
+GET {{bookmark_manager_app_HostAddress}}/health
+Accept: application/json
+
+###
+POST {{bookmark_manager_app_HostAddress}}/api/auth/register
+Content-Type: application/json
+Accept: application/json
+
+{
+    "fullname": "Dimitri Sifoua",
+    "email": "dimitri.sifoua@gmail.com",
+    "password": "Password123"
+}
+
+###
+POST {{bookmark_manager_app_HostAddress}}/api/auth/login
+Content-Type: application/json
+Accept: application/json
+
+{
+    "email": "dimitri.sifoua@gmail.com",
+    "password": "Password123"
+}
+
+###
+POST {{bookmark_manager_app_HostAddress}}/api/auth/logout
+Accept: application/json
+Cookie: {{cookie}}
+
+###
+POST {{bookmark_manager_app_HostAddress}}/api/bookmarks
+Content-Type: application/json
+Accept: application/json
+Cookie: {{cookie}}
+
+{
+    "title": "Claude",
+    "url": "https://claude.ai",
+    "description": "An AI assistant created by Anthropic that can help with analysis, writing, coding, math, and creative tasks through natural conversation.",
+    "tags": [
+        "Tools",
+        "AI",
+        "Learning"
+    ]
+}
+
+###
+DELETE {{bookmark_manager_app_HostAddress}}/api/bookmarks/1
+Accept: application/json
+Cookie: {{cookie}}
+
+###
+GET {{bookmark_manager_app_HostAddress}}/api/bookmarks/1
+Accept: application/json
+Cookie: {{cookie}}
+
+###
+PATCH {{bookmark_manager_app_HostAddress}}/api/bookmarks/1/pin
+Accept: application/json
+Cookie: {{cookie}}
+
+###
+POST {{bookmark_manager_app_HostAddress}}/api/visits
+Content-Type: application/json
+Accept: application/json
+Cookie: {{cookie}}
+
+{
+    "bookmarkId": 1,
+    "visitTime": "2026-01-31T19:49:19.462909+00:00"
+}
+
+###
+GET {{bookmark_manager_app_HostAddress}}/api/bookmarks
+Accept: application/json
+Cookie: {{cookie}}
+
+###
+GET {{bookmark_manager_app_HostAddress}}/api/tags
+Accept: application/json
+Cookie: {{cookie}}

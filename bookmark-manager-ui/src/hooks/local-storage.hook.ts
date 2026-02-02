@@ -9,7 +9,7 @@ export function useLocalStorage<T>(key: string, initialValue: Nullable<T> = null
     const [value, setValue] = useState<Nullable<T>>(() => {
         const storedValue = localStorage.getItem(key)
         if (storedValue === null) return initialValue
-        
+
         try {
             return JSON.parse(storedValue) as Nullable<T>
         } catch {

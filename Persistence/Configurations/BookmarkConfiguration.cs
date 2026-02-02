@@ -1,8 +1,8 @@
-using BookmarkManagerApp.Models;
+using bookmark_manager_app.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace BookmarkManagerApp.Persistence.Configurations;
+namespace bookmark_manager_app.Persistence.Configurations;
 
 public class BookmarkConfiguration : IEntityTypeConfiguration<Bookmark>
 {
@@ -24,5 +24,9 @@ public class BookmarkConfiguration : IEntityTypeConfiguration<Bookmark>
             .WithMany(x => x.Bookmarks)
             .HasForeignKey(x => x.UserId)
             .OnDelete(DeleteBehavior.Cascade);
+        
+        builder.HasMany(x => x.Tags)
+            .WithMany(x => x.Bookmarks)
+            .UsingEntity(join => join.ToTable("bookmark_tags"));
     }
 }

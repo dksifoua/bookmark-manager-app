@@ -1,37 +1,33 @@
-import { AuthContext } from "@/contexts/AuthContext"
+import { AuthContext, type AuthenticatedUser } from "@/contexts/AuthContext"
 import { type ReactNode, useState } from "react"
-import { useLocalStorage } from "@/hooks/local-storage.hook"
 import type { Nullable } from "@/types"
 import { useNavigate } from "react-router"
-import { authLogin, authLogout, authRegister } from "@/api/auth"
-import {
-    type LoginResponse,
-    type RegistrationResponse,
-    SuccessfulLoginApiResponseSchema,
-    SuccessfulRegistrationApiResponseSchema
-} from "@/api/auth/schema"
-import { fetchCurrentUser } from "@/api/users"
-import type { CurrentUser } from "@/api/users/schema"
+import { authLogin, authLogout } from "@/api/auth"
+import type { AuthApiResponse } from "@/api/auth/schema"
+import { useLocalStorage } from "@/hooks/local-storage.hook"
+import { UnauthorizedApiError } from "@/api/errors/UnauthorizedApiError"
+import type { UnauthorizedApiResponse } from "@/api/errors/schema"
 
 export function AuthProvider({ children }: { children: ReactNode }): ReactNode {
-    const { value, setLocalStorageValue } = useLocalStorage<CurrentUser>("AuthUser")
-    const [user, setUser] = useState<Nullable<CurrentUser>>(value)
+    const { value, setLocalStorageValue } = useLocalStorage<AuthenticatedUser>("AuthenticatedUser")
+    const [authenticatedUser, setAuthenticatedUser] = useState<Nullable<AuthenticatedUser>>(value)
+    const [error, setError] = useState<Nullable<UnauthorizedApiResponse>>(null)
 
     const navigate = useNavigate()
 
     function login(email: string, password: string): void {
         authLogin({ email, password })
-            .then((response: LoginResponse) => {
-                const parsedSuccessful = SuccessfulLoginApiResponseSchema.safeParse(response)
-                if (parsedSuccessful.success) {
-                    setUser(parsedSuccessful.data)
-                    setLocalStorageValue(parsedSuccessful.data)
+            .then((response: AuthApiResponse) => {
+                setAuthenticatedUser(response)
+                setLocalStorageValue(response)
 
-                    navigate("/", { replace: true })
-                }
+                navigate("/", { replace: true })
             })
             .catch((error) => {
                 console.log("Login failed:", error)
+                if (error instanceof UnauthorizedApiError) {
+                    setError(error.response)
+                }
             })
     }
 
@@ -41,34 +37,7 @@ export function AuthProvider({ children }: { children: ReactNode }): ReactNode {
                 console.log("Logout failed:", error)
             })
             .finally(() => {
-                setUser(null)
-                setLocalStorageValue(null)
-
-                navigate("login", { replace: true })
-            })
-    }
-
-    function register(fullname: string, email: string, password: string): void {
-        authRegister({ fullname, email, password })
-            .then((response: RegistrationResponse) => {
-                const parsedSuccessful = SuccessfulRegistrationApiResponseSchema.safeParse(response)
-                if (parsedSuccessful.success) {
-                    login(email, password)
-                }
-            })
-            .catch((error) => {
-                console.log("Registration failed:", error)
-            })
-    }
-    
-    function me(): void {
-        fetchCurrentUser()
-            .then((response: CurrentUser) => {
-                setUser(response)
-                setLocalStorageValue(response)
-            })
-            .catch(() => {                
-                setUser(null)
+                setAuthenticatedUser(null)
                 setLocalStorageValue(null)
 
                 navigate("login", { replace: true })
@@ -76,7 +45,7 @@ export function AuthProvider({ children }: { children: ReactNode }): ReactNode {
     }
 
     return (
-        <AuthContext.Provider value={{ authUser: user, login, logout, register, me }}>
+        <AuthContext.Provider value={{ authenticatedUser, login, logout, error }}>
             {children}
         </AuthContext.Provider>
     )

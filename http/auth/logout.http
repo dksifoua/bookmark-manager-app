@@ -1,5 +1,0 @@
-@bookmark_manager_app_HostAddress = http://localhost:5140/api/auth
-
-### Login Dimitri
-POST {{bookmark_manager_app_HostAddress}}/logout
-Cookie: token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiJlMDIyMjAyZS01NWQyLTQxOGUtYWUzZS01MWY2NDJmZDc4ZDAiLCJzdWIiOiJkaW1pdHJpLnNpZm91YUBnbWFpbC5jb20iLCJuYW1lIjoiRGltaXRyaSBTaWZvdWEiLCJuYmYiOjE3Njk1MTE5NzEsImV4cCI6MTc2OTUxMjg3MSwiaWF0IjoxNzY5NTExOTcxLCJpc3MiOiJCb29rbWFya01hbmFnZXJBcGkiLCJhdWQiOiJCb29rbWFya01hbmFnZXJBcGlVc2VycyJ9.r1OhN0_NiA4siJlOaqD8lk8gVeAtyUfdNtmgJk0O-CU; max-age=900; path=/; samesite=strict; httponly

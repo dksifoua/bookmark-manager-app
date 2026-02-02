@@ -1,13 +1,14 @@
 import type { Nullable } from "@/types"
 import { createContext } from "react"
-import type { CurrentUser } from "@/api/users/schema"
+import type { UnauthorizedApiResponse } from "@/api/errors/schema"
+
+export type AuthenticatedUser = { fullname: string, email: string }
 
 export type AuthContextType = {
-    authUser: Nullable<CurrentUser>,
+    authenticatedUser: Nullable<AuthenticatedUser>,
     login: (email: string, password: string) => void,
     logout: () => void,
-    register: (fullname: string,  email: string, password: string) => void
-    me: () => void
+    error: Nullable<UnauthorizedApiResponse>
 }
 
 export const AuthContext = createContext<Nullable<AuthContextType>>(null)
