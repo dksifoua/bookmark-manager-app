@@ -1,16 +1,15 @@
-import { SignInFormContainer } from "@/components/auth/SignInFormContainer"
-import type { JSX } from "react"
-import { Route, Routes } from "react-router"
+import { Route, Routes } from "react-router";
 import { AuthLayout } from "@/components/auth/AuthLayout"
-import { SignUpFormContainer } from "@/components/auth/SignUpFormContainer"
+import { SignInFormContainer } from "@/components/auth/SignInFormContainer"
 import { HomeLayout } from "@/components/home/HomeLayout"
 import { ProtectedRoute } from "@/components/ProtectedRoute"
-import { BookmarkList } from "@/components/bookmark/BookmarkList"
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
+import { SignUpFormContainer } from "@/components/auth/SignUpFormContainer"
+import { BookmarkList } from "@/components/bookmarks/BookmarkList"
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
 const queryClient = new QueryClient()
 
-export function App(): JSX.Element {
+export function App() {
 
     return (
         <>

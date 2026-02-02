@@ -1,4 +1,4 @@
-namespace BookmarkManagerApp.Models;
+namespace bookmark_manager_app.Models;
 
 public class Visit : BaseModel
 {
@@ -6,7 +6,7 @@ public class Visit : BaseModel
     
     public long BookmarkId { get; init; }
     
-    public DateTimeOffset VisitTime { get; init; } = DateTimeOffset.UtcNow;
+    public DateTimeOffset VisitTime { get; init; }
     
     public Bookmark? Bookmark { get; init; }
 }

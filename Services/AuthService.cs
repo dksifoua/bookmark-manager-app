@@ -1,36 +1,33 @@
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
-using BookmarkManagerApp.Exceptions;
-using BookmarkManagerApp.Models;
-using BookmarkManagerApp.Repositories;
-using BookmarkManagerApp.Services.Commands;
+using bookmark_manager_app.Exceptions;
+using bookmark_manager_app.Models;
+using bookmark_manager_app.Repositories;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
 
-namespace BookmarkManagerApp.Services;
+namespace bookmark_manager_app.Services;
 
 public class AuthService(
     UserRepository userRepository,
-    IConfiguration configuration,
-    PasswordHasher<IdentityUser> passwordHasher)
+    PasswordHasher<IdentityUser> passwordHasher,
+    IConfiguration configuration)
 {
-    public async Task<User> RegisterUserAsync(RegisterUserCommand command)
+    public async Task<User> RegisterAsync(string fullname, string email, string password)
     {
-        if (await userRepository.ExistsByEmailAsync(command.Email))
-        {
-            throw new ConflictException($"User with email '{command.Email}' already exists.");
-        }
+        if (await userRepository.EmailExistsAsync(email.ToLower()))
+            throw new ConflictException($"Email {email} already exists");
 
-        var hashedPassword = await HashPassword(command.Password);
-        var user = new User { Fullname = command.FullName, Email = command.Email, Password = hashedPassword };
-        return await userRepository.CreateAsync(user);
+        var hashedPassword = await HashPassword(password);
+        return await userRepository.CreateAsync(new User
+            { Email = email.ToLower(), Fullname = fullname, Password = hashedPassword });
     }
 
-    public async Task<JwtToken> AuthenticateUserAsync(LoginUserCommand command)
+    public async Task<JwtToken> AuthenticateUserAsync(string email, string password)
     {
-        var user = await userRepository.RetrieveByEmailAsync(command.Email);
-        if (user == null || !await VerifyHashedPassword(user.Password, command.Password))
+        var user = await userRepository.GetByEmailAsync(email.ToLower());
+        if (user == null || !await VerifyHashedPassword(user.Password, password))
         {
             throw new UnauthorizedException("Email or password is incorrect.");
         }
@@ -48,10 +45,10 @@ public class AuthService(
 
     private async Task<JwtToken> GenerateJwtToken(User user)
     {
-        var secretKey = configuration["JwtSettings:Key"] ?? string.Empty;
-        var issuer = configuration["JwtSettings:Issuer"];
-        var audience = configuration["JwtSettings:Audience"];
-        var durationInMinutes = configuration.GetValue("JwtSettings:DurationInMinutes", 5);
+        var secretKey = configuration["Jwt:Key"] ?? string.Empty;
+        var issuer = configuration["Jwt:Issuer"];
+        var audience = configuration["Jwt:Audience"];
+        var durationInMinutes = configuration.GetValue("Jwt:DurationInMinutes", 5);
 
         var claims = new[]
         {

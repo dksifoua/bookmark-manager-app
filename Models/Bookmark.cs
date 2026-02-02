@@ -1,4 +1,4 @@
-namespace BookmarkManagerApp.Models;
+namespace bookmark_manager_app.Models;
 
 public class Bookmark : BaseModel
 {
@@ -18,6 +18,6 @@ public class Bookmark : BaseModel
     
     public User? User { get; init; }
     
+    public ICollection<Tag> Tags { get; init; } = new List<Tag>();
     public ICollection<Visit> Visits { get; init; } = new List<Visit>();
-    public ICollection<BookmarkTag> BookmarkTags { get; init; } = new List<BookmarkTag>();
 }

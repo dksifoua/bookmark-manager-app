@@ -1,11 +1,11 @@
 using System.Security.Claims;
 using System.Text;
-using BookmarkManagerApp.Exceptions;
-using BookmarkManagerApp.Exceptions.Handlers;
-using BookmarkManagerApp.Persistence;
-using BookmarkManagerApp.Repositories;
-using BookmarkManagerApp.Services;
-using BookmarkManagerApp.Services.Utils;
+using bookmark_manager_app.Exceptions.Handlers;
+using bookmark_manager_app.Persistence;
+using bookmark_manager_app.Repositories;
+using bookmark_manager_app.Services;
+using bookmark_manager_app.Services.Utils;
+using dotenv.net;
 using FluentValidation;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
@@ -13,40 +13,29 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Scalar.AspNetCore;
 
+DotEnv.Load(); 
+
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddCors(options =>
-{
-    options.AddPolicy("CorsPolicy", policy =>
-    {
-        var allowedOrigins = builder.Configuration.GetSection("AllowedCorsOrigins").Get<string[]>();
-        if (allowedOrigins != null)
-        {
-            policy.WithOrigins(allowedOrigins)
-                .AllowCredentials()
-                .AllowAnyMethod()
-                .AllowAnyHeader();
-        }
-    });
-});
-
-builder.Services.AddOpenApi();
+builder.Services.AddHealthChecks();
 
 builder.Services.AddProblemDetails(options =>
 {
     options.CustomizeProblemDetails = context =>
     {
+        context.ProblemDetails.Instance = context.HttpContext.Request.Path;
         context.ProblemDetails.Extensions["traceId"] = context.HttpContext.TraceIdentifier;
-        context.ProblemDetails.Extensions["timestamp"] = DateTime.UtcNow;
+        context.ProblemDetails.Extensions["timestamp"] = DateTimeOffset.UtcNow.ToString();
         context.ProblemDetails.Instance = $"{context.HttpContext.Request.Method} {context.HttpContext.Request.Path}";
     };
 });
 
-builder.Services.AddExceptionHandler<ResourceNotFoundExceptionHandler>();
-builder.Services.AddExceptionHandler<BadRequestExceptionHandler>();
-builder.Services.AddExceptionHandler<ConflictExceptionHandler>();
 builder.Services.AddExceptionHandler<UnauthorizedExceptionHandler>();
 builder.Services.AddExceptionHandler<ValidationExceptionHandler>();
+builder.Services.AddExceptionHandler<NotFoundExceptionHandler>();
+builder.Services.AddExceptionHandler<HandlerBadRequestException>();
+builder.Services.AddExceptionHandler<ConflictExceptionHandler>();
+builder.Services.AddExceptionHandler<ForbiddenExceptionHandler>();
 builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
 
 builder.Services.AddDbContext<BookmarkDbContext>(options =>
@@ -60,31 +49,34 @@ builder.Services.AddSingleton<PasswordHasher<IdentityUser>>();
 builder.Services.AddScoped<UserRepository>();
 builder.Services.AddScoped<BookmarkRepository>();
 builder.Services.AddScoped<TagRepository>();
-builder.Services.AddScoped<BookmarkTagRepository>();
+builder.Services.AddScoped<VisitRepository>();
 
 builder.Services.AddScoped<UserService>();
 builder.Services.AddScoped<AuthService>();
 builder.Services.AddScoped<BookmarkService>();
 builder.Services.AddScoped<TagService>();
-builder.Services.AddScoped<BookmarkTagService>();
+builder.Services.AddScoped<VisitService>();
 
 builder.Services.AddValidatorsFromAssemblyContaining<Program>();
 
+var jwt = builder.Configuration.GetSection("Jwt");
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>
 {
     options.TokenValidationParameters = new TokenValidationParameters
     {
         ValidateIssuer = true,
-        ValidateAudience = false,
+        ValidateAudience = true,
         ValidateLifetime = true,
         ValidateIssuerSigningKey = true,
-        ValidIssuer = builder.Configuration["JwtSettings:Issuer"],
-        ValidAudience = builder.Configuration["JwtSettings:Audience"],
-        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["JwtSettings:Key"] ?? string.Empty)),
+        ValidIssuer = jwt["Issuer"],
+        ValidAudience = jwt["Audience"],
+        IssuerSigningKey = new SymmetricSecurityKey(
+            Encoding.UTF8.GetBytes(jwt["Key"]!)
+        )
     };
-    
+
     options.MapInboundClaims = false; // Disable Microsoft MapInboundClaims to keep JWT claim names as is.
-    
+
     options.Events = new JwtBearerEvents
     {
         OnMessageReceived = context =>
@@ -93,6 +85,7 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJw
             {
                 context.Token = token;
             }
+
             return Task.CompletedTask;
         },
         OnAuthenticationFailed = context =>
@@ -101,6 +94,7 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJw
             {
                 context.Response.Headers.Append("Token-Expired", "true");
             }
+
             var logger = context.HttpContext.RequestServices.GetRequiredService<ILogger<Program>>();
             logger.LogWarning("Authentication failed: {ExceptionMessage}", context.Exception.Message);
 
@@ -117,39 +111,34 @@ builder.Services.AddScoped<ClaimsPrincipal>(sp =>
 });
 builder.Services.AddScoped<UserContext>();
 
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowFrontend", policy =>
+    {
+        var allowedOrigins = builder.Configuration.GetSection("AllowedCorsOrigins").Get<string[]>();
+        if (allowedOrigins != null)
+        {
+            policy.WithOrigins(allowedOrigins)
+                .AllowCredentials()
+                .AllowAnyMethod()
+                .AllowAnyHeader();
+        }
+    });
+});
+
+builder.Services.AddOpenApi();
 builder.Services.AddControllers();
+builder.Services.AddEndpointsApiExplorer();
 
 var app = builder.Build();
-app.MapGet("/", (IConfiguration configuration) =>
-{
-    var appName = configuration["AppSettings:ApplicationName"];
-    var appVersion = configuration["AppSettings:ApplicationVersion"];
-    return Results.Ok(new { appName, appVersion });
-});
 
-app.UseCors("CorsPolicy");
-
-
-if (app.Environment.IsDevelopment())
-{
-    app.MapOpenApi();
-    app.MapScalarApiReference(options =>
-    {
-        options
-            .WithTitle("Bookmark Manager API")
-            .WithTheme(ScalarTheme.Kepler)
-            .ExpandAllTags();
-    });
-}
-
-// Suppress diagnostics only for specific exception types (ApiException)
-app.UseExceptionHandler(new ExceptionHandlerOptions
-{
-    SuppressDiagnosticsCallback = context => context.Exception is ApiException
-});
+app.MapOpenApi();
+app.MapScalarApiReference();
+app.UseCors("AllowFrontend");
 app.UseHttpsRedirection();
 app.UseAuthentication();
 app.UseAuthorization();
+app.UseExceptionHandler();
+app.MapHealthChecks("/api/health");
 app.MapControllers();
-
 app.Run();

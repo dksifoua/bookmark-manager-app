@@ -1,14 +1,14 @@
-using BookmarkManagerApp.Models;
+using bookmark_manager_app.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace BookmarkManagerApp.Persistence.Configurations;
+namespace bookmark_manager_app.Persistence.Configurations;
 
 public class UserConfiguration : IEntityTypeConfiguration<User>
 {
     public void Configure(EntityTypeBuilder<User> builder)
     {
-        builder.ToTable("users");
+         builder.ToTable("users");
         builder.HasKey(x => x.UserId);
         builder.HasIndex(x => x.Email).IsUnique();
 

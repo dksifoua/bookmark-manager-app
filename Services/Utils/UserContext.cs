@@ -1,6 +1,6 @@
 using System.Security.Claims;
 
-namespace BookmarkManagerApp.Services.Utils;
+namespace bookmark_manager_app.Services.Utils;
 
 public class UserContext(ClaimsPrincipal principal)
 {

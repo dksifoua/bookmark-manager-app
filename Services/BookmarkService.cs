@@ -1,21 +1,71 @@
-using BookmarkManagerApp.Exceptions;
-using BookmarkManagerApp.Models;
-using BookmarkManagerApp.Repositories;
-using BookmarkManagerApp.Services.Commands;
-using BookmarkManagerApp.Services.Utils;
+using bookmark_manager_app.Exceptions;
+using bookmark_manager_app.Models;
+using bookmark_manager_app.Repositories;
+using bookmark_manager_app.Services.Utils;
 
-namespace BookmarkManagerApp.Services;
+namespace bookmark_manager_app.Services;
 
 public class BookmarkService(
     BookmarkRepository bookmarkRepository,
-    TagRepository tagRepository,
-    UserContext userContext)
+    UserContext userContext,
+    TagRepository tagRepository)
 {
-    public async Task<Bookmark> CreateBookmarkAsync(CreateBookmarkCommand command)
+    public async Task DeleteAsync(long bookmarkId)
+    {
+        var bookmark = await bookmarkRepository.GetByIdAsync(bookmarkId);
+        if (bookmark == null)
+        {
+            throw new NotFoundException("Bookmark not found");
+        }
+
+        if (!bookmark.IsArchived)
+        {
+            throw new ForbiddenException("Cannot delete a non-archived bookmark");
+        }
+        
+        await bookmarkRepository.DeleteAsync(bookmarkId);
+    }
+
+    public async Task TogglePinAsync(long bookmarkId)
+    {
+        var bookmark = await bookmarkRepository.GetByIdAsync(bookmarkId);
+        if (bookmark == null)
+        {
+            throw new NotFoundException("Bookmark not found");
+        }
+
+        if (bookmark.IsArchived)
+        {
+            throw new ForbiddenException("Cannot pin an archived bookmark");
+        }
+        
+        await bookmarkRepository.TogglePinAsync(bookmarkId);
+    }
+
+    public async Task ToggleArchiveAsync(long bookmarkId)
+    {
+        if (!await bookmarkRepository.ExistsByBookmarkId(bookmarkId))
+        {
+            throw new NotFoundException("Bookmark not found");
+        }
+        
+        await bookmarkRepository.ToggleArchiveAsync(bookmarkId);
+    }
+    
+    public async Task<IEnumerable<Bookmark>> GetAllByUserIdAsync() =>
+        await bookmarkRepository.GetAllByUserIdAsync(userContext.UserId);
+    
+    public async Task<Bookmark> GetByIdAsync(long bookmarkId)
+    {
+        var bookmark = await bookmarkRepository.GetByIdAsync(bookmarkId);
+        return bookmark ?? throw new NotFoundException("Bookmark not found");
+    }
+    
+    public async Task<Bookmark> CreateAsync(CreateBookmarkCommand command)
     {
         if (await bookmarkRepository.ExistsByUserIdAndTitleAndUrl(userContext.UserId, command.Title, command.Url))
         {
-            throw new ConflictException("A bookmark with the same title and/or URL already exists for the user");
+            throw new ConflictException("Bookmark with this title and/or url already exists");
         }
 
         var bookmark = new Bookmark
@@ -23,51 +73,26 @@ public class BookmarkService(
             UserId = userContext.UserId,
             Title = command.Title,
             Url = command.Url,
-            Description = command.Description
+            Description = command.Description,
+            Tags = new List<Tag>()
         };
 
-        var tagnames = (command.Tagnames ?? []).Distinct()
-            .Select(x => x.Trim().ToLowerInvariant())
-            .Where(x => x.Length > 0)
-            .Distinct()
-            .ToArray();
-
-        if (tagnames.Length == 0) return await bookmarkRepository.CreateAsync(bookmark);
+        if (command.TagNames.Length == 0) return await bookmarkRepository.CreateAsync(bookmark);
         
-        var existingTags = await tagRepository.RetrieveByNames(tagnames);
+        var existingTags = await tagRepository.GetByNames(command.TagNames);
         var existingTagsByNames = existingTags.ToDictionary(tag => tag.Name);
 
-        foreach (var tagName in tagnames)
+        foreach (var tagName in command.TagNames)
         {
-            if (!existingTagsByNames.TryGetValue(tagName, out var tag))
-            {
-                tag = await tagRepository.CreateWithoutCommitAsync(new Tag { Name = tagName });
-                existingTagsByNames[tagName] = tag;
-            }
-                
-            bookmark.BookmarkTags.Add(new BookmarkTag { Tag = tag });
+            bookmark.Tags.Add(
+                existingTagsByNames.TryGetValue(tagName, out var tag)
+                    ? tag
+                    : new Tag { Name = tagName }
+            );
         }
 
-        return await bookmarkRepository.CreateAsync(bookmark);  
+        return await bookmarkRepository.CreateAsync(bookmark);
     }
-
-    public async Task DeleteBookmarkAsync(long bookmarkId)
-    {
-        var bookmark = await RetrieveBookmarkByIdAsync(bookmarkId);
-        if (bookmark == null)
-        {
-            throw new ResourceNotFoundException($"Bookmark with id {bookmarkId} not found");
-        }
-
-        await bookmarkRepository.DeleteAsync(bookmark);
-    }
-
-    public async Task<Bookmark> RetrieveBookmarkByIdAsync(long bookmarkId)
-    {
-        var bookmark = await bookmarkRepository.RetrieveByIdAsync(bookmarkId);
-        return bookmark ?? throw new ResourceNotFoundException($"Bookmark with id {bookmarkId} not found.");
-    }
-
-    public async Task<IEnumerable<Bookmark>> RetrieveAllBookmarksByUserIdAsync() =>
-        await bookmarkRepository.RetrieveAllByUserIdAsync(userContext.UserId);
 }
+
+public record CreateBookmarkCommand(string Title, string Url, string Description, string[] TagNames);

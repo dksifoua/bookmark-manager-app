@@ -1,30 +1,26 @@
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 
-namespace BookmarkManagerApp.Exceptions.Handlers;
+namespace bookmark_manager_app.Exceptions.Handlers;
 
-public class ConflictExceptionHandler(ILogger<ValidationExceptionHandler> logger) : IExceptionHandler
+public sealed class ConflictExceptionHandler(ILogger<ConflictExceptionHandler> logger) : IExceptionHandler
 {
-    public async ValueTask<bool> TryHandleAsync(
-        HttpContext httpContext,
-        Exception exception,
+    public async ValueTask<bool> TryHandleAsync(HttpContext httpContext, Exception exception,
         CancellationToken cancellationToken)
     {
-        if (exception is not ConflictException conflictException)
+        if (exception is not ConflictException conflict)
         {
             return false;
         }
 
-        logger.LogWarning("Conflict: {Message}", conflictException.Message);
-
-        httpContext.Response.StatusCode = StatusCodes.Status409Conflict;
+        logger.LogWarning("Conflict detected: {Message}", conflict.Message);
+        httpContext.Response.StatusCode = conflict.HttpStatusCode;
         await httpContext.Response.WriteAsJsonAsync(new ProblemDetails
         {
-            Status = StatusCodes.Status409Conflict,
+            Status = conflict.HttpStatusCode,
             Title = "Conflict",
-            Detail = conflictException.Message
+            Detail = conflict.Message
         }, cancellationToken);
-
         return true;
     }
 }

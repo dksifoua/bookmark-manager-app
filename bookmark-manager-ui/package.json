@@ -4,10 +4,10 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "vite",
-    "build": "tsc -b && vite build",
-    "lint": "eslint .",
-    "preview": "vite preview"
+    "dev": "bunx --bun vite",
+    "build": "tsc -b && bunx --bun vite build",
+    "lint": "bunx --bun eslint .",
+    "preview": "bunx --bun vite preview"
   },
   "dependencies": {
     "@tailwindcss/vite": "^4.1.18",
@@ -16,7 +16,6 @@
     "react-dom": "^19.2.0",
     "react-router": "^7.13.0",
     "tailwindcss": "^4.1.18",
-    "vite-plugin-svgr": "^4.5.0",
     "zod": "^4.3.6",
     "zustand": "^5.0.10"
   },

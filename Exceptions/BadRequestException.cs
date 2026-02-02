@@ -1,5 +1,3 @@
-using System.Net;
+namespace bookmark_manager_app.Exceptions;
 
-namespace BookmarkManagerApp.Exceptions;
-
-public class BadRequestException(string message) : ApiException(message, HttpStatusCode.BadRequest);
+public sealed class BadRequestException(string message) : ApiException(message, StatusCodes.Status400BadRequest);

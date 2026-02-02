@@ -1,6 +1,5 @@
-import { type JSX, useEffect, useRef, useState } from "react"
+import { type JSX, useRef, useState } from "react"
 import { useCloseModal } from "@/hooks/modal.hook"
-import { useAuthContext } from "@/hooks/auth.hook"
 import MenuHamburgerIcon from "@/assets/images/icon-menu-hamburger.svg"
 import SearchIcon from "@/assets/images/icon-search.svg"
 import AddIcon from "@/assets/images/icon-add.svg"
@@ -9,28 +8,31 @@ import LightThemeIcon from "@/assets/images/icon-light-theme.svg"
 import DarkThemeIcon from "@/assets/images/icon-dark-theme.svg"
 import LogoutIcon from "@/assets/images/icon-logout.svg"
 import AvatarImage from "@/assets/images/image-avatar.webp"
+import { useAuthContext } from "@/hooks/auth.hook"
+import { type GlobalStore, useGlobalStore } from "@/store"
+import { useShallow } from "zustand/react/shallow"
 
-export function Header({ openSidebar }: { openSidebar: () => void }): JSX.Element {
-    const { me } = useAuthContext()
-
-    useEffect(() => {
-        me()
-    }, [])
+export function Header(): JSX.Element {
 
     return (
         <div
             className={`w-full h-16.25 md:h-19.5 absolute top-0 flex flex-row gap-y-2.5 px-4 py-3 bg-neutral-0 items-center justify-between`}>
-            <SearchBar openSidebar={openSidebar}/>
+            <SearchBar/>
             <ButtonGroup/>
         </div>
     )
 }
 
-function SearchBar({ openSidebar }: { openSidebar: () => void }): JSX.Element {
+function SearchBar(): JSX.Element {
+    const { setIsMobileSidebarOpen } = useGlobalStore(
+        useShallow((store: GlobalStore) => ({
+            setIsMobileSidebarOpen: store.setIsMobileSidebarOpen,
+        }))
+    )
 
     return (
         <div className="flex flex-row gap-x-2.5 md:gap-x-4 justify-start">
-            <button onClick={openSidebar}
+            <button onClick={() => setIsMobileSidebarOpen(true)}
                     className="xl:hidden w-10 md-w-11 h-10 md:h-11 p-2.5 border border-neutral-400 rounded-8 cursor-pointer">
                 <img src={MenuHamburgerIcon} alt="Menu Hamburger Icon" className="w-5 h-5"/>
             </button>
@@ -73,22 +75,17 @@ function ButtonGroup(): JSX.Element {
 }
 
 function AvatarDropdown(): JSX.Element {
-    const { authUser, logout } = useAuthContext()
     
-    if (authUser === null) {
-        return <div></div>
-    }
+    const { logout } = useAuthContext()
     
-    const { fullname, email } = authUser
-
     return (
         <div className="w-62 flex flex-col gap-y-1 p-0 rounded-8 bg-neutral-0 border border-neutral-100">
             <div className="flex px-4 py-3 border border-neutral-100 items-center justify-center">
                 <div className="flex flex-row gap-x-3">
                     <img src={AvatarImage} alt="Avatar Image" className="w-10 md:w-11"/>
                     <div className="flex flex-col gap-y-1">
-                        <p className="text-preset-4 text-neutral-900">{fullname}</p>
-                        <p className="text-preset-4-md text-neutral-800">{email}</p>
+                        <p className="text-preset-4 text-neutral-900">{`Dimitri Sifoua`}</p>
+                        <p className="text-preset-4-md text-neutral-800">{`dimitri.sifoua@gmail.com`}</p>
                     </div>
                 </div>
             </div>

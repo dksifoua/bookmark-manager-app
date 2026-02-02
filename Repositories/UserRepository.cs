@@ -1,15 +1,17 @@
-using BookmarkManagerApp.Models;
-using BookmarkManagerApp.Persistence;
+using bookmark_manager_app.Models;
+using bookmark_manager_app.Persistence;
 using Microsoft.EntityFrameworkCore;
 
-namespace BookmarkManagerApp.Repositories;
+namespace bookmark_manager_app.Repositories;
 
 public class UserRepository(BookmarkDbContext context)
 {
-    public async Task<bool> ExistsByEmailAsync(string email) =>
-        await context.Users.AsNoTracking().AnyAsync(x => x.Email == email);
+    public async Task<User?> GetByEmailAsync(string email) =>
+        await context.Users.AsNoTracking()
+            .FirstOrDefaultAsync(u => u.Email == email);
 
-    public async Task<List<User>> RetrieveAllAsync() => await context.Users.AsNoTracking().ToListAsync();
+    public async Task<User?> GetByIdAsync(long userId) =>
+        await context.Users.AsNoTracking().FirstOrDefaultAsync(u => u.UserId == userId);
 
     public async Task<User> CreateAsync(User user)
     {
@@ -18,9 +20,21 @@ public class UserRepository(BookmarkDbContext context)
         return user;
     }
 
-    public async Task<User?> RetrieveByEmailAsync(string email) =>
-        await context.Users.AsNoTracking().FirstOrDefaultAsync(x => x.Email == email);
+    public async Task UpdateAsync(User user)
+    {
+        context.Users.Update(user);
+        await context.SaveChangesAsync();
+    }
 
-    public async Task<User?> RetrieveByIdAsync(long userId) =>
-        await context.Users.AsNoTracking().FirstOrDefaultAsync(x => x.UserId == userId);
+    public async Task DeleteAsync(User user)
+    {
+        context.Users.Remove(user);
+        await context.SaveChangesAsync();
+    }
+
+    public async Task<bool> EmailExistsAsync(string email)
+    {
+        return await context.Users.AsNoTracking()
+            .AnyAsync(u => u.Email == email);
+    }
 }

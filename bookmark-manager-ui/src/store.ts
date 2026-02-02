@@ -1,68 +1,78 @@
 import { create } from "zustand/react"
-import { devtools } from "zustand/middleware"
+import type { Nullable } from "@/types"
+import type { Bookmark } from "@/api/bookmarks/schema"
 
-export type BookmarkSortBy = "recently-added" | "recently-visited" | "most-visited"
+export type SortBookmarksBy = "recently-added" | "most-visited" | "last-visited"
 
 export type GlobalStore = {
     headerTitle: string
-    filterArchivedBookmarks: boolean
-    setFilterArchivedBookmarks: (filterArchivedBookmarks: boolean) => void
+    sortBookmarksBy: SortBookmarksBy
+    setSortBookmarksBy: (sortBookmarksBy: SortBookmarksBy) => void
+    
     tagFilters: string[]
     addTagFilter: (tag: string) => void
     removeTagFilter: (tag: string) => void
-    tag2checked: Record<string, boolean>
-    setTag2checked: (name: string, checked: boolean) => void
-    bookmarkSortBy: BookmarkSortBy
-    setBookmarkSortBy: (bookmarkSortBy: BookmarkSortBy) => void
+    
+    filterArchivedBookmarks: boolean
+    setFilterArchivedBookmarks: (filterArchivedBookmarks: boolean) => void
+    
+    isMobileSidebarOpen: boolean
+    setIsMobileSidebarOpen: (isMobileSidebarOpen: boolean) => void
+    
+    dialogBookmarkData: Nullable<Bookmark>
+    isDeleteDialogOpen: boolean
+    setIsDeleteDialogOpen: (isDeleteDialogOpen: boolean, dialogBookmarkData: Nullable<Bookmark>) => void
 }
 
-export const useGlobalStore = create<GlobalStore>()(
-    devtools<GlobalStore>((set) => ({
-        headerTitle: "All bookmarks",
-        filterArchivedBookmarks: false,
-        setFilterArchivedBookmarks: (filterArchivedBookmarks: boolean): void => set((store: GlobalStore) => {
-            const prefix = "Archived - "
-            const headerTitle = filterArchivedBookmarks
-                ? prefix + store.headerTitle
-                : store.headerTitle.startsWith(prefix)
-                    ? store.headerTitle.slice(prefix.length)
-                    : store.headerTitle
-            return { filterArchivedBookmarks, headerTitle }
-        }),
-        tagFilters: [],
-        addTagFilter: (tag: string): void => set((store: GlobalStore) => {
-            const prevSuffix = ` tagged with [${store.tagFilters.join(", ")}]`
-            let headerTitle = store.headerTitle.endsWith(prevSuffix)
-                ? store.headerTitle.slice(0, -prevSuffix.length)
-                : store.headerTitle
+export const useGlobalStore = create<GlobalStore>((set) => ({
+    headerTitle: "All bookmarks",
+    sortBookmarksBy: "recently-added",
+    setSortBookmarksBy: (sortBookmarksBy: SortBookmarksBy) => set({ sortBookmarksBy }),
+    tagFilters: [],
+    addTagFilter: (tag: string) => set((store) => {
+        let headerTitle = store.headerTitle
+        if (store.tagFilters.length > 0) {
+            const prevSuffix = `tagged with [${store.tagFilters.join(", ")}]`
+            headerTitle = headerTitle.slice(0, -prevSuffix.length)
+        }
 
-            const tagFilters = [...store.tagFilters, tag]
-            const suffix = ` tagged with [${tagFilters.join(", ")}]`
-            headerTitle = headerTitle + suffix
+        const tagFilters = [...store.tagFilters, tag]
+        const suffix = `tagged with [${tagFilters.join(", ")}]`
+        headerTitle = `${headerTitle} ${suffix}`
 
-            return { tagFilters, headerTitle }
-        }),
-        removeTagFilter: (tag: string): void => set((store: GlobalStore) => {
-            const prevSuffix = ` tagged with [${store.tagFilters.join(", ")}]`
-            let headerTitle = store.headerTitle.endsWith(prevSuffix)
-                ? store.headerTitle.slice(0, -prevSuffix.length)
-                : store.headerTitle
+        return { headerTitle, tagFilters }
+    }),
+    removeTagFilter: (tag: string) => set((store) => {
+        let headerTitle = store.headerTitle
+        if (store.tagFilters.length > 0) {
+            const prevSuffix = `tagged with [${store.tagFilters.join(", ")}]`
+            headerTitle = headerTitle.slice(0, -prevSuffix.length)
+        }
 
-            const tagFilters = store.tagFilters.filter((t: string): boolean => t !== tag)
-            const suffix = ` tagged with [${tagFilters.join(", ")}]`
-            headerTitle = tagFilters.length === 0
-                ? headerTitle
-                : headerTitle + suffix
+        const tagFilters = store.tagFilters.filter((t) => t !== tag)
+        const suffix = `tagged with [${tagFilters.join(", ")}]`
+        headerTitle = tagFilters.length === 0 ? headerTitle : `${headerTitle} ${suffix}`
 
-            return { tagFilters, headerTitle }
-        }),
-        tag2checked: {},
-        setTag2checked: (name: string, checked: boolean) => set((store) => {
-            const tag2checked = { ...store.tag2checked, [name]: checked }
+        return { headerTitle, tagFilters }
+    }),
+    filterArchivedBookmarks: false,
+    setFilterArchivedBookmarks: (filterArchivedBookmarks: boolean) => set((store) => {
+        const prevPrefix = store.filterArchivedBookmarks ? "Archived" : "All"
+        let headerTitle = store.headerTitle.slice(prevPrefix.length + 1, store.headerTitle.length)
 
-            return { tag2checked }
-        }),
-        bookmarkSortBy: "recently-added",
-        setBookmarkSortBy: (bookmarkSortBy: BookmarkSortBy) => set({ bookmarkSortBy })
-    }))
-)
+        const prefix = filterArchivedBookmarks ? "Archived" : "All"
+        headerTitle = `${prefix} ${headerTitle}`
+
+        return { headerTitle, filterArchivedBookmarks }
+    }),
+    isMobileSidebarOpen: false,
+    setIsMobileSidebarOpen: (isMobileSidebarOpen: boolean) => set(() => {
+        return { isMobileSidebarOpen }
+    }),
+    
+    dialogBookmarkData: null,
+    isDeleteDialogOpen: false,
+    setIsDeleteDialogOpen: (isDeleteDialogOpen: boolean, dialogBookmarkData: Nullable<Bookmark>) => set(() => {
+        return { isDeleteDialogOpen, dialogBookmarkData }
+    }),
+}))

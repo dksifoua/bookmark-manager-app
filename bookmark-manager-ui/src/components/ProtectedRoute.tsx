@@ -1,13 +1,13 @@
 import type { JSX } from "react"
-import { useAuthContext } from "@/hooks/auth.hook"
 import { Navigate, Outlet } from "react-router"
+import { useAuthContext } from "@/hooks/auth.hook"
 
 export function ProtectedRoute(): JSX.Element {
-    const { authUser } = useAuthContext()
-
-    if (authUser === null) {
+    const { authenticatedUser } = useAuthContext()
+    
+    if (authenticatedUser === null) {
         return <Navigate to="login" replace/>
-    }
+    } 
 
     return <Outlet/>
 }
