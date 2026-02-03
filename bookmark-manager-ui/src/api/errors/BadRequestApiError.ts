@@ -1,11 +1,9 @@
 import type { BadRequestApiResponse } from "@/api/errors/schema"
+import { ApiError } from "@/api/errors/ApiError"
 
-export class BadRequestApiError extends Error {
-    readonly response: BadRequestApiResponse
+export class BadRequestApiError extends ApiError {
 
     constructor(response: BadRequestApiResponse) {
-        super(response.title)
-        this.name = response.title
-        this.response = response
+        super(response)
     }
 }

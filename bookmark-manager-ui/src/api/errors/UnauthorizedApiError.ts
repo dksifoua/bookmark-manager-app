@@ -1,11 +1,9 @@
 import type { UnauthorizedApiResponse } from "@/api/errors/schema"
+import { ApiError } from "@/api/errors/ApiError"
 
-export class UnauthorizedApiError extends Error {
-    readonly response: UnauthorizedApiResponse
+export class UnauthorizedApiError extends ApiError {
 
     constructor(response: UnauthorizedApiResponse) {
-        super(response.detail)
-        this.name = response.title
-        this.response = response
+        super(response)
     }
 }

@@ -15,8 +15,8 @@ public sealed class NotFoundExceptionHandler(ILogger<NotFoundExceptionHandler> l
         httpContext.Response.StatusCode = notFound.HttpStatusCode;
         await httpContext.Response.WriteAsJsonAsync(new ProblemDetails
         {
-            Status = notFound.HttpStatusCode,
             Title = "Resource Not Found",
+            Status = notFound.HttpStatusCode,
             Detail = notFound.Message
         }, cancellationToken);
         return true;

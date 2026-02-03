@@ -1,5 +1,6 @@
 using bookmark_manager_app.Controllers.Requests;
 using bookmark_manager_app.Controllers.Responses;
+using bookmark_manager_app.Exceptions;
 using bookmark_manager_app.Services;
 using FluentValidation;
 using Microsoft.AspNetCore.Authorization;
@@ -16,6 +17,9 @@ public class AuthController(
     IConfiguration configuration) : ControllerBase
 {
     [HttpPost("register")]
+    [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(UserRegistrationResponse))]
+    [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ProblemDetails))]
+    [ProducesResponseType(StatusCodes.Status409Conflict, Type = typeof(ProblemDetails))]
     public async Task<ActionResult<UserRegistrationResponse>> RegisterUserAsync(
         UserRegistrationRequest userRegistrationRequest)
     {
@@ -28,6 +32,9 @@ public class AuthController(
     }
 
     [HttpPost("login")]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(UserLoginResponse))]
+    [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ProblemDetails))]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized, Type = typeof(ProblemDetails))]
     public async Task<ActionResult<UserLoginResponse>> LoginAsync(UserLoginRequest userLoginRequest)
     {
         await userLoginRequestValidator.ValidateAndThrowAsync(userLoginRequest);
@@ -47,6 +54,7 @@ public class AuthController(
     }
 
     [HttpPost("logout")]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
     public ActionResult Logout()
     {
         var cookieOptions = new CookieOptions
@@ -57,6 +65,6 @@ public class AuthController(
             Path = "/"
         };
         Response.Cookies.Delete("token", cookieOptions);
-        return Ok();
+        return NoContent();
     }
 }

@@ -15,8 +15,8 @@ public sealed class ForbiddenExceptionHandler(ILogger<ForbiddenExceptionHandler>
         httpContext.Response.StatusCode = forbid.HttpStatusCode;
         await httpContext.Response.WriteAsJsonAsync(new ProblemDetails
         {
+            Title = "Forbidden",
             Status = forbid.HttpStatusCode,
-            Type = "Forbid",
             Detail = forbid.Message
         }, cancellationToken);
 

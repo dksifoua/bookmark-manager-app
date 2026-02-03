@@ -1,5 +1,5 @@
-// @bookmark_manager_app_HostAddress = http://localhost:5140/api
-@bookmark_manager_app_HostAddress = http://localhost:8080/api
+@bookmark_manager_app_HostAddress = http://localhost:5140/api
+// @bookmark_manager_app_HostAddress = http://localhost:8080/api
 @cookie = token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiIxYzFlMTM4Ny0xN2EzLTRkNDktYjFmNC0zZDQ0MjAxZjY0NDAiLCJzdWIiOiIxIiwiZW1haWwiOiJkaW1pdHJpLnNpZm91YUBnbWFpbC5jb20iLCJuYW1lIjoiRGltaXRyaSBTaWZvdWEiLCJuYmYiOjE3Njk5OTIzMjYsImV4cCI6MTc2OTk5NTkyNiwiaWF0IjoxNzY5OTkyMzI2LCJpc3MiOiJib29rbWFyay1tYW5hZ2VyLWFwaSIsImF1ZCI6ImJvb2ttYXJrLW1hbmFnZXItY2xpZW50In0.7W3NjIV1CDh52fAlP1qTMRABC-Wd6tyh5-2TXNtWdYk; max-age=3600; path=/; samesite=strict; httponly
 
 ###
