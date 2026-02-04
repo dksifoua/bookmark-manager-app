@@ -14,7 +14,8 @@ public class AuthController(
     AuthService authService,
     IValidator<UserRegistrationRequest> userRegistrationRequestValidator,
     IValidator<UserLoginRequest> userLoginRequestValidator,
-    IConfiguration configuration) : ControllerBase
+    IConfiguration configuration,
+    IWebHostEnvironment env) : ControllerBase
 {
     [HttpPost("register")]
     [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(UserRegistrationResponse))]
@@ -44,8 +45,8 @@ public class AuthController(
         var cookieOptions = new CookieOptions
         {
             HttpOnly = true,
-            Secure = false,
-            SameSite = SameSiteMode.Strict,
+            Secure = !env.IsDevelopment(),
+            SameSite = env.IsDevelopment() ? SameSiteMode.Strict : SameSiteMode.None,
             MaxAge = TimeSpan.FromMinutes(durationInMinutes)
         };
 
@@ -60,8 +61,8 @@ public class AuthController(
         var cookieOptions = new CookieOptions
         {
             HttpOnly = true,
-            Secure = false,
-            SameSite = SameSiteMode.Strict,
+            Secure = !env.IsDevelopment(),
+            SameSite = env.IsDevelopment() ? SameSiteMode.Strict : SameSiteMode.None,
             Path = "/"
         };
         Response.Cookies.Delete("token", cookieOptions);
