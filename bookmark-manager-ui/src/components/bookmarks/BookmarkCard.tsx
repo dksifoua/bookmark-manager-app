@@ -1,6 +1,7 @@
 import { type JSX, useRef, useState } from "react"
 import MenuBookmarkIcon from "@/assets/images/icon-menu-bookmark.svg"
 import PinIcon from "@/assets/images/icon-pin.svg"
+import UnpinIcon from "@/assets/images/icon-unpin.svg"
 import VisitCountIcon from "@/assets/images/icon-visit-count.svg"
 import LastVisitedIcon from "@/assets/images/icon-last-visited.svg"
 import CreatedIcon from "@/assets/images/icon-created.svg"
@@ -15,7 +16,7 @@ import DeleteIcon from "@/assets/images/icon-delete.svg"
 import { useCloseModal } from "@/hooks/modal.hook"
 import { useMutation, useQueryClient } from "@tanstack/react-query"
 import { visitBookmark } from "@/api/visits"
-import { toggleArchive, togglePin } from "@/api/bookmarks"
+import { togglePin } from "@/api/bookmarks"
 import { type GlobalStore, useGlobalStore } from "@/store"
 import { useShallow } from "zustand/react/shallow"
 
@@ -81,7 +82,16 @@ function BookmarkActionDropdown({ bookmark, closeDropdown }: {
     bookmark: Bookmark,
     closeDropdown: () => void
 }): JSX.Element {
+    const { url, isPinned, isArchived } = bookmark
+    
     const queryClient = useQueryClient()
+    const { setIsNotificationOpen, setIsArchiveDialogOpen, setIsDeleteDialogOpen } = useGlobalStore(
+        useShallow((store: GlobalStore) => ({
+            setIsNotificationOpen: store.setIsNotificationOpen,
+            setIsArchiveDialogOpen: store.setIsArchiveDialogOpen,
+            setIsDeleteDialogOpen: store.setIsDeleteDialogOpen
+        }))
+    )
     const { mutate: visitBookmarkFn } = useMutation({
         mutationFn: visitBookmark,
         onSuccess: async () => await queryClient.invalidateQueries({ queryKey: ["bookmarks"] })
@@ -90,18 +100,6 @@ function BookmarkActionDropdown({ bookmark, closeDropdown }: {
         mutationFn: togglePin,
         onSuccess: async () => await queryClient.invalidateQueries({ queryKey: ["bookmarks"] })
     })
-    const { mutate: toggleArchiveFn } = useMutation({
-        mutationFn: toggleArchive,
-        onSuccess: async () => await Promise.all([
-            queryClient.invalidateQueries({ queryKey: ["bookmarks"] }),
-            queryClient.invalidateQueries({ queryKey: ["tags"] })
-        ])
-    })
-    const { setIsDeleteDialogOpen } = useGlobalStore(
-        useShallow((store: GlobalStore) => ({
-            setIsDeleteDialogOpen: store.setIsDeleteDialogOpen
-        }))
-    )
 
     function handleVisit(): void {
         visitBookmarkFn({ bookmarkId: bookmark.bookmarkId, visitTime: new Date() })
@@ -112,19 +110,18 @@ function BookmarkActionDropdown({ bookmark, closeDropdown }: {
     function handlePin(): void {
         pinToggleFn({ bookmarkId: bookmark.bookmarkId })
         closeDropdown()
+        setIsNotificationOpen(true, isPinned ? "bookmark-unpinned" : "bookmark-pinned")
     }
 
     function handleArchive(): void {
-        toggleArchiveFn({ bookmarkId: bookmark.bookmarkId })
         closeDropdown()
+        setIsArchiveDialogOpen(true, bookmark)
     }
 
     function handleDelete(): void { 
         closeDropdown()
         setIsDeleteDialogOpen(true, bookmark)
     }
-
-    const { url, isPinned, isArchived } = bookmark
 
     return (
         <div className="w-50 flex flex-col gap-y-1 p-2 rounded-8 bg-neutral-0 border border-neutral-100">
@@ -136,7 +133,7 @@ function BookmarkActionDropdown({ bookmark, closeDropdown }: {
             </button>
             <button onClick={(): void => {
                 navigator.clipboard.writeText(url).then(closeDropdown)
-
+                setIsNotificationOpen(true, "bookmark-link-copied")
             }}
                     className="w-full h-9 flex flex-row gap-x-2.5 p-2 rounded-8 items-center cursor-pointer hover:bg-neutral-300">
                 <img src={CopyIcon} alt="Copy Icon" className="w-4 h-4"/>
@@ -146,7 +143,7 @@ function BookmarkActionDropdown({ bookmark, closeDropdown }: {
                 !isArchived
                 && <button onClick={handlePin}
                            className="w-full h-9 flex flex-row gap-x-2.5 p-2 rounded-8 items-center cursor-pointer hover:bg-neutral-300">
-                    <img src={PinIcon} alt="Pin Icon" className="w-4 h-4"/>
+                    <img src={isPinned ? UnpinIcon : PinIcon} alt="Pin Icon" className="w-4 h-4"/>
                     <p className="text-preset-4 text-neutral-800">
                         {
                             isPinned ? "Unpin" : "Pin"

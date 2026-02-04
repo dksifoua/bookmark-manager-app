@@ -3,6 +3,15 @@ import type { Nullable } from "@/types"
 import type { Bookmark } from "@/api/bookmarks/schema"
 
 export type SortBookmarksBy = "recently-added" | "most-visited" | "last-visited"
+export type NotificationType =
+    | "bookmark-added"
+    | "bookmark-updated"
+    | "bookmark-link-copied"
+    | "bookmark-pinned"
+    | "bookmark-unpinned"
+    | "bookmark-archived"
+    | "bookmark-restored"
+    | "bookmark-deleted"
 
 export type GlobalStore = {
     headerTitle: string
@@ -24,8 +33,15 @@ export type GlobalStore = {
     isAddDialogOpen: boolean
     setIsAddDialogOpen: (isAddDialogOpen: boolean, dialogBookmarkData: Nullable<Bookmark>) => void
     
+    isArchiveDialogOpen: boolean
+    setIsArchiveDialogOpen: (isArchiveDialogOpen: boolean, dialogBookmarkData: Nullable<Bookmark>) => void
+
     isDeleteDialogOpen: boolean
     setIsDeleteDialogOpen: (isDeleteDialogOpen: boolean, dialogBookmarkData: Nullable<Bookmark>) => void
+    
+    notificationType: Nullable<NotificationType>
+    isNotificationOpen: boolean
+    setIsNotificationOpen: (isNotificationOpen: boolean, notificationType: Nullable<NotificationType>) => void
 }
 
 export const useGlobalStore = create<GlobalStore>((set) => ({
@@ -81,8 +97,19 @@ export const useGlobalStore = create<GlobalStore>((set) => ({
         return { isAddDialogOpen, dialogBookmarkData }
     }),
     
+    isArchiveDialogOpen: false,
+    setIsArchiveDialogOpen: (isArchiveDialogOpen: boolean, dialogBookmarkData: Nullable<Bookmark>) => set(() => {
+        return { isArchiveDialogOpen, dialogBookmarkData }
+    }),
+
     isDeleteDialogOpen: false,
     setIsDeleteDialogOpen: (isDeleteDialogOpen: boolean, dialogBookmarkData: Nullable<Bookmark>) => set(() => {
         return { isDeleteDialogOpen, dialogBookmarkData }
     }),
+
+    notificationType: null,
+    isNotificationOpen: false,
+    setIsNotificationOpen: (isNotificationOpen: boolean, notificationType: Nullable<NotificationType>) => set(() => {
+        return { isNotificationOpen, notificationType }
+    })
 }))

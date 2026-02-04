@@ -2,15 +2,15 @@ import { type JSX } from "react"
 import CloseIcon from "@/assets/images/icon-close.svg"
 import type { Bookmark } from "@/api/bookmarks/schema"
 import { useMutation, useQueryClient } from "@tanstack/react-query"
-import { deleteBookmark } from "@/api/bookmarks"
+import { toggleArchive } from "@/api/bookmarks"
 import { type GlobalStore, useGlobalStore } from "@/store"
 import { useShallow } from "zustand/react/shallow"
 
-export function BookmarkDeleteContainer({ bookmark, closeModal }: {
+export function BookmarkArchiveContainer({ bookmark, closeModal }: {
     bookmark: Bookmark,
     closeModal: () => void
 }): JSX.Element {
-    const { bookmarkId, title } = bookmark
+    const { bookmarkId, title, isArchived } = bookmark
     const queryClient = useQueryClient()
     const { setIsNotificationOpen } = useGlobalStore(
         useShallow((store: GlobalStore) => ({
@@ -18,13 +18,13 @@ export function BookmarkDeleteContainer({ bookmark, closeModal }: {
         }))
     )
     const { mutate } = useMutation({
-        mutationFn: deleteBookmark,
+        mutationFn: toggleArchive,
         onSuccess: () => Promise.all([
             queryClient.invalidateQueries({ queryKey: ["bookmarks"] }),
             queryClient.invalidateQueries({ queryKey: ["tags"] })
         ]).then(() => {
             closeModal()
-            setIsNotificationOpen(true, "bookmark-deleted")
+            setIsNotificationOpen(true, isArchived ? "bookmark-restored" : "bookmark-archived")
         })
     })
 
@@ -35,9 +35,17 @@ export function BookmarkDeleteContainer({ bookmark, closeModal }: {
                 <img src={CloseIcon} alt="Close Icon" className="w-5 h-5"/>
             </button>
             <div className="flex flex-col gap-y-2">
-                <p className="text-preset-1 text-neutral-900">Delete bookmark</p>
+                <p className="text-preset-1 text-neutral-900">
+                    {
+                        isArchived ? "Restore bookmark" : "Archive bookmark"
+                    }
+                </p>
                 <p className="text-preset-4-md text-neutral-800">
-                    Are you sure you want to delete this bookmark [<span className="text-neutral-900">{title}</span>]?
+                    {
+                        isArchived
+                            ? <span>Move the bookmark [<span className="text-neutral-900">{title}</span>] back to your active list?</span>
+                            : <span>Are you sure you want to archive the bookmark [<span className="text-neutral-900">{title}</span>]?</span>
+                    }
                 </p>
             </div>
             <div className="flex flex-row gap-x-4 items-center justify-end">
@@ -46,8 +54,12 @@ export function BookmarkDeleteContainer({ bookmark, closeModal }: {
                     <p className="text-preset-3 text-neutral-900">Cancel</p>
                 </button>
                 <button onClick={() => mutate({ bookmarkId })}
-                    className="h-11.5 flex px-4 py-3 bg-red-800 rounded-8 items-center justify-center cursor-pointer">
-                    <p className="text-preset-3 text-neutral-0">Delete Permanently</p>
+                        className="h-11.5 flex px-4 py-3 bg-teal-700 rounded-8 items-center justify-center cursor-pointer">
+                    <p className="text-preset-3 text-neutral-0">
+                        {
+                            isArchived ? "Restore" : "Archive"
+                        }
+                    </p>
                 </button>
             </div>
         </div>

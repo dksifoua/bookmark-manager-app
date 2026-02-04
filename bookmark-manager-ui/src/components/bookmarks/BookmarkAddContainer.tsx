@@ -1,4 +1,4 @@
-import { type JSX, type SyntheticEvent, useState } from "react";
+import { type JSX, type SyntheticEvent, useState } from "react"
 import CloseIcon from "@/assets/images/icon-close.svg"
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 import { fetchTagCount } from "@/api/tags"
@@ -8,23 +8,33 @@ import LoadingIcon from "@/assets/images/icon-loading.svg"
 import { ApiError } from "@/api/errors/ApiError"
 import type { Nullable } from "@/types"
 import type { ErrorApiResponse } from "@/api/errors/schema"
+import { type GlobalStore, useGlobalStore } from "@/store"
+import { useShallow } from "zustand/react/shallow"
 
 export function BookmarkAddContainer({ closeModal }: { closeModal: () => void }): JSX.Element {
     const [tags, setTags] = useState<string[]>([])
     const [currentTag, setCurrentTag] = useState<string>("")
+    const queryClient = useQueryClient()
     const { data: tagSuggestions } = useQuery({
         queryKey: ["tags"],
         queryFn: fetchTagCount,
         select: (tags: TagCount[]): TagCount[] =>
             [...tags].sort((a: TagCount, b: TagCount): number => a.name.localeCompare(b.name))
     })
-    const queryClient = useQueryClient()
+    const { setIsNotificationOpen } = useGlobalStore(
+        useShallow((store: GlobalStore) => ({
+            setIsNotificationOpen: store.setIsNotificationOpen,
+        }))
+    )
     const { mutate, isPending, error: mutationError } = useMutation({
         mutationFn: addBookmark,
         onSuccess: (): Promise<void> => Promise.all([
             queryClient.invalidateQueries({ queryKey: ["bookmarks"] }),
             queryClient.invalidateQueries({ queryKey: ["tags"] })
-        ]).then((): void => closeModal())
+        ]).then((): void => {
+            closeModal()
+            setIsNotificationOpen(true, "bookmark-added")
+        })
     })
     
     const error: Nullable<ErrorApiResponse> = mutationError instanceof ApiError ? mutationError.response : null
@@ -131,17 +141,17 @@ export function BookmarkAddContainer({ closeModal }: { closeModal: () => void })
                         onChange={(e): void => setCurrentTag(e.target.value)}
                         onKeyDown={(e): void => {
                             if (e.key === "," || e.key === "Enter") {
-                                e.preventDefault();
+                                e.preventDefault()
                                 if (currentTag.trim()) {
-                                    setTags([...tags, currentTag.trim()]);
-                                    setCurrentTag("");
+                                    setTags([...tags, currentTag.trim()])
+                                    setCurrentTag("")
                                 }
                             }
                         }}
                         onBlur={(): void => {
                             if (currentTag.trim()) {
-                                setTags([...tags, currentTag.trim()]);
-                                setCurrentTag("");
+                                setTags([...tags, currentTag.trim()])
+                                setCurrentTag("")
                             }
                         }}
                         list="tag-suggestions"
