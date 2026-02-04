@@ -48,13 +48,19 @@ function SearchBar(): JSX.Element {
 function ButtonGroup(): JSX.Element {
     const ref = useRef<HTMLDivElement>(null)
     const [isDropdownOpen, setIsDropdownOpen] = useState<boolean>(false)
+    const { setIsAddDialogOpen } = useGlobalStore(
+        useShallow((store: GlobalStore) => ({
+            setIsAddDialogOpen: store.setIsAddDialogOpen,
+        }))
+    )
 
     useCloseModal(ref, (): void => setIsDropdownOpen(false))
 
     return (
         <div className="flex flex-row gap-x-2.5 md:gap-x-4 items-center justify-between relative" ref={ref}>
-            <button
-                className="w-10 md:w-auto h-10 md:h-11 flex md:flex-row md:gap-x-1 items-center justify-center md:justify-between md:px-4 rounded-8 bg-teal-700 text-neutral-0">
+            <button onClick={(): void => setIsAddDialogOpen(true, null)}
+                className="w-10 md:w-auto h-10 md:h-11 flex md:flex-row md:gap-x-1 items-center justify-center md:justify-between md:px-4 rounded-8 bg-teal-700 text-neutral-0 cursor-pointer"
+            >
                 <img src={AddIcon} alt="Add Icon" className="w-5 h-5 brightness-0 invert"/>
                 <p className="max-md:hidden text-preset-3 text-neutral-0">Add Bookmark</p>
             </button>

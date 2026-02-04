@@ -3,14 +3,25 @@ import { BookmarkDeleteContainer } from "@/components/bookmarks/BookmarkDeleteCo
 import { Sidebar } from "@/components/home/Sidebar"
 import { useShallow } from "zustand/react/shallow"
 import { type GlobalStore, useGlobalStore } from "@/store"
+import { BookmarkAddContainer } from "@/components/bookmarks/BookmarkAddContainer"
 
 export function Modal(): JSX.Element {
-    const { bookmark, isMobileSidebarOpen, setIsMobileSidebarOpen, isDeleteDialogOpen, setIsDeleteDialogOpen } = useGlobalStore(
+    const {
+        bookmark,
+        isMobileSidebarOpen,
+        setIsMobileSidebarOpen,
+        isAddDialogOpen,
+        setIsAddDialogOpen,
+        isDeleteDialogOpen,
+        setIsDeleteDialogOpen
+    } = useGlobalStore(
         useShallow((store: GlobalStore) => ({
             isMobileSidebarOpen: store.isMobileSidebarOpen,
             setIsMobileSidebarOpen: store.setIsMobileSidebarOpen,
-            
+
             bookmark: store.dialogBookmarkData,
+            isAddDialogOpen: store.isAddDialogOpen,
+            setIsAddDialogOpen: store.setIsAddDialogOpen,
             isDeleteDialogOpen: store.isDeleteDialogOpen,
             setIsDeleteDialogOpen: store.setIsDeleteDialogOpen
         }))
@@ -22,6 +33,12 @@ export function Modal(): JSX.Element {
                 isMobileSidebarOpen
                 && <div className="fixed inset-0 z-50 flex items-center justify-start bg-modal-70">
                     <Sidebar openSidebar={() => setIsMobileSidebarOpen(false)}/>
+                </div>
+            }
+            {
+                isAddDialogOpen
+                && <div className="fixed inset-0 z-50 flex items-center justify-center bg-modal-70">
+                    <BookmarkAddContainer closeModal={() => setIsAddDialogOpen(false, null)}/>
                 </div>
             }
             {

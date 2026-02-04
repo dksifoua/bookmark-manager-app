@@ -20,6 +20,10 @@ export type GlobalStore = {
     setIsMobileSidebarOpen: (isMobileSidebarOpen: boolean) => void
     
     dialogBookmarkData: Nullable<Bookmark>
+    
+    isAddDialogOpen: boolean
+    setIsAddDialogOpen: (isAddDialogOpen: boolean, dialogBookmarkData: Nullable<Bookmark>) => void
+    
     isDeleteDialogOpen: boolean
     setIsDeleteDialogOpen: (isDeleteDialogOpen: boolean, dialogBookmarkData: Nullable<Bookmark>) => void
 }
@@ -69,8 +73,14 @@ export const useGlobalStore = create<GlobalStore>((set) => ({
     setIsMobileSidebarOpen: (isMobileSidebarOpen: boolean) => set(() => {
         return { isMobileSidebarOpen }
     }),
-    
+
     dialogBookmarkData: null,
+    
+    isAddDialogOpen: false,
+    setIsAddDialogOpen: (isAddDialogOpen: boolean, dialogBookmarkData: Nullable<Bookmark>) => set(() => {
+        return { isAddDialogOpen, dialogBookmarkData }
+    }),
+    
     isDeleteDialogOpen: false,
     setIsDeleteDialogOpen: (isDeleteDialogOpen: boolean, dialogBookmarkData: Nullable<Bookmark>) => set(() => {
         return { isDeleteDialogOpen, dialogBookmarkData }

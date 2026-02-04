@@ -5,7 +5,6 @@ const apiUrl = import.meta.env.VITE_BOOKMARK_MANAGER_API_URL
 
 export async function authLogin({ email, password }: { email: string, password: string }): Promise<AuthApiResponse> {
     if (!apiUrl) throw new Error("BOOKMARK_MANAGER_API_URL environment variable is not set")
-    console.log(apiUrl)
 
     const response = await fetch(`${apiUrl}/auth/login`, {
         method: "POST",

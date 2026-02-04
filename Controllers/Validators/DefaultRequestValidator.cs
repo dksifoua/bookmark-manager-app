@@ -23,8 +23,16 @@ public static class FluentValidationExtensions
 {
     public static IRuleBuilderOptions<T, string> IsValidUrl<T>(this IRuleBuilder<T, string> ruleBuilder)
     {
-        return ruleBuilder.Must(uri => 
-            Uri.TryCreate(uri, UriKind.RelativeOrAbsolute, out var outUri) 
-            && (outUri.Scheme == Uri.UriSchemeHttp || outUri.Scheme == Uri.UriSchemeHttps));
+        return ruleBuilder.Must(uri =>
+            {
+                if (string.IsNullOrWhiteSpace(uri))
+                    return false;
+
+                if (!Uri.TryCreate(uri, UriKind.Absolute, out var outUri))
+                    return false;
+
+                return outUri.Scheme == Uri.UriSchemeHttp || outUri.Scheme == Uri.UriSchemeHttps;
+            })
+            .WithMessage("Url must be a valid absolute http/https URL.");
     }
 }

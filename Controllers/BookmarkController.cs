@@ -15,6 +15,10 @@ public class BookmarkController(
     IValidator<CreateBookmarkRequest> createBookmarkRequestValidator) : ControllerBase
 {
     [HttpPost]
+    [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(CreateBookmarkResponse))]
+    [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ProblemDetails))]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized, Type = typeof(ProblemDetails))]
+    [ProducesResponseType(StatusCodes.Status409Conflict, Type = typeof(ProblemDetails))]
     public async Task<ActionResult<CreateBookmarkResponse>> CreateAsync(CreateBookmarkRequest request)
     {
         await createBookmarkRequestValidator.ValidateAndThrowAsync(request);
@@ -29,6 +33,9 @@ public class BookmarkController(
     }
 
     [HttpGet("{id:long}", Name = nameof(GetByIdAsync))]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(GetBookmarkResponse))]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized, Type = typeof(ProblemDetails))]
+    [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(ProblemDetails))]
     public async Task<ActionResult<GetBookmarkResponse>> GetByIdAsync(long id)
     {
         var bookmark = await bookmarkService.GetByIdAsync(id);
@@ -36,6 +43,8 @@ public class BookmarkController(
     }
 
     [HttpGet]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<GetBookmarkResponse>))]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized, Type = typeof(ProblemDetails))]
     public async Task<ActionResult<IEnumerable<GetBookmarkResponse>>> GetAllByUserIdAsync()
     {
         var bookmarks = await bookmarkService.GetAllByUserIdAsync();
@@ -43,6 +52,10 @@ public class BookmarkController(
     }
 
     [HttpPatch("{id:long}/pin")]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized, Type = typeof(ProblemDetails))]
+    [ProducesResponseType(StatusCodes.Status403Forbidden, Type = typeof(ProblemDetails))]
+    [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(ProblemDetails))]
     public async Task<IActionResult> TogglePinAsync(long id)
     {
         await bookmarkService.TogglePinAsync(id);
@@ -50,6 +63,9 @@ public class BookmarkController(
     }
 
     [HttpPatch("{id:long}/archive")]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized, Type = typeof(ProblemDetails))]
+    [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(ProblemDetails))]
     public async Task<IActionResult> ToggleArchiveAsync(long id)
     {
         await bookmarkService.ToggleArchiveAsync(id);
@@ -57,6 +73,10 @@ public class BookmarkController(
     }
     
     [HttpDelete("{id:long}")]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized, Type = typeof(ProblemDetails))]
+    [ProducesResponseType(StatusCodes.Status403Forbidden, Type = typeof(ProblemDetails))]
+    [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(ProblemDetails))]
     public async Task<IActionResult> DeleteAsync(long id)
     {
         await bookmarkService.DeleteAsync(id);

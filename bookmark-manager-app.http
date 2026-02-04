@@ -1,6 +1,6 @@
 @bookmark_manager_app_HostAddress = http://localhost:5140/api
 // @bookmark_manager_app_HostAddress = http://localhost:8080/api
-@cookie = token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiIxYzFlMTM4Ny0xN2EzLTRkNDktYjFmNC0zZDQ0MjAxZjY0NDAiLCJzdWIiOiIxIiwiZW1haWwiOiJkaW1pdHJpLnNpZm91YUBnbWFpbC5jb20iLCJuYW1lIjoiRGltaXRyaSBTaWZvdWEiLCJuYmYiOjE3Njk5OTIzMjYsImV4cCI6MTc2OTk5NTkyNiwiaWF0IjoxNzY5OTkyMzI2LCJpc3MiOiJib29rbWFyay1tYW5hZ2VyLWFwaSIsImF1ZCI6ImJvb2ttYXJrLW1hbmFnZXItY2xpZW50In0.7W3NjIV1CDh52fAlP1qTMRABC-Wd6tyh5-2TXNtWdYk; max-age=3600; path=/; samesite=strict; httponly
+@cookie = token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiJhMTI4NjRjZi02MzJjLTRmMmEtODI2MC04MjI5MzE0YmE5NWYiLCJzdWIiOiIxIiwiZW1haWwiOiJkaW1pdHJpLnNpZm91YUBnbWFpbC5jb20iLCJuYW1lIjoiRGltaXRyaSBTaWZvdWEiLCJuYmYiOjE3NzAxNTkzNzUsImV4cCI6MTc3MDE2Mjk3NSwiaWF0IjoxNzcwMTU5Mzc1LCJpc3MiOiJib29rbWFyay1tYW5hZ2VyLWFwaSIsImF1ZCI6ImJvb2ttYXJrLW1hbmFnZXItY2xpZW50In0.LAq0o2PZwO33XNcPmi-MoN-dtcqycaYdJHze_8e5f3M; max-age=3600; path=/; samesite=strict; httponly
 
 ###
 GET {{bookmark_manager_app_HostAddress}}/health
@@ -18,7 +18,7 @@ Accept: application/json
 }
 
 ###
-POST {{bookmark_manager_app_HostAddress}}/api/auth/login
+POST {{bookmark_manager_app_HostAddress}}/auth/login
 Content-Type: application/json
 Accept: application/json
 
@@ -33,7 +33,12 @@ Accept: application/json
 Cookie: {{cookie}}
 
 ###
-POST {{bookmark_manager_app_HostAddress}}/api/bookmarks
+GET {{bookmark_manager_app_HostAddress}}/bookmarks
+Accept: application/json
+Cookie: {{cookie}}
+
+###
+POST {{bookmark_manager_app_HostAddress}}/bookmarks
 Content-Type: application/json
 Accept: application/json
 Cookie: {{cookie}}
@@ -45,27 +50,44 @@ Cookie: {{cookie}}
     "tags": [
         "Tools",
         "AI",
+        "Learning"  
+    ]
+}
+
+###
+POST {{bookmark_manager_app_HostAddress}}/bookmarks
+Content-Type: application/json
+Accept: application/json
+Cookie: {{cookie}}
+
+{
+    "title": "Claude",
+    "url": "",
+    "description": "An AI assistant created by Anthropic that can help with analysis, writing, coding, math, and creative tasks through natural conversation.",
+    "tags": [
+        "Tools",
+        "AI",
         "Learning"
     ]
 }
 
 ###
-DELETE {{bookmark_manager_app_HostAddress}}/api/bookmarks/1
+DELETE {{bookmark_manager_app_HostAddress}}/bookmarks/1
 Accept: application/json
 Cookie: {{cookie}}
 
 ###
-GET {{bookmark_manager_app_HostAddress}}/api/bookmarks/1
+GET {{bookmark_manager_app_HostAddress}}/bookmarks/1
 Accept: application/json
 Cookie: {{cookie}}
 
 ###
-PATCH {{bookmark_manager_app_HostAddress}}/api/bookmarks/1/pin
+PATCH {{bookmark_manager_app_HostAddress}}/bookmarks/1/pin
 Accept: application/json
 Cookie: {{cookie}}
 
 ###
-POST {{bookmark_manager_app_HostAddress}}/api/visits
+POST {{bookmark_manager_app_HostAddress}}/visits
 Content-Type: application/json
 Accept: application/json
 Cookie: {{cookie}}
@@ -76,11 +98,6 @@ Cookie: {{cookie}}
 }
 
 ###
-GET {{bookmark_manager_app_HostAddress}}/api/bookmarks
-Accept: application/json
-Cookie: {{cookie}}
-
-###
-GET {{bookmark_manager_app_HostAddress}}/api/tags
+GET {{bookmark_manager_app_HostAddress}}/tags
 Accept: application/json
 Cookie: {{cookie}}

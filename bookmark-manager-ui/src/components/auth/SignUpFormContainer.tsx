@@ -91,7 +91,7 @@ function FormFields(): JSX.Element {
                 </div>
             }
             <button type="submit"
-                    className="h-11.5 flex px-4 py-3 flex flex-row gap-x-2 bg-teal-700 rounded-8 items-center justify-center cursor-pointer">
+                    className="h-11.5 flex flex-row gap-x-2 px-4 py-3 bg-teal-700 rounded-8 items-center justify-center cursor-pointer">
                 {
                     isLoading && <img src={LoadingIcon} alt="Loading Icon" className="w-4 h-4 spin-slow"/>
                 }
