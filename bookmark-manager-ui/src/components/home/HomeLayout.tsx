@@ -8,7 +8,7 @@ export function HomeLayout(): JSX.Element {
     
     return (
         <div className="min-h-screen flex flex-row p-0">
-            <div className="max-xl:hidden">
+            <div className="max-lg:hidden">
                 <Sidebar/>
             </div>
             <div className={`w-full flex flex-col gap-y-2.5 px-0 pt-16.25 md:pt-19.5 relative`}>

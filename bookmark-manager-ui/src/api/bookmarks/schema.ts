@@ -10,6 +10,6 @@ export const FetchBookmarkApiResponseSchema = z.object({
     tags: z.array(z.string()),
     creationTime: z.coerce.date(),
     visitsCount: z.number(),
-    lastVisitTime: z.coerce.date()
+    lastVisitTime: z.coerce.date().nullable()
 })
 export type Bookmark = z.infer<typeof FetchBookmarkApiResponseSchema>

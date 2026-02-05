@@ -25,8 +25,8 @@ public record GetBookmarkResponse(
         bookmark.Tags
             .Select(t => t.Name)
             .ToArray(),
-        bookmark.CreationTime,
+        bookmark.CreationTime.ToUniversalTime(),
         bookmark.Visits.Count,
-        bookmark.Visits.OrderByDescending(v => v.VisitTime).FirstOrDefault()?.VisitTime
+        bookmark.Visits.OrderByDescending(v => v.VisitTime).FirstOrDefault()?.VisitTime.ToUniversalTime()
     );
 }

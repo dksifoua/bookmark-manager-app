@@ -39,7 +39,7 @@ export function BookmarkList(): JSX.Element {
                 } else if (sortBookmarksBy === "most-visited") {
                     return b.visitsCount - a.visitsCount
                 } else if (sortBookmarksBy === "last-visited") {
-                    return b.lastVisitTime.getTime() - a.lastVisitTime.getTime()
+                    return (b.lastVisitTime?.getTime() ?? 0) - (a.lastVisitTime?.getTime() ?? 0)
                 }
                 return 0
             })

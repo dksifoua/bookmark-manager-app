@@ -18,7 +18,7 @@ export function Sidebar({ openSidebar }: { openSidebar?: () => void }): JSX.Elem
     })
 
     return (
-        <div className="w-74 h-screen flex flex-col bg-neutral-0 border border-neutral-300">
+        <div className="w-74 h-full flex flex-col bg-neutral-0 border border-neutral-300">
             <div className="xl:h-19.5 flex items-center justify-center pt-5 pb-2.5 relative">
                 <Logo/>
                 {
@@ -43,12 +43,15 @@ export function Sidebar({ openSidebar }: { openSidebar?: () => void }): JSX.Elem
 }
 
 function Navigation(): JSX.Element {
-    const [selected, setSelected] = useState<"home" | "archived">("home")
-    const { setFilterArchivedBookmarks } = useGlobalStore(
+    const { filterArchivedBookmarks, setFilterArchivedBookmarks } = useGlobalStore(
         useShallow((store: GlobalStore) => ({
-            setFilterArchivedBookmarks: store.setFilterArchivedBookmarks
+            filterArchivedBookmarks: store.filterArchivedBookmarks,
+            setFilterArchivedBookmarks: store.setFilterArchivedBookmarks,
         }))
     )
+    const [selected, setSelected] = useState<"home" | "archived">(() => {
+        return filterArchivedBookmarks ? "archived" : "home"
+    })
 
     return (
         <div className="flex flex-col gap-y-4 px-4 py-5">

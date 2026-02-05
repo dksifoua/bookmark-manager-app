@@ -208,7 +208,7 @@ function BookmarkCardFooter({ isPinned, isArchived, visitCount, creationTime, la
 
     let lastVisitTimeDay = ""
     let lastVisitTimeMonth = ""
-    if (lastVisitTime) {
+    if (lastVisitTime !== null) {
         const lastVisitTimeParts = formatter.formatToParts(lastVisitTime)
         lastVisitTimeDay = lastVisitTimeParts.find(part => part.type === "day")?.value || ""
         lastVisitTimeMonth = lastVisitTimeParts.find(part => part.type === "month")?.value || ""

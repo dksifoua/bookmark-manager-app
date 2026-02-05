@@ -26,6 +26,6 @@ public class VisitController(VisitService visitService, IValidator<CreateVisitRe
         await createVisitRequestValidator.ValidateAndThrowAsync(request);
         
         var visit = await visitService.CreateAsync(new Visit{ BookmarkId = request.BookmarkId, VisitTime = request.VisitTime});
-        return CreatedAtRoute(nameof(GetVisitByIdAsync), new { Id = visit.VisitId }, new VisitResponse(visit.BookmarkId, visit.VisitTime));
+        return CreatedAtRoute(nameof(GetVisitByIdAsync), new { Id = visit.VisitId }, VisitResponse.FromModel(visit));
     }
 }
