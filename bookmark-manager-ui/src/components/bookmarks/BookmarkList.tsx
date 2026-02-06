@@ -1,4 +1,4 @@
-import { type JSX, useRef, useState } from "react"
+import { type JSX, useEffect, useRef, useState } from "react"
 import { useCloseModal } from "@/hooks/modal.hook"
 import SortIcon from "@/assets/images/icon-sort.svg"
 import CheckIcon from "@/assets/images/icon-check.svg"
@@ -8,6 +8,8 @@ import { fetchBookmarks } from "@/api/bookmarks"
 import type { Bookmark } from "@/api/bookmarks/schema"
 import { type GlobalStore, useGlobalStore } from "@/store"
 import { useShallow } from "zustand/react/shallow"
+import { UnauthorizedApiError } from "@/api/errors/UnauthorizedApiError"
+import { useAuthContext } from "@/hooks/auth.hook"
 
 export function BookmarkList(): JSX.Element {
     const ref = useRef<HTMLDivElement>(null)
@@ -22,7 +24,7 @@ export function BookmarkList(): JSX.Element {
         }))
     )
 
-    const { data: bookmarks } = useQuery({
+    const { data: bookmarks, isError, error } = useQuery({
         queryKey: ["bookmarks"],
         queryFn: fetchBookmarks,
         select: (data: Bookmark[]): Bookmark[] =>
@@ -46,6 +48,14 @@ export function BookmarkList(): JSX.Element {
     })
 
     useCloseModal(ref, (): void => setIsDropdownOpen(false))
+    
+    const { logout } = useAuthContext()
+    useEffect(() => {
+        if (isError && error instanceof UnauthorizedApiError) {
+            logout()
+        }
+    }, [isError, error, logout])
+    
 
     return (
         <div className="flex flex-col gap-y-5 px-8 pt-8 pb-16">

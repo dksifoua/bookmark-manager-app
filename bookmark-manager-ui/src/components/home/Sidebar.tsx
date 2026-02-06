@@ -1,4 +1,4 @@
-import { type ChangeEvent, type JSX, useState } from "react"
+import { type ChangeEvent, type JSX, useEffect, useState } from "react"
 import { Logo } from "@/components/Logo"
 import HomeIcon from "@/assets/images/icon-home.svg"
 import ArchiveIcon from "@/assets/images/icon-archive.svg"
@@ -8,14 +8,23 @@ import { fetchTagCount } from "@/api/tags"
 import type { TagCount } from "@/api/tags/schema"
 import { type GlobalStore, useGlobalStore } from "@/store"
 import { useShallow } from "zustand/react/shallow"
+import { useAuthContext } from "@/hooks/auth.hook"
+import { UnauthorizedApiError } from "@/api/errors/UnauthorizedApiError"
 
 export function Sidebar({ openSidebar }: { openSidebar?: () => void }): JSX.Element {
-    const { data: tags, isLoading } = useQuery({
+    const { data: tags, isLoading, isError, error } = useQuery({
         queryKey: ["tags"],
         queryFn: fetchTagCount,
         select: (tags: TagCount[]): TagCount[] =>
             [...tags].sort((a: TagCount, b: TagCount): number => a.name.localeCompare(b.name))
     })
+
+    const { logout } = useAuthContext()
+    useEffect(() => {
+        if (isError && error instanceof UnauthorizedApiError) {
+            logout()
+        }
+    }, [isError, error, logout])
 
     return (
         <div className="w-74 h-full flex flex-col bg-neutral-0 border border-neutral-300">

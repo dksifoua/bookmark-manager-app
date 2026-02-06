@@ -24,7 +24,7 @@ Accept: application/json
 
 {
     "email": "dimitri.sifoua@gmail.com",
-    "password": "Password123"
+    "password": "Password1234"
 }
 
 ###

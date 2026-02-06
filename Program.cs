@@ -8,12 +8,13 @@ using bookmark_manager_app.Services.Utils;
 using dotenv.net;
 using FluentValidation;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Scalar.AspNetCore;
 
-DotEnv.Load(); 
+DotEnv.Load();
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -81,10 +82,12 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJw
     {
         OnMessageReceived = context =>
         {
-            if (context.Request.Cookies.TryGetValue("token", out var token))
+            if (context.Request.Cookies.TryGetValue("token", out var token) && !string.IsNullOrWhiteSpace(token))
             {
                 context.Token = token;
             }
+
+            context.HttpContext.Items["TokenProvided"] = !string.IsNullOrWhiteSpace(context.Token);
 
             return Task.CompletedTask;
         },
@@ -92,11 +95,35 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJw
         {
             if (context.Exception is SecurityTokenExpiredException)
             {
-                context.Response.Headers.Append("Token-Expired", "true");
+                context.HttpContext.Items["TokenExpired"] = true;
             }
 
-            var logger = context.HttpContext.RequestServices.GetRequiredService<ILogger<Program>>();
-            logger.LogWarning("Authentication failed: {ExceptionMessage}", context.Exception.Message);
+            return Task.CompletedTask;
+        },
+        OnChallenge = context =>
+        {
+            var endpoint = context.HttpContext.GetEndpoint();
+            var isProtectedEndpoint = endpoint?.Metadata.GetMetadata<IAuthorizeData>() != null;
+            if (!isProtectedEndpoint)
+            {
+                return Task.CompletedTask;
+            }
+
+            var tokenProvided = context.HttpContext.Items.TryGetValue("TokenProvided", out var providedObj)
+                                && providedObj is true;
+
+            var tokenExpired = context.HttpContext.Items.TryGetValue("TokenExpired", out var expiredObj)
+                               && expiredObj is true;
+
+
+            if (!tokenProvided)
+            {
+                context.Response.Headers["Token-Missing"] = "true";
+            }
+            else if (tokenExpired)
+            {
+                context.Response.Headers["Token-Expired"] = "true";
+            }
 
             return Task.CompletedTask;
         }
@@ -119,6 +146,7 @@ builder.Services.AddCors(options =>
         if (allowedOrigins != null)
         {
             policy.WithOrigins(allowedOrigins)
+                .WithExposedHeaders("Token-Missing", "Token-Expired", "WWW-Authenticate")
                 .AllowCredentials()
                 .AllowAnyMethod()
                 .AllowAnyHeader();

@@ -21,11 +21,23 @@ export async function parseKnownErrors({ expectedStatusCode, response }: {
         throw new BadRequestApiError(parsedResponse.data)
     }
     if (response.status === 401) {
-        const parsedResponse = UnauthorizedApiResponseSchema.safeParse(await response.json())
-        if (!parsedResponse.success) {
-            throw parsedResponse.error
+        if (response.headers.get("Content-Length") === "0") {
+            const tokenMissing = response.headers.get("Token-Missing")
+            const tokenExpired = response.headers.get("Token-Expired")
+            if (tokenMissing === "true" || tokenExpired === "true") {
+                throw new UnauthorizedApiError({
+                    title: "Token is missing or expired",
+                    status: 401,
+                    detail: "The provided token is either missing or has expired. Please authenticate again."
+                })
+            } 
+        } else {
+            const parsedResponse = UnauthorizedApiResponseSchema.safeParse(await response.json())
+            if (!parsedResponse.success) {
+                throw parsedResponse.error
+            }
+            throw new UnauthorizedApiError(parsedResponse.data)
         }
-        throw new UnauthorizedApiError(parsedResponse.data)
     }
     if (response.status === 403) {
         const parsedResponse = ForbiddenApiResponseSchema.safeParse(await response.json())
