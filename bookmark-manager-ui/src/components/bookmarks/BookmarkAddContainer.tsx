@@ -117,7 +117,7 @@ export function BookmarkAddContainer({ closeModal }: { closeModal: () => void })
             </div>
             <div className="flex flex-col gap-y-5">
                 <div className="flex flex-col gap-y-1.5">
-                    <label htmlFor="tags" className="text-preset-4 color-neutral-900">Tags *</label>
+                    <label htmlFor="tags" className="text-preset-4 color-neutral-900">Tags (comma separated) *</label>
                     <div className="flex flex-wrap gap-2 mb-2">
                         {
                             tags.map((tag: string, index: number): JSX.Element => (
