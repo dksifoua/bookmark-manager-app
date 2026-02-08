@@ -22,13 +22,14 @@ export async function parseKnownErrors({ expectedStatusCode, response }: {
     }
     if (response.status === 401) {
         if (response.headers.get("Content-Length") === "0") {
+            const tokenInvalid = response.headers.get("Token-Invalid")
             const tokenMissing = response.headers.get("Token-Missing")
             const tokenExpired = response.headers.get("Token-Expired")
-            if (tokenMissing === "true" || tokenExpired === "true") {
+            if (tokenInvalid === "true" || tokenMissing === "true" || tokenExpired === "true") {
                 throw new UnauthorizedApiError({
-                    title: "Token is missing or expired",
+                    title: "Token is missing, invalid, or expired",
                     status: 401,
-                    detail: "The provided token is either missing or has expired. Please authenticate again."
+                    detail: "The provided token is either missing, invalid, or has expired. Please authenticate again."
                 })
             } 
         } else {

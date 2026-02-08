@@ -97,6 +97,10 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJw
             {
                 context.HttpContext.Items["TokenExpired"] = true;
             }
+            else
+            {
+                context.HttpContext.Items["TokenInvalid"] = true;
+            }
 
             return Task.CompletedTask;
         },
@@ -111,21 +115,26 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJw
 
             var tokenProvided = context.HttpContext.Items.TryGetValue("TokenProvided", out var providedObj)
                                 && providedObj is true;
-
-            var tokenExpired = context.HttpContext.Items.TryGetValue("TokenExpired", out var expiredObj)
-                               && expiredObj is true;
-
-
             if (!tokenProvided)
             {
                 context.Response.Headers["Token-Missing"] = "true";
-            }
-            else if (tokenExpired)
-            {
-                context.Response.Headers["Token-Expired"] = "true";
+                return Task.CompletedTask;
             }
 
+            var tokenInvalid = context.HttpContext.Items.TryGetValue("TokenInvalid", out var invalidObj)
+                               && invalidObj is true;
+            if (tokenInvalid)
+            {
+                context.Response.Headers["Token-Invalid"] = "true";
+                return Task.CompletedTask;
+            }
+            
+            var tokenExpired = context.HttpContext.Items.TryGetValue("TokenExpired", out var expiredObj)
+                               && expiredObj is true;
+            if (!tokenExpired) return Task.CompletedTask;
+            context.Response.Headers["Token-Expired"] = "true";
             return Task.CompletedTask;
+
         }
     };
 });
@@ -146,7 +155,7 @@ builder.Services.AddCors(options =>
         if (allowedOrigins != null)
         {
             policy.WithOrigins(allowedOrigins)
-                .WithExposedHeaders("Token-Missing", "Token-Expired", "WWW-Authenticate")
+                .WithExposedHeaders("Token-Invalid", "Token-Missing", "Token-Expired", "WWW-Authenticate")
                 .AllowCredentials()
                 .AllowAnyMethod()
                 .AllowAnyHeader();
