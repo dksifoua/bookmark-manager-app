@@ -1,7 +1,6 @@
 import { type JSX, useEffect, useRef, useState } from "react"
 import { useCloseModal } from "@/hooks/modal.hook"
-import SortIcon from "@/assets/images/icon-sort.svg"
-import CheckIcon from "@/assets/images/icon-check.svg"
+import { SortIcon, CheckIcon } from "@/components/icons"
 import { BookmarkCard } from "@/components/bookmarks/BookmarkCard"
 import { useQuery } from "@tanstack/react-query"
 import { fetchBookmarks } from "@/api/bookmarks"
@@ -64,7 +63,7 @@ export function BookmarkList(): JSX.Element {
                 <button
                     onClick={(): void => setIsDropdownOpen(!isDropdownOpen)}
                     className="w-29 h-10.5 flex flex-row gap-x-1 px-3 py-2.5 items-center justify-between bg-neutral-0 rounded-8 cursor-pointer">
-                    <img src={SortIcon} alt="Sort Icon" className="w-5 h-5"/>
+                    <SortIcon className="w-5 h-5"/>
                     <p className="text-preset-3 text-neutral-900 w-20">Sort by</p>
                 </button>
                 <div className="absolute right-0 top-[125%] z-10">
@@ -109,7 +108,7 @@ function SortByDropdown({ closeDropdown }: { closeDropdown: () => void }): JSX.E
                 }`}
             >
                 <p className="text-preset-4 text-neutral-800">Recently added</p>
-                {sortBookmarksBy === "recently-added" && <img src={CheckIcon} alt="Check Icon" className="w-4 h-4"/>}
+                {sortBookmarksBy === "recently-added" && <CheckIcon className="w-4 h-4"/>}
             </button>
             <button
                 onClick={(): void => {
@@ -125,7 +124,7 @@ function SortByDropdown({ closeDropdown }: { closeDropdown: () => void }): JSX.E
                 }`}
             >
                 <p className="text-preset-4 text-neutral-800">Last visited</p>
-                {sortBookmarksBy === "last-visited" && <img src={CheckIcon} alt="Check Icon" className="w-4 h-4"/>}
+                {sortBookmarksBy === "last-visited" && <CheckIcon className="w-4 h-4"/>}
             </button>
             <button
                 onClick={(): void => {
@@ -141,7 +140,7 @@ function SortByDropdown({ closeDropdown }: { closeDropdown: () => void }): JSX.E
                 }`}
             >
                 <p className="text-preset-4 text-neutral-800">Most visited</p>
-                {sortBookmarksBy === "most-visited" && <img src={CheckIcon} alt="Check Icon" className="w-4 h-4"/>}
+                {sortBookmarksBy === "most-visited" && <CheckIcon className="w-4 h-4"/>}
             </button>
         </div>
     )

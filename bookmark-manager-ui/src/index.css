@@ -32,7 +32,7 @@
     --color-neutral-900: #051513;
     --color-neutral-800: #4C5C59;
     --color-neutral-500: #899492;
-    --color-neutral-400: #COCFCC;
+    --color-neutral-400: #C0CFCC;
     --color-neutral-300: #DDE9E7;
     --color-neutral-100: #E8F0EF;
     --color-neutral-0: #FFFFFF;
@@ -96,6 +96,20 @@
             opacity: 1;
         }
     }
+}
+
+.dark {
+    --color-neutral-0: #001F1F;
+    --color-neutral-100: #001414;
+    --color-neutral-300: #004241;
+    --color-neutral-400: #004746;
+    --color-neutral-500: #00706E;
+    --color-neutral-800: #B1B9B9;
+    --color-neutral-900: #FFFFFF;
+    
+    --color-neutral-d-800: #001F1F;
+    --color-neutral-d-600: #002E2D;
+    --color-neutral-d-400: #004746;
 }
 
 @layer base {

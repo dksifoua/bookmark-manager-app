@@ -1,8 +1,6 @@
 import { type ChangeEvent, type JSX, useEffect, useState } from "react"
 import { Logo } from "@/components/Logo"
-import HomeIcon from "@/assets/images/icon-home.svg"
-import ArchiveIcon from "@/assets/images/icon-archive.svg"
-import CloseIcon from "@/assets/images/icon-close.svg"
+import { HomeIcon, ArchiveIcon, CloseIcon } from "@/components/icons"
 import { useQuery } from "@tanstack/react-query"
 import { fetchTagCount } from "@/api/tags"
 import type { TagCount } from "@/api/tags/schema"
@@ -33,7 +31,7 @@ export function Sidebar({ openSidebar }: { openSidebar?: () => void }): JSX.Elem
                 {
                     openSidebar &&
                     <button onClick={openSidebar} className="xl:hidden absolute top-2.5 right-2.5 cursor-pointer">
-                        <img src={CloseIcon} alt="Close Icon" className="w-8 h-8"/>
+                        <CloseIcon className="w-8 h-8"/>
                     </button>
                 }
             </div>
@@ -75,7 +73,7 @@ function Navigation(): JSX.Element {
                         setFilterArchivedBookmarks(false)
                     }
                 }}>
-                    <img src={HomeIcon} alt="Home Icon" className="w-5 h-5"/>
+                    <HomeIcon className="w-5 h-5"/>
                     <p className="text-preset-3 text-neutral-900">Home</p>
                 </button>
                 <button className={`flex flex-row gap-x-3 items-center justify-start px-3 py-2 border ${
@@ -88,7 +86,7 @@ function Navigation(): JSX.Element {
                         setFilterArchivedBookmarks(true)
                     }
                 }}>
-                    <img src={ArchiveIcon} alt="Archive Icon" className="w-5 h-5"/>
+                    <ArchiveIcon className="w-5 h-5"/>
                     <p className="text-preset-3 text-neutral-800">Archived</p>
                 </button>
             </div>
@@ -120,12 +118,12 @@ function Tag({ tag }: { tag: TagCount }): JSX.Element {
         <div className="h-10.5 flex flex-row gap-x-3 px-3 py-2 items-center justify-between">
             <label className="w-full flex flex-row gap-x-2 items-center justify-start">
                 <input type="checkbox" checked={tagFilters.includes(name)} onChange={handleCheck}
-                       className={`size-4 border border-neutral-500 cursor-pointer`}
+                       className={`appearance-none size-4 grid place-content-center bg-inherit checked:bg-neutral-500 border border-neutral-500 rounded-4 cursor-pointer`}
                 />
                 <span className="text-preset-3 text-neutral-800">{name}</span>
             </label>
             <div
-                className="w-6 h-6 flex px-2 py-0.5 items-center justify-center rounded-full bg-neutral-100 border border-neutral-300 size-4">
+                className="w-6 h-6 flex px-2 py-0.5 items-center justify-center rounded-full bg-neutral-100 dark:bg-neutral-d-600 border border-neutral-300 size-4">
                 <span className="text-preset-5 text-neutral-800">{
                     filterArchivedBookmarks ? archivedCount : count
                 }</span>

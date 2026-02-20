@@ -2,7 +2,7 @@ import { type JSX, type SyntheticEvent, useState } from "react"
 import { Logo } from "@/components/Logo"
 import { Link } from "react-router"
 import { useAuthContext } from "@/hooks/auth.hook"
-import LoadingIcon from "@/assets/images/icon-loading.svg"
+import { LoadingIcon } from "@/components/icons"
 
 export function SignInFormContainer(): JSX.Element {
 
@@ -80,11 +80,14 @@ function FormFields(): JSX.Element {
                 </div>
             }
             <button type="submit"
-                    className="h-11.5 flex flex-row gap-x-2 px-4 py-3 bg-teal-700 rounded-8 items-center justify-center cursor-pointer">
+                    className={`h-11.5 flex flex-row gap-x-2 px-4 py-3 bg-teal-700 rounded-8 items-center justify-center ${
+                        isLoading ? "opacity-50 cursor-not-allowed" : ""
+                    }`}>
                 {
-                    isLoading && <img src={LoadingIcon} alt="Loading Icon" className="w-4 h-4 spin-slow"/>
+                    isLoading
+                        ? <LoadingIcon className="w-8 h-8"/>
+                        : <p className="text-preset-3 text-neutral-0 dark:text-neutral-d-0">Log in</p>
                 }
-                <p className="text-preset-3 text-neutral-0">Log in</p>
             </button>
         </form>
     )

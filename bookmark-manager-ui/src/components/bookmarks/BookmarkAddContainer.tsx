@@ -1,10 +1,9 @@
 import { type JSX, type SyntheticEvent, useState } from "react"
-import CloseIcon from "@/assets/images/icon-close.svg"
+import { CloseIcon, LoadingIcon } from "@/components/icons"
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 import { fetchTagCount } from "@/api/tags"
 import type { TagCount } from "@/api/tags/schema"
 import { addBookmark } from "@/api/bookmarks"
-import LoadingIcon from "@/assets/images/icon-loading.svg"
 import { ApiError } from "@/api/errors/ApiError"
 import type { Nullable } from "@/types"
 import type { ErrorApiResponse } from "@/api/errors/schema"
@@ -54,7 +53,7 @@ export function BookmarkAddContainer({ closeModal }: { closeModal: () => void })
         <form onSubmit={handleSubmit} className="w-85.75 md:w-md xl:w-142.5 flex flex-col gap-y-8 p-8 rounded-16 bg-neutral-0 relative">
             <button type="reset" onClick={closeModal}
                     className="w-8 h-8 flex absolute top-2.5 right-2.5 rounded-8 border border-neutral-400 cursor-pointer items-center justify-center">
-                <img src={CloseIcon} alt="Close Icon" className="w-5 h-5"/>
+                <CloseIcon className="w-5 h-5"/>
             </button>
             <div className="flex flex-col gap-y-2">
                 <p className="text-preset-1 text-neutral-900">Add a bookmark</p>
@@ -190,7 +189,7 @@ export function BookmarkAddContainer({ closeModal }: { closeModal: () => void })
                 <button type="submit"
                     className="h-11.5 flex flex-row gap-x-2 px-4 py-3 bg-teal-700 rounded-8 items-center justify-center cursor-pointer">
                     {
-                        isPending && <img src={LoadingIcon} alt="Loading Icon" className="w-4 h-4 spin-slow"/>
+                        isPending && <LoadingIcon className="w-4 h-4 animate-spin spin-slow"/>
                     }
                     <p className="text-preset-3 text-neutral-0">Add Bookmark</p>
                 </button>

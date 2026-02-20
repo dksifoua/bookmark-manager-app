@@ -1,18 +1,20 @@
 import { type JSX, useRef, useState } from "react"
-import MenuBookmarkIcon from "@/assets/images/icon-menu-bookmark.svg"
-import PinIcon from "@/assets/images/icon-pin.svg"
-import UnpinIcon from "@/assets/images/icon-unpin.svg"
-import VisitCountIcon from "@/assets/images/icon-visit-count.svg"
-import LastVisitedIcon from "@/assets/images/icon-last-visited.svg"
-import CreatedIcon from "@/assets/images/icon-created.svg"
+import {
+    ArchiveIcon,
+    CopyIcon,
+    CreatedIcon,
+    DeleteIcon,
+    EditIcon,
+    LastVisitedIcon,
+    MenuBookmarkIcon,
+    PinIcon,
+    UnarchiveIcon,
+    UnpinIcon,
+    VisitCountIcon,
+    VisitIcon
+} from "@/components/icons"
 import type { Nullable } from "@/types"
 import type { Bookmark } from "@/api/bookmarks/schema"
-import VisitIcon from "@/assets/images/icon-visit.svg"
-import CopyIcon from "@/assets/images/icon-copy.svg"
-import EditIcon from "@/assets/images/icon-edit.svg"
-import ArchiveIcon from "@/assets/images/icon-archive.svg"
-import UnarchiveIcon from "@/assets/images/icon-unarchive.svg"
-import DeleteIcon from "@/assets/images/icon-delete.svg"
 import { useCloseModal } from "@/hooks/modal.hook"
 import { useMutation, useQueryClient } from "@tanstack/react-query"
 import { visitBookmark } from "@/api/visits"
@@ -64,9 +66,9 @@ function BookmarkCardHeader({ bookmark }: { bookmark: Bookmark }): JSX.Element {
             </div>
             <button
                 onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-                className="w-8 h-8 flex border border-neutral-500 rounded-8 items-center justify-center cursor-pointer"
+                className="w-8 h-8 flex border border-neutral-400 rounded-8 items-center justify-center cursor-pointer"
             >
-                <img src={MenuBookmarkIcon} alt="Menu Bookmark Icon"/>
+                <MenuBookmarkIcon className={`w-5 h-5`}/>
             </button>
             <div className="absolute right-0 top-full">
                 {
@@ -83,7 +85,7 @@ function BookmarkActionDropdown({ bookmark, closeDropdown }: {
     closeDropdown: () => void
 }): JSX.Element {
     const { url, isPinned, isArchived } = bookmark
-    
+
     const queryClient = useQueryClient()
     const { setIsNotificationOpen, setIsArchiveDialogOpen, setIsDeleteDialogOpen } = useGlobalStore(
         useShallow((store: GlobalStore) => ({
@@ -118,7 +120,7 @@ function BookmarkActionDropdown({ bookmark, closeDropdown }: {
         setIsArchiveDialogOpen(true, bookmark)
     }
 
-    function handleDelete(): void { 
+    function handleDelete(): void {
         closeDropdown()
         setIsDeleteDialogOpen(true, bookmark)
     }
@@ -128,7 +130,7 @@ function BookmarkActionDropdown({ bookmark, closeDropdown }: {
             <button onClick={handleVisit}
                     className="w-full h-9 flex flex-row gap-x-2.5 p-2 rounded-8 items-center cursor-pointer hover:bg-neutral-300"
             >
-                <img src={VisitIcon} alt="Visit Icon" className="w-4 h-4"/>
+                <VisitIcon className="w-4 h-4"/>
                 <p className="text-preset-4 text-neutral-800">Visit</p>
             </button>
             <button onClick={(): void => {
@@ -136,43 +138,35 @@ function BookmarkActionDropdown({ bookmark, closeDropdown }: {
                 setIsNotificationOpen(true, "bookmark-link-copied")
             }}
                     className="w-full h-9 flex flex-row gap-x-2.5 p-2 rounded-8 items-center cursor-pointer hover:bg-neutral-300">
-                <img src={CopyIcon} alt="Copy Icon" className="w-4 h-4"/>
+                <CopyIcon className="w-4 h-4"/>
                 <p className="text-preset-4 text-neutral-800">Copy URL</p>
             </button>
             {
                 !isArchived
                 && <button onClick={handlePin}
                            className="w-full h-9 flex flex-row gap-x-2.5 p-2 rounded-8 items-center cursor-pointer hover:bg-neutral-300">
-                    <img src={isPinned ? UnpinIcon : PinIcon} alt="Pin Icon" className="w-4 h-4"/>
-                    <p className="text-preset-4 text-neutral-800">
-                        {
-                            isPinned ? "Unpin" : "Pin"
-                        }
-                    </p>
+                    {isPinned ? <UnpinIcon className="w-4 h-4"/> : <PinIcon className="w-4 h-4"/>}
+                    <p className="text-preset-4 text-neutral-800">{isPinned ? "Unpin" : "Pin"}</p>
                 </button>
             }
             {
                 !isArchived
                 && <button
                     className="w-full h-9 flex flex-row gap-x-2.5 p-2 rounded-8 items-center cursor-pointer hover:bg-neutral-300">
-                    <img src={EditIcon} alt="Edit Icon" className="w-4 h-4"/>
+                    <EditIcon className="w-4 h-4"/>
                     <p className="text-preset-4 text-neutral-800">Edit</p>
                 </button>
             }
             <button onClick={handleArchive}
                     className="w-full h-9 flex flex-row gap-x-2.5 p-2 rounded-8 items-center cursor-pointer hover:bg-neutral-300">
-                <img src={isArchived ? UnarchiveIcon : ArchiveIcon} alt="(Un)Archive Icon" className="w-4 h-4"/>
-                <p className="text-preset-4 text-neutral-800">
-                    {
-                        isArchived ? "Unarchive" : "Archive"
-                    }
-                </p>
+                {isArchived ? <UnarchiveIcon className="w-4 h-4"/> : <ArchiveIcon className="w-4 h-4"/>}
+                <p className="text-preset-4 text-neutral-800">{isArchived ? "Unarchive" : "Archive"}</p>
             </button>
             {
                 isArchived
                 && <button onClick={handleDelete}
                            className="w-full h-9 flex flex-row gap-x-2.5 p-2 rounded-8 items-center cursor-pointer hover:bg-neutral-300">
-                    <img src={DeleteIcon} alt="Delete Icon" className="w-4 h-4"/>
+                    <DeleteIcon className="w-4 h-4"/>
                     <p className="text-preset-4 text-neutral-800">Delete Permanently</p>
                 </button>
             }
@@ -186,8 +180,8 @@ function BookmarkCardTags({ tags }: { tags: string[] }): JSX.Element {
         <div className="flex flex-row gap-x-2">
             {
                 tags.map((tag: string, index: number): JSX.Element => (
-                    <div key={index} className="flex px-2 py-0.5 rounded-4 bg-neutral-100">
-                        <p className="text-preset-5">{tag}</p>
+                    <div key={index} className="flex px-2 py-0.5 rounded-4 bg-neutral-100 dark:bg-neutral-d-600">
+                        <p className="text-preset-5 text-neutral-800">{tag}</p>
                     </div>
                 ))
             }
@@ -215,15 +209,16 @@ function BookmarkCardFooter({ isPinned, isArchived, visitCount, creationTime, la
     }
 
     return (
-        <div className="h-10.25 flex flex-row gap-x-8 px-4 py-3 border border-neutral-300 items-center justify-between">
+        <div
+            className="h-10.25 flex flex-row gap-x-8 px-4 py-3 border-t border-neutral-300 items-center justify-between">
             <div className="flex flex-row gap-x-4 items-center">
                 <div className="flex flex-row gap-x-1.5 items-center justify-between">
-                    <img src={VisitCountIcon} alt="Visit Count Icon" className="w-3 h-3"/>
-                    <p className="text-preset-5">{visitCount}</p>
+                    <VisitCountIcon className="w-3 h-3"/>
+                    <p className="text-preset-5 text-neutral-800">{visitCount}</p>
                 </div>
                 <div className="flex flex-row gap-x-1.5 items-center justify-between">
-                    <img src={LastVisitedIcon} alt="Last Visited Icon" className="w-3 h-3"/>
-                    <p className="text-preset-5">
+                    <LastVisitedIcon className="w-3 h-3"/>
+                    <p className="text-preset-5 text-neutral-800">
                         {
                             lastVisitTime === null
                                 ? "Never"
@@ -232,8 +227,8 @@ function BookmarkCardFooter({ isPinned, isArchived, visitCount, creationTime, la
                     </p>
                 </div>
                 <div className="flex flex-row gap-x-1.5 items-center justify-between">
-                    <img src={CreatedIcon} alt="Created Icon" className="w-3 h-3"/>
-                    <p className="text-preset-5">{`${creationTimeDay} ${creationTimeMonth}`}</p>
+                    <CreatedIcon className="w-3 h-3"/>
+                    <p className="text-preset-5 text-neutral-800">{`${creationTimeDay} ${creationTimeMonth}`}</p>
                 </div>
             </div>
             <div className="flex items-center justify-center">
@@ -241,7 +236,7 @@ function BookmarkCardFooter({ isPinned, isArchived, visitCount, creationTime, la
                     isArchived
                         ?
                         <p className="px-1.5 rounded-4 text-preset-5 text-neutral-800 bg-neutral-300 border border-neutral-300">Archived</p>
-                        : isPinned && <img src={PinIcon} alt="Pin Icon" className="w-4 h-4"/>
+                        : isPinned && <PinIcon className="w-4 h-4"/>
                 }
             </div>
         </div>

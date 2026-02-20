@@ -1,5 +1,5 @@
 import { type JSX } from "react"
-import CloseIcon from "@/assets/images/icon-close.svg"
+import { CloseIcon } from "@/components/icons"
 import type { Bookmark } from "@/api/bookmarks/schema"
 import { useMutation, useQueryClient } from "@tanstack/react-query"
 import { deleteBookmark } from "@/api/bookmarks"
@@ -32,7 +32,7 @@ export function BookmarkDeleteContainer({ bookmark, closeModal }: {
         <div className="w-112.5 flex flex-col gap-y-8 p-8 rounded-16 bg-neutral-0 relative">
             <button onClick={closeModal}
                     className="w-8 h-8 flex absolute top-2.5 right-2.5 rounded-8 border border-neutral-400 cursor-pointer items-center justify-center">
-                <img src={CloseIcon} alt="Close Icon" className="w-5 h-5"/>
+                <CloseIcon className="w-5 h-5"/>
             </button>
             <div className="flex flex-col gap-y-2">
                 <p className="text-preset-1 text-neutral-900">Delete bookmark</p>
@@ -47,7 +47,7 @@ export function BookmarkDeleteContainer({ bookmark, closeModal }: {
                 </button>
                 <button onClick={() => mutate({ bookmarkId })}
                     className="h-11.5 flex px-4 py-3 bg-red-800 rounded-8 items-center justify-center cursor-pointer">
-                    <p className="text-preset-3 text-neutral-0">Delete Permanently</p>
+                    <p className="text-preset-3 text-neutral-0 dark:text-neutral-d-0">Delete Permanently</p>
                 </button>
             </div>
         </div>

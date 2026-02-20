@@ -2,7 +2,7 @@ import type { JSX, SyntheticEvent } from "react"
 import { Logo } from "@/components/Logo"
 import { Link } from "react-router"
 import { useAuthContext } from "@/hooks/auth.hook"
-import LoadingIcon from "@/assets/images/icon-loading.svg"
+import { LoadingIcon } from "@/components/icons"
 
 export function SignUpFormContainer(): JSX.Element {
 
@@ -48,7 +48,7 @@ function FormFields(): JSX.Element {
                     <div className="flex flex-col gap-y-1.5">
                         {
                             error.errors["Fullname"].map((error: string, index: number) => (
-                                <span key={index} className="text-preset-4 text-red-800">{error}</span>
+                                <span key={index} className="text-preset-4 text-red-600">{error}</span>
                             ))
                         }
                     </div>
@@ -63,7 +63,7 @@ function FormFields(): JSX.Element {
                     <div className="flex flex-col gap-y-1.5">
                         {
                             error.errors["Email"].map((error: string, index: number) => (
-                                <span key={index} className="text-preset-4 text-red-800">{error}</span>
+                                <span key={index} className="text-preset-4 text-red-600">{error}</span>
                             ))
                         }
                     </div>
@@ -78,7 +78,7 @@ function FormFields(): JSX.Element {
                     <div className="flex flex-col gap-y-1.5">
                         {
                             error.errors["Password"].map((error: string, index: number) => (
-                                <span key={index} className="text-preset-4 text-red-800">{error}</span>
+                                <span key={index} className="text-preset-4 text-red-600">{error}</span>
                             ))
                         }
                     </div>
@@ -87,15 +87,18 @@ function FormFields(): JSX.Element {
             {
                 error !== null && "detail" in error &&
                 <div className="flex flex-col gap-y-1.5">
-                    <span className="text-preset-4 text-red-800">{error.detail}</span>
+                    <span className="text-preset-4 text-red-600">{error.detail}</span>
                 </div>
             }
             <button type="submit"
-                    className="h-11.5 flex flex-row gap-x-2 px-4 py-3 bg-teal-700 rounded-8 items-center justify-center cursor-pointer">
+                    className={`h-11.5 flex flex-row gap-x-2 px-4 py-3 bg-teal-700 rounded-8 items-center justify-center ${
+                        isLoading ? "opacity-50 cursor-not-allowed" : ""
+                    }`}>
                 {
-                    isLoading && <img src={LoadingIcon} alt="Loading Icon" className="w-4 h-4 spin-slow"/>
+                    isLoading
+                        ? <LoadingIcon className="w-8 h-8"/>
+                        : <p className="text-preset-3 text-neutral-0 dark:text-neutral-d-0">Create account</p>
                 }
-                <p className="text-preset-3 text-neutral-0">Create account</p>
             </button>
         </form>
     )
