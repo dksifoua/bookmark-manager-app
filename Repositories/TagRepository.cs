@@ -10,6 +10,9 @@ public class TagRepository(BookmarkDbContext context)
         await context.Tags.AsNoTracking().AnyAsync(t => t.Name == name);
 
     public async Task<IEnumerable<Tag>> GetByNames(IEnumerable<string> names) =>
+        await context.Tags.AsNoTracking().Where(t => names.Contains(t.Name)).ToListAsync();
+
+    public async Task<IEnumerable<Tag>> GetByNamesForUpdate(IEnumerable<string> names) =>
         await context.Tags.Where(t => names.Contains(t.Name)).ToListAsync();
 
     public async Task<IEnumerable<TagCount>> GetCountByUserIdAsync(long userId)

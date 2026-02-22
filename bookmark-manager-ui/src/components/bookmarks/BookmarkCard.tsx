@@ -87,10 +87,11 @@ function BookmarkActionDropdown({ bookmark, closeDropdown }: {
     const { url, isPinned, isArchived } = bookmark
 
     const queryClient = useQueryClient()
-    const { setIsNotificationOpen, setIsArchiveDialogOpen, setIsDeleteDialogOpen } = useGlobalStore(
+    const { setIsNotificationOpen, setIsArchiveDialogOpen, setUpdateDialogOpen, setIsDeleteDialogOpen } = useGlobalStore(
         useShallow((store: GlobalStore) => ({
             setIsNotificationOpen: store.setIsNotificationOpen,
             setIsArchiveDialogOpen: store.setIsArchiveDialogOpen,
+            setUpdateDialogOpen: store.setIsUpdateDialogOpen,
             setIsDeleteDialogOpen: store.setIsDeleteDialogOpen
         }))
     )
@@ -113,6 +114,11 @@ function BookmarkActionDropdown({ bookmark, closeDropdown }: {
         pinToggleFn({ bookmarkId: bookmark.bookmarkId })
         closeDropdown()
         setIsNotificationOpen(true, isPinned ? "bookmark-unpinned" : "bookmark-pinned")
+    }
+
+    function handleEdit(): void {
+        closeDropdown()
+        setUpdateDialogOpen(true, bookmark)
     }
 
     function handleArchive(): void {
@@ -151,7 +157,7 @@ function BookmarkActionDropdown({ bookmark, closeDropdown }: {
             }
             {
                 !isArchived
-                && <button
+                && <button onClick={handleEdit}
                     className="w-full h-9 flex flex-row gap-x-2.5 p-2 rounded-8 items-center cursor-pointer hover:bg-neutral-300">
                     <EditIcon className="w-4 h-4"/>
                     <p className="text-preset-4 text-neutral-800">Edit</p>

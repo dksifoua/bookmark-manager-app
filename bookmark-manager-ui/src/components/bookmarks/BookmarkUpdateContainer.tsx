@@ -3,16 +3,28 @@ import { CloseIcon, LoadingIcon } from "@/components/icons"
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 import { fetchTagCount } from "@/api/tags"
 import type { TagCount } from "@/api/tags/schema"
-import { addBookmark } from "@/api/bookmarks"
+import { updateBookmark } from "@/api/bookmarks"
 import { ApiError } from "@/api/errors/ApiError"
 import type { Nullable } from "@/types"
 import type { ErrorApiResponse } from "@/api/errors/schema"
 import { type GlobalStore, useGlobalStore } from "@/store"
 import { useShallow } from "zustand/react/shallow"
+import type { Bookmark } from "@/api/bookmarks/schema"
 import { BookmarkTagInput } from "@/components/bookmarks/BookmarkTagInput"
 
-export function BookmarkAddContainer({ closeModal }: { closeModal: () => void }): JSX.Element {
-    const [tags, setTags] = useState<string[]>([])
+export function BookmarkUpdateContainer({ bookmark, closeModal }: {
+    bookmark: Bookmark,
+    closeModal: () => void
+}): JSX.Element {
+    const {
+        bookmarkId,
+        title: bookmarkTitle,
+        url: bookmarkUrl,
+        description: bookmarkDescription,
+        tags: bookmarkTags
+    } = bookmark
+
+    const [tags, setTags] = useState<string[]>(bookmarkTags)
     const queryClient = useQueryClient()
     const { data: tagSuggestions } = useQuery({
         queryKey: ["tags"],
@@ -26,13 +38,13 @@ export function BookmarkAddContainer({ closeModal }: { closeModal: () => void })
         }))
     )
     const { mutate, isPending, error: mutationError } = useMutation({
-        mutationFn: addBookmark,
+        mutationFn: updateBookmark,
         onSuccess: (): Promise<void> => Promise.all([
             queryClient.invalidateQueries({ queryKey: ["bookmarks"] }),
             queryClient.invalidateQueries({ queryKey: ["tags"] })
         ]).then((): void => {
             closeModal()
-            setIsNotificationOpen(true, "bookmark-added")
+            setIsNotificationOpen(true, "bookmark-updated")
         })
     })
 
@@ -46,7 +58,7 @@ export function BookmarkAddContainer({ closeModal }: { closeModal: () => void })
         const description = formData.get("description") as string
         const url = formData.get("url") as string
 
-        mutate({ title, description, url, tags })
+        mutate({ bookmarkId, title, description, url, tags })
     }
 
     return (
@@ -57,17 +69,15 @@ export function BookmarkAddContainer({ closeModal }: { closeModal: () => void })
                 <CloseIcon className="w-5 h-5"/>
             </button>
             <div className="flex flex-col gap-y-2">
-                <p className="text-preset-1 text-neutral-900">Add a bookmark</p>
+                <p className="text-preset-1 text-neutral-900">Edit bookmark</p>
                 <p className="text-preset-4-md text-neutral-800">
-                    Save a link with details to keep your collection organized. We extract the favicon automatically
-                    from
-                    the URL.
+                    Update your saved link details — change the title, description, URL, or tags anytime.
                 </p>
             </div>
             <div className="flex flex-col gap-y-5">
                 <div className="flex flex-col gap-y-1.5">
                     <label htmlFor="title" className="text-preset-4 color-neutral-900">Title *</label>
-                    <input type="text" id="title" name="title" autoComplete="off" required={false}
+                    <input type="text" id="title" name="title" defaultValue={bookmarkTitle} autoComplete="off" required={false}
                            className="h-11.25 p-3 bg-neutral-0 border border-neutral-500 rounded-8"/>
                     {
                         error !== null && "errors" in error && "Title" in error.errors &&
@@ -84,7 +94,7 @@ export function BookmarkAddContainer({ closeModal }: { closeModal: () => void })
             <div className="flex flex-col gap-y-5">
                 <div className="flex flex-col gap-y-1.5">
                     <label htmlFor="url" className="text-preset-4 color-neutral-900">Website URL *</label>
-                    <input type="text" id="url" name="url" autoComplete="off" required={false}
+                    <input type="text" id="url" name="url" defaultValue={bookmarkUrl} autoComplete="off" required={false}
                            className="h-11.25 p-3 bg-neutral-0 border border-neutral-500 rounded-8"/>
                     {
                         error !== null && "errors" in error && "Url" in error.errors &&
@@ -101,7 +111,7 @@ export function BookmarkAddContainer({ closeModal }: { closeModal: () => void })
             <div className="flex flex-col gap-y-5">
                 <div className="flex flex-col gap-y-1.5">
                     <label htmlFor="description" className="text-preset-4 color-neutral-900">Description *</label>
-                    <textarea id="description" name="description" autoComplete="off" required={false}
+                    <textarea id="description" name="description" defaultValue={bookmarkDescription} autoComplete="off" required={false}
                               className="h-22.75 p-3 bg-neutral-0 border border-neutral-500 rounded-8"/>
                     {
                         error !== null && "errors" in error && "Description" in error.errors &&
@@ -134,7 +144,7 @@ export function BookmarkAddContainer({ closeModal }: { closeModal: () => void })
                     {
                         isPending ?? <LoadingIcon className="w-4 h-4"/>
                     }
-                    <p className="text-preset-3 text-neutral-0">Add Bookmark</p>
+                    <p className="text-preset-3 text-neutral-0">Save Bookmark</p>
                 </button>
             </div>
         </form>

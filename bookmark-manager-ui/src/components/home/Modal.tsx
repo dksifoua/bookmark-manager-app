@@ -6,6 +6,7 @@ import { type GlobalStore, useGlobalStore } from "@/store"
 import { BookmarkAddContainer } from "@/components/bookmarks/BookmarkAddContainer"
 import { NotificationContainer } from "@/components/NotificationContainer"
 import { BookmarkArchiveContainer } from "@/components/bookmarks/BookmarkArchiveContainer"
+import { BookmarkUpdateContainer } from "@/components/bookmarks/BookmarkUpdateContainer"
 
 export function Modal(): JSX.Element {
     const {
@@ -14,6 +15,8 @@ export function Modal(): JSX.Element {
         setIsMobileSidebarOpen,
         isAddDialogOpen,
         setIsAddDialogOpen,
+        isUpdateDialogOpen,
+        setIsUpdateDialogOpen,
         isArchiveDialogOpen,
         setIsArchiveDialogOpen,
         isDeleteDialogOpen,
@@ -28,6 +31,8 @@ export function Modal(): JSX.Element {
             bookmark: store.dialogBookmarkData,
             isAddDialogOpen: store.isAddDialogOpen,
             setIsAddDialogOpen: store.setIsAddDialogOpen,
+            isUpdateDialogOpen: store.isUpdateDialogOpen,
+            setIsUpdateDialogOpen: store.setIsUpdateDialogOpen,
             isArchiveDialogOpen: store.isArchiveDialogOpen,
             setIsArchiveDialogOpen: store.setIsArchiveDialogOpen,
             isDeleteDialogOpen: store.isDeleteDialogOpen,
@@ -50,6 +55,12 @@ export function Modal(): JSX.Element {
                 isAddDialogOpen
                 && <div className="fixed inset-0 z-50 flex items-center justify-center bg-modal-70">
                     <BookmarkAddContainer closeModal={() => setIsAddDialogOpen(false, null)}/>
+                </div>
+            }
+            {
+                isUpdateDialogOpen && bookmark
+                && <div className="fixed inset-0 z-50 flex items-center justify-center bg-modal-70">
+                    <BookmarkUpdateContainer bookmark={bookmark} closeModal={() => setIsUpdateDialogOpen(false, null)}/>
                 </div>
             }
             {

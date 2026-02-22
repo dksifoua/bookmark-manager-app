@@ -38,6 +38,24 @@ export async function addBookmark({ title, url, description, tags }: {
     await parseKnownErrors({ expectedStatusCode: 201, response })
 }
 
+export async function updateBookmark({ bookmarkId, title, url, description, tags }: {
+    bookmarkId: number,
+    title: string,
+    url: string,
+    description: string,
+    tags: string[]
+}): Promise<void> {
+    if (!apiUrl) throw new Error("BOOKMARK_MANAGER_API_URL environment variable is not set")
+
+    const response = await fetch(`${apiUrl}/bookmarks/${bookmarkId}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ title, url, description, tags }),
+        credentials: "include"
+    })
+    await parseKnownErrors({ expectedStatusCode: 204, response })
+}
+
 export async function togglePin({ bookmarkId }: {
     bookmarkId: number
 }): Promise<void> {

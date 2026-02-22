@@ -34,6 +34,9 @@ export type GlobalStore = {
     isAddDialogOpen: boolean
     setIsAddDialogOpen: (isAddDialogOpen: boolean, dialogBookmarkData: Nullable<Bookmark>) => void
 
+    isUpdateDialogOpen: boolean
+    setIsUpdateDialogOpen: (isUpdateDialogOpen: boolean, dialogBookmarkData: Nullable<Bookmark>) => void
+
     isArchiveDialogOpen: boolean
     setIsArchiveDialogOpen: (isArchiveDialogOpen: boolean, dialogBookmarkData: Nullable<Bookmark>) => void
 
@@ -98,6 +101,11 @@ export const useGlobalStore = create<GlobalStore>()(
             isAddDialogOpen: false,
             setIsAddDialogOpen: (isAddDialogOpen: boolean, dialogBookmarkData: Nullable<Bookmark>) => set(() => {
                 return { isAddDialogOpen, dialogBookmarkData }
+            }),
+
+            isUpdateDialogOpen: false,
+            setIsUpdateDialogOpen: (isUpdateDialogOpen: boolean, dialogBookmarkData: Nullable<Bookmark>) => set(() => {
+                return { isUpdateDialogOpen, dialogBookmarkData }
             }),
 
             isArchiveDialogOpen: false,

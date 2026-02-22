@@ -1,6 +1,6 @@
 @bookmark_manager_app_HostAddress = http://localhost:5140/api
 // @bookmark_manager_app_HostAddress = http://localhost:8080/api
-@cookie = token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiJlMmIwNjM4MS1lYTY5LTQ0OGItOGIyNC00ZjViNDQ0MWIxNTMiLCJzdWIiOiIxIiwiZW1haWwiOiJkaW1pdHJpLnNpZm91YUBnbWFpbC5jb20iLCJuYW1lIjoiRGltaXRyaSBTaWZvdWEiLCJuYmYiOjE3NzAyOTM0NzIsImV4cCI6MTc3MDI5NzA3MiwiaWF0IjoxNzcwMjkzNDcyLCJpc3MiOiJib29rbWFyay1tYW5hZ2VyLWFwaSIsImF1ZCI6ImJvb2ttYXJrLW1hbmFnZXItY2xpZW50In0.G6jDYo0ZBhVZZjwpkaCQDPYjtGHYUWLPYHWjGP8jidA; max-age=3600; path=/; samesite=strict; httponly
+@cookie = token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiIyOTZjNWQ0NC03MTVmLTQ2YjAtODE2Ni02ZGE2NDUwYTBjZGYiLCJzdWIiOiIxIiwiZW1haWwiOiJkaW1pdHJpLnNpZm91YUBnbWFpbC5jb20iLCJuYW1lIjoiRGltaXRyaSBTaWZvdWEiLCJuYmYiOjE3NzE3ODcwNTksImV4cCI6MTc3MTc5MDY1OSwiaWF0IjoxNzcxNzg3MDU5LCJpc3MiOiJib29rbWFyay1tYW5hZ2VyLWFwaSIsImF1ZCI6ImJvb2ttYXJrLW1hbmFnZXItY2xpZW50In0.0yD3kpY5ez_5EJ4tCdtaC0tt1-MrcZDHSpFXToxKUJ0; max-age=3600; path=/; samesite=strict; httponly
 
 ###
 GET {{bookmark_manager_app_HostAddress}}/health
@@ -24,7 +24,7 @@ Accept: application/json
 
 {
     "email": "dimitri.sifoua@gmail.com",
-    "password": "Password1234"
+    "password": "Password123"
 }
 
 ###
@@ -77,9 +77,26 @@ Accept: application/json
 Cookie: {{cookie}}
 
 ###
-GET {{bookmark_manager_app_HostAddress}}/bookmarks/1
+GET {{bookmark_manager_app_HostAddress}}/bookmarks/18
 Accept: application/json
 Cookie: {{cookie}}
+
+###
+PUT {{bookmark_manager_app_HostAddress}}/bookmarks/18
+Content-Type: application/json
+Accept: application/json
+Cookie: {{cookie}}
+
+{
+    "title": "React Cheatsheets",
+    "url": "https://react-typescript-cheatsheet.netlify.app/",
+    "description": "Cheatsheets for experienced React developers getting started with TypeScript",
+    "tags": [
+        "Learning",
+        "React",
+        "Practice"
+    ]
+}
 
 ###
 PATCH {{bookmark_manager_app_HostAddress}}/bookmarks/1/pin

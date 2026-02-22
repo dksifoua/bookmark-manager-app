@@ -12,14 +12,14 @@ namespace bookmark_manager_app.Controllers;
 [Route("/api/bookmarks")]
 public class BookmarkController(
     BookmarkService bookmarkService,
-    IValidator<CreateBookmarkRequest> createBookmarkRequestValidator) : ControllerBase
+    IValidator<CreateOrUpdateBookmarkRequest> createBookmarkRequestValidator) : ControllerBase
 {
     [HttpPost]
     [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(CreateBookmarkResponse))]
     [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ProblemDetails))]
     [ProducesResponseType(StatusCodes.Status401Unauthorized, Type = typeof(ProblemDetails))]
     [ProducesResponseType(StatusCodes.Status409Conflict, Type = typeof(ProblemDetails))]
-    public async Task<ActionResult<CreateBookmarkResponse>> CreateAsync(CreateBookmarkRequest request)
+    public async Task<ActionResult<CreateBookmarkResponse>> CreateAsync(CreateOrUpdateBookmarkRequest request)
     {
         await createBookmarkRequestValidator.ValidateAndThrowAsync(request);
 
@@ -31,7 +31,21 @@ public class BookmarkController(
         return CreatedAtRoute(nameof(GetByIdAsync), new { Id = bookmark.BookmarkId },
             new CreateBookmarkResponse(bookmark.Title, bookmark.Url, bookmark.Description, tagNames));
     }
+    
+    [HttpPut("{id:long}")]
+    [ProducesResponseType(StatusCodes.Status204NoContent, Type = typeof(CreateBookmarkResponse))]
+    [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ProblemDetails))]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized, Type = typeof(ProblemDetails))]
+    [ProducesResponseType(StatusCodes.Status409Conflict, Type = typeof(ProblemDetails))]
+    public async Task<ActionResult> UpdateAsync(long id, CreateOrUpdateBookmarkRequest request)
+    {
+        await createBookmarkRequestValidator.ValidateAndThrowAsync(request);
 
+        await bookmarkService.UpdateAsync(id, request.ToCommand());
+
+        return NoContent();
+    }
+    
     [HttpGet("{id:long}", Name = nameof(GetByIdAsync))]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(GetBookmarkResponse))]
     [ProducesResponseType(StatusCodes.Status401Unauthorized, Type = typeof(ProblemDetails))]

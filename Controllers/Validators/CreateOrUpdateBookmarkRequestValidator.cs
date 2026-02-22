@@ -3,9 +3,9 @@ using FluentValidation;
 
 namespace bookmark_manager_app.Controllers.Validators;
 
-public class CreateBookmarkRequestValidator : DefaultRequestValidator<CreateBookmarkRequest>
+public class CreateOrUpdateBookmarkRequestValidator : DefaultRequestValidator<CreateOrUpdateBookmarkRequest>
 {
-    public CreateBookmarkRequestValidator()
+    public CreateOrUpdateBookmarkRequestValidator()
     {
         RuleFor(x => x.Title).NotEmpty().MinimumLength(3).MaximumLength(200);
         RuleFor(x => x.Url).IsValidUrl().MaximumLength(2048);
