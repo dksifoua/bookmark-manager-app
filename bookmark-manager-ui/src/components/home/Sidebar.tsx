@@ -1,6 +1,6 @@
 import { type ChangeEvent, type JSX, useEffect, useState } from "react"
 import { Logo } from "@/components/Logo"
-import { HomeIcon, ArchiveIcon, CloseIcon } from "@/components/icons"
+import { HomeIcon, ArchiveIcon, CloseIcon, LoadingIcon } from "@/components/icons"
 import { useQuery } from "@tanstack/react-query"
 import { fetchTagCount } from "@/api/tags"
 import type { TagCount } from "@/api/tags/schema"
@@ -10,7 +10,7 @@ import { useAuthContext } from "@/hooks/auth.hook"
 import { UnauthorizedApiError } from "@/api/errors/UnauthorizedApiError"
 
 export function Sidebar({ openSidebar }: { openSidebar?: () => void }): JSX.Element {
-    const { data: tags, isLoading, isError, error } = useQuery({
+    const { data: tags, isFetching, isError, error } = useQuery({
         queryKey: ["tags"],
         queryFn: fetchTagCount,
         select: (tags: TagCount[]): TagCount[] =>
@@ -39,8 +39,8 @@ export function Sidebar({ openSidebar }: { openSidebar?: () => void }): JSX.Elem
             <div className="flex flex-col px-4">
                 <p className="px-3 pb-4 text-preset-5">TAGS</p>
                 {
-                    isLoading
-                        ? <p className="px-3 text-preset-3 text-neutral-800">Loading tags...</p>
+                    isFetching
+                        ? <LoadingIcon className="w-12 h-12"/>
                         : tags?.map((tag: TagCount): JSX.Element =>
                             <Tag key={tag.id} tag={tag}/>)
                 }

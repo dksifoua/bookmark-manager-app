@@ -1,6 +1,6 @@
 import { type JSX, useEffect, useRef, useState } from "react"
 import { useCloseModal } from "@/hooks/modal.hook"
-import { SortIcon, CheckIcon } from "@/components/icons"
+import { SortIcon, CheckIcon, LoadingIcon } from "@/components/icons"
 import { BookmarkCard } from "@/components/bookmarks/BookmarkCard"
 import { useQuery } from "@tanstack/react-query"
 import { fetchBookmarks } from "@/api/bookmarks"
@@ -23,7 +23,7 @@ export function BookmarkList(): JSX.Element {
         }))
     )
 
-    const { data: bookmarks, isError, error } = useQuery({
+    const { data: bookmarks, isFetching, isError, error } = useQuery({
         queryKey: ["bookmarks"],
         queryFn: fetchBookmarks,
         select: (data: Bookmark[]): Bookmark[] =>
@@ -72,11 +72,13 @@ export function BookmarkList(): JSX.Element {
             </div>
             <div className="flex flex-wrap gap-8 pt-8 items-center justify-center">
                 {
-                    !bookmarks || bookmarks.length === 0
-                        ? <p>No bookmarks to display.</p>
-                        : bookmarks?.map((bookmark: Bookmark) => (
-                            <BookmarkCard key={bookmark.bookmarkId} bookmark={bookmark}/>
-                        ))
+                    isFetching
+                        ? <LoadingIcon className="w-12 h-12"/>
+                        : !bookmarks || bookmarks.length === 0
+                            ? <p>No bookmarks to display.</p>
+                            : bookmarks?.map((bookmark: Bookmark) => (
+                                <BookmarkCard key={bookmark.bookmarkId} bookmark={bookmark}/>
+                            ))
                 }
             </div>
         </div>

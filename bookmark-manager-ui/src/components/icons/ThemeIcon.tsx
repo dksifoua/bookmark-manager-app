@@ -3,8 +3,8 @@ import { type JSX } from "react"
 export function ThemeIcon({ className }: { className?: string }): JSX.Element {
 
     return (
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" className={`${className} fill-neutral-0 stroke-neutral-900`}>
-            <g stroke-linecap="round" stroke-linejoin="round" stroke-width="1.6" clip-path="url(#a)">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" className={`fill-neutral-0 stroke-neutral-900 ${className}`}>
+            <g strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.6" clipPath="url(#a)">
                 <path
                     d="M1.667 10A8.333 8.333 0 0 0 10 18.333a2.5 2.5 0 0 0 2.5-2.5v-.416c0-.387 0-.58.022-.743a2.5 2.5 0 0 1 2.152-2.153c.162-.021.356-.021.743-.021h.417a2.5 2.5 0 0 0 2.5-2.5 8.333 8.333 0 0 0-16.667 0"/>
                 <path

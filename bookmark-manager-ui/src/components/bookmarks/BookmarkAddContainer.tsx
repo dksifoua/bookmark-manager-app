@@ -35,22 +35,23 @@ export function BookmarkAddContainer({ closeModal }: { closeModal: () => void })
             setIsNotificationOpen(true, "bookmark-added")
         })
     })
-    
+
     const error: Nullable<ErrorApiResponse> = mutationError instanceof ApiError ? mutationError.response : null
-    
+
     function handleSubmit(event: SyntheticEvent<HTMLFormElement>): void {
         event.preventDefault()
-        
+
         const formData = new FormData(event.currentTarget)
         const title = formData.get("title") as string
         const description = formData.get("description") as string
         const url = formData.get("url") as string
-        
+
         mutate({ title, description, url, tags })
     }
 
     return (
-        <form onSubmit={handleSubmit} className="w-85.75 md:w-md xl:w-142.5 flex flex-col gap-y-8 p-8 rounded-16 bg-neutral-0 relative">
+        <form onSubmit={handleSubmit}
+              className="w-85.75 md:w-md xl:w-142.5 flex flex-col gap-y-8 p-8 rounded-16 bg-neutral-0 relative">
             <button type="reset" onClick={closeModal}
                     className="w-8 h-8 flex absolute top-2.5 right-2.5 rounded-8 border border-neutral-400 cursor-pointer items-center justify-center">
                 <CloseIcon className="w-5 h-5"/>
@@ -187,9 +188,11 @@ export function BookmarkAddContainer({ closeModal }: { closeModal: () => void })
                     <p className="text-preset-3 text-neutral-900">Cancel</p>
                 </button>
                 <button type="submit"
-                    className="h-11.5 flex flex-row gap-x-2 px-4 py-3 bg-teal-700 rounded-8 items-center justify-center cursor-pointer">
+                        className={`h-11.5 flex flex-row gap-x-2 px-4 py-3 bg-teal-700 rounded-8 items-center justify-center ${
+                            isPending ? "opacity-50 cursor-not-allowed" : ""
+                        }`}>
                     {
-                        isPending && <LoadingIcon className="w-4 h-4 animate-spin spin-slow"/>
+                        isPending ?? <LoadingIcon className="w-4 h-4 animate-spin spin-slow"/>
                     }
                     <p className="text-preset-3 text-neutral-0">Add Bookmark</p>
                 </button>

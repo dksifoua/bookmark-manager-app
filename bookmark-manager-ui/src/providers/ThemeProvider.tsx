@@ -13,7 +13,9 @@ export function ThemeProvider({ children }: { children: ReactNode }): ReactNode 
             document.documentElement.classList.remove("dark")
         }
 
-        setLocalStorageValue(theme)
+        if (value) {
+            setLocalStorageValue(theme)
+        }
     }, [value])
 
     return (
