@@ -40,7 +40,7 @@ export function Sidebar({ openSidebar }: { openSidebar?: () => void }): JSX.Elem
                 <p className="px-3 pb-4 text-preset-5">TAGS</p>
                 {
                     isFetching
-                        ? <LoadingIcon className="w-12 h-12"/>
+                        ? <LoadingIcon className="w-12 h-12 mx-auto"/>
                         : tags?.map((tag: TagCount): JSX.Element =>
                             <Tag key={tag.id} tag={tag}/>)
                 }

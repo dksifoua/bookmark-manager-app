@@ -73,7 +73,7 @@ export function BookmarkList(): JSX.Element {
             <div className="flex flex-wrap gap-8 pt-8 items-center justify-center">
                 {
                     isFetching
-                        ? <LoadingIcon className="w-12 h-12"/>
+                        ? <LoadingIcon className="w-12 h-12 mx-auto"/>
                         : !bookmarks || bookmarks.length === 0
                             ? <p>No bookmarks to display.</p>
                             : bookmarks?.map((bookmark: Bookmark) => (

@@ -119,13 +119,13 @@ public class BookmarkService(
 
         if (command.TagNames.Length == 0) return await bookmarkRepository.CreateAsync(bookmark);
 
-        var existingTags = await tagRepository.GetByNames(command.TagNames);
-        var existingTagsByNames = existingTags.ToDictionary(tag => tag.Name);
+        var existingTags = await tagRepository.GetByNamesForUpdate(command.TagNames);
+        var existingTagNames = existingTags.ToDictionary(tag => tag.Name);
 
         foreach (var tagName in command.TagNames)
         {
             bookmark.Tags.Add(
-                existingTagsByNames.TryGetValue(tagName, out var tag)
+                existingTagNames.TryGetValue(tagName, out var tag)
                     ? tag
                     : new Tag { Name = tagName }
             );

@@ -1,6 +1,6 @@
 @bookmark_manager_app_HostAddress = http://localhost:5140/api
 // @bookmark_manager_app_HostAddress = http://localhost:8080/api
-@cookie = token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiIyOTZjNWQ0NC03MTVmLTQ2YjAtODE2Ni02ZGE2NDUwYTBjZGYiLCJzdWIiOiIxIiwiZW1haWwiOiJkaW1pdHJpLnNpZm91YUBnbWFpbC5jb20iLCJuYW1lIjoiRGltaXRyaSBTaWZvdWEiLCJuYmYiOjE3NzE3ODcwNTksImV4cCI6MTc3MTc5MDY1OSwiaWF0IjoxNzcxNzg3MDU5LCJpc3MiOiJib29rbWFyay1tYW5hZ2VyLWFwaSIsImF1ZCI6ImJvb2ttYXJrLW1hbmFnZXItY2xpZW50In0.0yD3kpY5ez_5EJ4tCdtaC0tt1-MrcZDHSpFXToxKUJ0; max-age=3600; path=/; samesite=strict; httponly
+@cookie = token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiI3ZDEyNDlkYS01ZGUwLTQ3NjMtYjFkNS1jNWEyYzYxZTc0Y2YiLCJzdWIiOiIxIiwiZW1haWwiOiJkaW1pdHJpLnNpZm91YUBnbWFpbC5jb20iLCJuYW1lIjoiRGltaXRyaSBTaWZvdWEiLCJuYmYiOjE3NzE3OTEyMTQsImV4cCI6MTc3MTc5NDgxNCwiaWF0IjoxNzcxNzkxMjE0LCJpc3MiOiJib29rbWFyay1tYW5hZ2VyLWFwaSIsImF1ZCI6ImJvb2ttYXJrLW1hbmFnZXItY2xpZW50In0.aRuX2ekWrbLQbPEuaP3JpUIMO4qWzKzXMGsF62pk-Uo; max-age=3600; path=/; samesite=strict; httponly
 
 ###
 GET {{bookmark_manager_app_HostAddress}}/health
@@ -61,13 +61,12 @@ Accept: application/json
 Cookie: {{cookie}}
 
 {
-    "title": "Claude",
-    "url": "",
-    "description": "An AI assistant created by Anthropic that can help with analysis, writing, coding, math, and creative tasks through natural conversation.",
+    "title": "Refactoring.Guru",
+    "url": "https://refactoring.guru",
+    "description": "Refactoring.Guru makes it easy for you to discover everything you need to know about refactoring, design patterns, SOLID principles, and other smart programming topics.",
     "tags": [
-        "Tools",
-        "AI",
-        "Learning"
+        "Learning",
+        "Design Patterns"
     ]
 }
 

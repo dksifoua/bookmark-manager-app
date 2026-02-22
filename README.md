@@ -1,4 +1,5 @@
 # Bookmark Manager Application
+[![Deployment](https://github.com/dksifoua/bookmark-manager-app/actions/workflows/deployment.yaml/badge.svg)](https://github.com/dksifoua/bookmark-manager-app/actions/workflows/deployment.yaml)
 ![GitHub repo size](https://img.shields.io/github/repo-size/dksifoua/bookmark-manager-app)
 ![GitHub License](https://img.shields.io/github/license/dksifoua/bookmark-manager-app)
 ![GitHub top language](https://img.shields.io/github/languages/top/dksifoua/bookmark-manager-app)

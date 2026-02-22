@@ -4,7 +4,7 @@ export function LoadingIcon({ className }: { className?: string }): JSX.Element 
 
     return (
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid"
-             className={`[shape-rendering:auto] block ${className} fill-neutral-0 stroke-white`}>
+             className={`[shape-rendering:auto] block fill-neutral-0 stroke-neutral-500 ${className}`}>
             <g>
                 <circle strokeDasharray="164.93361431346415 56.97787143782138" r="35" strokeWidth="10"
                         fill="none" cy="50" cx="50">
