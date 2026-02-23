@@ -1,11 +1,11 @@
 import { type JSX, useState } from "react"
 import type { Nullable } from "@/types"
 import type { ErrorApiResponse } from "@/api/errors/schema"
-import type { TagCount } from "@/api/tags/schema"
+import type { Tag } from "@/api/tags/schema"
 
 export function BookmarkTagInput({ tags, tagSuggestions, error, setTags }: {
     tags: string[],
-    tagSuggestions: TagCount[] | undefined,
+    tagSuggestions: Tag[] | undefined,
     error: Nullable<ErrorApiResponse>,
     setTags: (tags: string[]) => void
 }): JSX.Element {
@@ -67,7 +67,7 @@ export function BookmarkTagInput({ tags, tagSuggestions, error, setTags }: {
                 }
                 <datalist id="tag-suggestions">
                     {
-                        tagSuggestions && tagSuggestions.map((tag: TagCount): JSX.Element => (
+                        tagSuggestions && tagSuggestions.map((tag: Tag): JSX.Element => (
                             <option key={tag.name} value={tag.name}>{tag.name}</option>
                         ))
                     }

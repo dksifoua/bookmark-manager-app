@@ -1,8 +1,8 @@
 import { type JSX, type SyntheticEvent, useState } from "react"
 import { CloseIcon, LoadingIcon } from "@/components/icons"
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
-import { fetchTagCount } from "@/api/tags"
-import type { TagCount } from "@/api/tags/schema"
+import { fetchTags } from "@/api/tags"
+import type { Tag } from "@/api/tags/schema"
 import { updateBookmark } from "@/api/bookmarks"
 import { ApiError } from "@/api/errors/ApiError"
 import type { Nullable } from "@/types"
@@ -28,9 +28,9 @@ export function BookmarkUpdateContainer({ bookmark, closeModal }: {
     const queryClient = useQueryClient()
     const { data: tagSuggestions } = useQuery({
         queryKey: ["tags"],
-        queryFn: fetchTagCount,
-        select: (tags: TagCount[]): TagCount[] =>
-            [...tags].sort((a: TagCount, b: TagCount): number => a.name.localeCompare(b.name))
+        queryFn: fetchTags,
+        select: (tags: Tag[]): Tag[] =>
+            [...tags].sort((a: Tag, b: Tag): number => a.name.localeCompare(b.name))
     })
     const { setIsNotificationOpen } = useGlobalStore(
         useShallow((store: GlobalStore) => ({

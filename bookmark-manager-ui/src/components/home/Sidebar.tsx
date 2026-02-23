@@ -1,21 +1,46 @@
 import { type ChangeEvent, type JSX, useEffect, useState } from "react"
 import { Logo } from "@/components/Logo"
-import { HomeIcon, ArchiveIcon, CloseIcon, LoadingIcon } from "@/components/icons"
+import { ArchiveIcon, CloseIcon, HomeIcon, LoadingIcon } from "@/components/icons"
 import { useQuery } from "@tanstack/react-query"
-import { fetchTagCount } from "@/api/tags"
-import type { TagCount } from "@/api/tags/schema"
 import { type GlobalStore, useGlobalStore } from "@/store"
 import { useShallow } from "zustand/react/shallow"
 import { useAuthContext } from "@/hooks/auth.hook"
 import { UnauthorizedApiError } from "@/api/errors/UnauthorizedApiError"
+import type { Bookmark } from "@/api/bookmarks/schema"
+import { fetchBookmarks } from "@/api/bookmarks"
+
+function buildTag2count({ bookmarks }: { bookmarks: Bookmark[] | undefined }): Map<string, number> {
+    const tag2count: Map<string, number> = new Map()
+    if (!bookmarks) return tag2count
+
+    for (const bookmark of bookmarks) {
+        for (const tag of bookmark.tags) {
+            tag2count.set(tag, (tag2count.get(tag) ?? 0) + 1)
+        }
+    }
+
+    return tag2count
+}
 
 export function Sidebar({ openSidebar }: { openSidebar?: () => void }): JSX.Element {
-    const { data: tags, isFetching, isError, error } = useQuery({
-        queryKey: ["tags"],
-        queryFn: fetchTagCount,
-        select: (tags: TagCount[]): TagCount[] =>
-            [...tags].sort((a: TagCount, b: TagCount): number => a.name.localeCompare(b.name))
+    const { searchQuery, tagFilters, filterArchivedBookmarks } = useGlobalStore(
+        useShallow((store: GlobalStore) => ({
+            searchQuery: store.searchQuery,
+            tagFilters: store.tagFilters,
+            filterArchivedBookmarks: store.filterArchivedBookmarks,
+        }))
+    )
+    const { data: bookmarks, isFetching, isError, error } = useQuery({
+        queryKey: ["bookmarks", searchQuery],
+        queryFn: async (): Promise<Bookmark[]> => fetchBookmarks(searchQuery),
+        select: (data: Bookmark[]): Bookmark[] =>
+            [
+                ...data
+                    .filter((bookmark: Bookmark): boolean => filterArchivedBookmarks ? bookmark.isArchived : !bookmark.isArchived)
+                    .filter((bookmark: Bookmark): boolean => tagFilters.every((filter: string): boolean => bookmark.tags.includes(filter)))
+            ]
     })
+    const tag2count = buildTag2count({ bookmarks })
 
     const { logout } = useAuthContext()
     useEffect(() => {
@@ -41,8 +66,10 @@ export function Sidebar({ openSidebar }: { openSidebar?: () => void }): JSX.Elem
                 {
                     isFetching
                         ? <LoadingIcon className="w-12 h-12 mx-auto"/>
-                        : tags?.map((tag: TagCount): JSX.Element =>
-                            <Tag key={tag.id} tag={tag}/>)
+                        : Array.from(tag2count.entries())
+                            .sort((a: [string, number], b: [string, number]): number => a[0].localeCompare(b[0]))
+                            .map(([tag, count]: [string, number]): JSX.Element =>
+                                <Tag key={tag} name={tag} count={count}/>)
                 }
             </div>
         </div>
@@ -94,17 +121,14 @@ function Navigation(): JSX.Element {
     )
 }
 
-function Tag({ tag }: { tag: TagCount }): JSX.Element {
-    const { tagFilters, addFilter, removeFilter, filterArchivedBookmarks } = useGlobalStore(
+function Tag({ name, count }: { name: string, count: number }): JSX.Element {
+    const { tagFilters, addFilter, removeFilter } = useGlobalStore(
         useShallow((store: GlobalStore) => ({
             tagFilters: store.tagFilters,
             addFilter: store.addTagFilter,
             removeFilter: store.removeTagFilter,
-            filterArchivedBookmarks: store.filterArchivedBookmarks
         }))
     )
-
-    const { name, count, archivedCount } = tag
 
     function handleCheck(event: ChangeEvent<HTMLInputElement>): void {
         if (event.target.checked) {
@@ -124,9 +148,7 @@ function Tag({ tag }: { tag: TagCount }): JSX.Element {
             </label>
             <div
                 className="w-6 h-6 flex px-2 py-0.5 items-center justify-center rounded-full bg-neutral-100 dark:bg-neutral-d-600 border border-neutral-300 size-4">
-                <span className="text-preset-5 text-neutral-800">{
-                    filterArchivedBookmarks ? archivedCount : count
-                }</span>
+                <span className="text-preset-5 text-neutral-800">{count}</span>
             </div>
         </div>
     )
