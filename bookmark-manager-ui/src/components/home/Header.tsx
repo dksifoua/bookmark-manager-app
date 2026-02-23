@@ -51,14 +51,19 @@ function SearchBar(): JSX.Element {
 
             setSearchQuery(searchTerm.toLowerCase())
             setEnableSearch(true)
-            
-            setSearchTerm("")
         }
     }
     
-    function handleChange(event: ChangeEvent<HTMLInputElement>): void {
+    function handleChange(event: ChangeEvent<HTMLInputElement>): void {        
+        const prevSearchTerm = searchTerm
         setSearchTerm(event.target.value)
-        setEnableSearch(false)
+        
+        if (prevSearchTerm.length > 0 && event.target.value.length === 0) {
+            setSearchQuery("")
+            setEnableSearch(true)
+        } else {
+            setEnableSearch(false)
+        }
     }
 
     return (
