@@ -1,5 +1,5 @@
 import { type JSX } from "react"
-import { CloseIcon } from "@/components/icons"
+import { CloseIcon, LoadingIcon } from "@/components/icons"
 import type { Bookmark } from "@/api/bookmarks/schema"
 import { useMutation, useQueryClient } from "@tanstack/react-query"
 import { toggleArchive } from "@/api/bookmarks"
@@ -17,7 +17,7 @@ export function BookmarkArchiveContainer({ bookmark, closeModal }: {
             setIsNotificationOpen: store.setIsNotificationOpen,
         }))
     )
-    const { mutate } = useMutation({
+    const { mutate, isPending } = useMutation({
         mutationFn: toggleArchive,
         onSuccess: () => Promise.all([
             queryClient.invalidateQueries({ queryKey: ["bookmarks"] }),
@@ -53,9 +53,12 @@ export function BookmarkArchiveContainer({ bookmark, closeModal }: {
                         className="h-11.5 flex px-4 py-3 bg-neutral-0 rounded-8 border border-neutral-400 items-center justify-center cursor-pointer">
                     <p className="text-preset-3 text-neutral-900">Cancel</p>
                 </button>
-                <button onClick={() => mutate({ bookmarkId })}
+                <button onClick={() => mutate({ bookmarkId })} disabled={isPending}
                         className="h-11.5 flex px-4 py-3 bg-teal-700 rounded-8 items-center justify-center cursor-pointer">
                     <p className="text-preset-3 text-neutral-0 dark:text-neutral-d-0">
+                        {
+                            isPending ?? <LoadingIcon className="w-4 h-4"/>
+                        }
                         {
                             isArchived ? "Restore" : "Archive"
                         }
