@@ -16,10 +16,10 @@ export type NotificationType =
 
 export type GlobalStore = {
     headerTitle: string
-    
+
     searchQuery: string
     setSearchQuery: (searchQuery: string) => void
-    
+
     sortBookmarksBy: SortBookmarksBy
     setSortBookmarksBy: (sortBookmarksBy: SortBookmarksBy) => void
 
@@ -55,47 +55,35 @@ export type GlobalStore = {
 export const useGlobalStore = create<GlobalStore>()(
     persist<GlobalStore>(
         (set) => ({
-            headerTitle: "All bookmarks",
+            headerTitle: "Bookmarks",
             searchQuery: "",
-            setSearchQuery: (searchQuery: string) => set(() => {
-                return { searchQuery }
+            setSearchQuery: (searchQuery: string) => set((store) => {
+                const {tagFilters, filterArchivedBookmarks} = store
+                const headerTitle = buildHeaderTitle({tagFilters, filterArchivedBookmarks, searchQuery})
+
+                return { searchQuery, headerTitle }
             }),
             sortBookmarksBy: "recently-added",
             setSortBookmarksBy: (sortBookmarksBy: SortBookmarksBy) => set({ sortBookmarksBy }),
             tagFilters: [],
             addTagFilter: (tag: string) => set((store) => {
-                let headerTitle = store.headerTitle
-                if (store.tagFilters.length > 0) {
-                    const prevSuffix = `tagged with [${store.tagFilters.join(", ")}]`
-                    headerTitle = headerTitle.slice(0, -prevSuffix.length)
-                }
-
                 const tagFilters = [...store.tagFilters, tag]
-                const suffix = `tagged with [${tagFilters.join(", ")}]`
-                headerTitle = `${headerTitle} ${suffix}`
+                const {filterArchivedBookmarks, searchQuery} = store
+                const headerTitle = buildHeaderTitle({tagFilters, filterArchivedBookmarks, searchQuery})
 
                 return { headerTitle, tagFilters }
             }),
             removeTagFilter: (tag: string) => set((store) => {
-                let headerTitle = store.headerTitle
-                if (store.tagFilters.length > 0) {
-                    const prevSuffix = `tagged with [${store.tagFilters.join(", ")}]`
-                    headerTitle = headerTitle.slice(0, -prevSuffix.length)
-                }
-
                 const tagFilters = store.tagFilters.filter((t) => t !== tag)
-                const suffix = `tagged with [${tagFilters.join(", ")}]`
-                headerTitle = tagFilters.length === 0 ? headerTitle : `${headerTitle} ${suffix}`
+                const {filterArchivedBookmarks, searchQuery} = store
+                const headerTitle = buildHeaderTitle({tagFilters, filterArchivedBookmarks, searchQuery})
 
                 return { headerTitle, tagFilters }
             }),
             filterArchivedBookmarks: false,
             setFilterArchivedBookmarks: (filterArchivedBookmarks: boolean) => set((store) => {
-                const prevPrefix = store.filterArchivedBookmarks ? "Archived" : "All"
-                let headerTitle = store.headerTitle.slice(prevPrefix.length + 1, store.headerTitle.length)
-
-                const prefix = filterArchivedBookmarks ? "Archived" : "All"
-                headerTitle = `${prefix} ${headerTitle}`
+                const {tagFilters, searchQuery} = store
+                const headerTitle = buildHeaderTitle({tagFilters, filterArchivedBookmarks, searchQuery})
 
                 return { headerTitle, filterArchivedBookmarks }
             }),
@@ -137,3 +125,31 @@ export const useGlobalStore = create<GlobalStore>()(
         }
     ),
 )
+
+function buildHeaderTitle({ tagFilters, filterArchivedBookmarks, searchQuery }: {
+    tagFilters: string[],
+    filterArchivedBookmarks: boolean,
+    searchQuery: string
+}): string {
+    const parts: string[] = []
+
+    if (searchQuery.length > 1) {
+        parts.push("Search")
+    }
+
+    if (filterArchivedBookmarks) {
+        parts.push("Archives")
+    }
+
+    parts.push("Bookmarks")
+
+    if (searchQuery.length > 1) {
+        parts.push(`"${searchQuery}"`)
+    }
+
+    if (tagFilters.length > 0) {
+        parts.push(`Tagged with: [${tagFilters.join(', ')}]`)
+    }
+
+    return parts.join(" > ")
+}
