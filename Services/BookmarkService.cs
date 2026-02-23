@@ -92,6 +92,9 @@ public class BookmarkService(
         await bookmarkRepository.ToggleArchiveAsync(bookmarkId);
     }
 
+    public async Task<IEnumerable<Bookmark>> GetAllByUserIdAndSearchTermAsync(string searchTerm) =>
+        await bookmarkRepository.GetAllByUserIdAndSearchTermAsync(userContext.UserId, searchTerm);
+
     public async Task<IEnumerable<Bookmark>> GetAllByUserIdAsync() =>
         await bookmarkRepository.GetAllByUserIdAsync(userContext.UserId);
 

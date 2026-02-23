@@ -1,6 +1,6 @@
 @bookmark_manager_app_HostAddress = http://localhost:5140/api
 // @bookmark_manager_app_HostAddress = http://localhost:8080/api
-@cookie = token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiI3ZDEyNDlkYS01ZGUwLTQ3NjMtYjFkNS1jNWEyYzYxZTc0Y2YiLCJzdWIiOiIxIiwiZW1haWwiOiJkaW1pdHJpLnNpZm91YUBnbWFpbC5jb20iLCJuYW1lIjoiRGltaXRyaSBTaWZvdWEiLCJuYmYiOjE3NzE3OTEyMTQsImV4cCI6MTc3MTc5NDgxNCwiaWF0IjoxNzcxNzkxMjE0LCJpc3MiOiJib29rbWFyay1tYW5hZ2VyLWFwaSIsImF1ZCI6ImJvb2ttYXJrLW1hbmFnZXItY2xpZW50In0.aRuX2ekWrbLQbPEuaP3JpUIMO4qWzKzXMGsF62pk-Uo; max-age=3600; path=/; samesite=strict; httponly
+@cookie = token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiIzNWY0YTI5Yi0zYzRmLTQyNWYtYmEwZC1kZTJmMTY5ZmMwMWIiLCJzdWIiOiIxIiwiZW1haWwiOiJkaW1pdHJpLnNpZm91YUBnbWFpbC5jb20iLCJuYW1lIjoiRGltaXRyaSBTaWZvdWEiLCJuYmYiOjE3NzE4NTc4MjEsImV4cCI6MTc3MTg2MTQyMSwiaWF0IjoxNzcxODU3ODIxLCJpc3MiOiJib29rbWFyay1tYW5hZ2VyLWFwaSIsImF1ZCI6ImJvb2ttYXJrLW1hbmFnZXItY2xpZW50In0.uz6Ic8HdEsQX_qPmX4ggPKdX25ZB0j0SM49bWVHmZuk; max-age=3600; path=/; samesite=strict; httponly
 
 ###
 GET {{bookmark_manager_app_HostAddress}}/health
@@ -34,6 +34,11 @@ Cookie: {{cookie}}
 
 ###
 GET {{bookmark_manager_app_HostAddress}}/bookmarks
+Accept: application/json
+Cookie: {{cookie}}
+
+###
+GET {{bookmark_manager_app_HostAddress}}/bookmarks/search?query=css
 Accept: application/json
 Cookie: {{cookie}}
 

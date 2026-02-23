@@ -16,6 +16,10 @@ export type NotificationType =
 
 export type GlobalStore = {
     headerTitle: string
+    
+    searchQuery: string
+    setSearchQuery: (searchQuery: string) => void
+    
     sortBookmarksBy: SortBookmarksBy
     setSortBookmarksBy: (sortBookmarksBy: SortBookmarksBy) => void
 
@@ -52,6 +56,10 @@ export const useGlobalStore = create<GlobalStore>()(
     persist<GlobalStore>(
         (set) => ({
             headerTitle: "All bookmarks",
+            searchQuery: "",
+            setSearchQuery: (searchQuery: string) => set(() => {
+                return { searchQuery }
+            }),
             sortBookmarksBy: "recently-added",
             setSortBookmarksBy: (sortBookmarksBy: SortBookmarksBy) => set({ sortBookmarksBy }),
             tagFilters: [],

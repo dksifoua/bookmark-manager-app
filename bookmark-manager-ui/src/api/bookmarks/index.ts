@@ -4,10 +4,11 @@ import { parseKnownErrors } from "@/api/errors"
 
 const apiUrl = import.meta.env.VITE_BOOKMARK_MANAGER_API_URL
 
-export async function fetchBookmarks(): Promise<Bookmark[]> {
+export async function fetchBookmarks(query: string = ""): Promise<Bookmark[]> {
     if (!apiUrl) throw new Error("BOOKMARK_MANAGER_API_URL environment variable is not set")
 
-    const response = await fetch(`${apiUrl}/bookmarks`, {
+    const endpoint = query.length > 1 ? `/bookmarks/search?query=${encodeURIComponent(query)}` : "/bookmarks"
+    const response = await fetch(`${apiUrl}${endpoint}`, {
         method: "GET",
         credentials: "include"
     })

@@ -1,19 +1,22 @@
-import { type JSX, useRef, useState } from "react"
+import { type ChangeEvent, type JSX, type KeyboardEvent, useRef, useState } from "react"
 import { useCloseModal } from "@/hooks/modal.hook"
 import {
     AddIcon,
+    DarkThemeIcon,
+    LightThemeIcon,
+    LogoutIcon,
     MenuHamburgerIcon,
     SearchIcon,
     ThemeIcon,
-    LightThemeIcon,
-    DarkThemeIcon,
-    LogoutIcon,
 } from "@/components/icons"
 import AvatarImage from "@/assets/images/image-avatar.webp"
 import { useAuthContext } from "@/hooks/auth.hook"
 import { type GlobalStore, useGlobalStore } from "@/store"
 import { useShallow } from "zustand/react/shallow"
 import { useThemeContext } from "@/hooks/theme.hook"
+import { useQuery } from "@tanstack/react-query"
+import type { Bookmark } from "@/api/bookmarks/schema"
+import { fetchBookmarks } from "@/api/bookmarks"
 
 export function Header(): JSX.Element {
 
@@ -27,11 +30,36 @@ export function Header(): JSX.Element {
 }
 
 function SearchBar(): JSX.Element {
-    const { setIsMobileSidebarOpen } = useGlobalStore(
+    const [searchTerm, setSearchTerm] = useState<string>("")
+    const [enableSearch, setEnableSearch] = useState<boolean>(false)
+    const { searchQuery, setSearchQuery, setIsMobileSidebarOpen } = useGlobalStore(
         useShallow((store: GlobalStore) => ({
+            searchQuery: store.searchQuery,
+            setSearchQuery: store.setSearchQuery,
             setIsMobileSidebarOpen: store.setIsMobileSidebarOpen,
         }))
     )
+    useQuery({
+        queryKey: ["bookmarks", searchQuery],
+        queryFn: async (): Promise<Bookmark[]> => fetchBookmarks(searchQuery),
+        enabled: enableSearch
+    })
+
+    function handleSearch(event: KeyboardEvent<HTMLInputElement>): void {
+        if (event.key === "Enter") {
+            event.preventDefault()
+
+            setSearchQuery(searchTerm.toLowerCase())
+            setEnableSearch(true)
+            
+            setSearchTerm("")
+        }
+    }
+    
+    function handleChange(event: ChangeEvent<HTMLInputElement>): void {
+        setSearchTerm(event.target.value)
+        setEnableSearch(false)
+    }
 
     return (
         <div className="flex flex-row gap-x-2.5 md:gap-x-4 justify-start">
@@ -41,7 +69,8 @@ function SearchBar(): JSX.Element {
             </button>
             <div className="relative w-48.25 md:w-[320px]">
                 <input type="search" name="search" placeholder="Search by title..."
-                       className="w-full h-10 md:h-11 pl-10 border border-neutral-300 rounded-8 placeholder:text-neutral-800"/>
+                       value={searchTerm} onChange={handleChange} onKeyDown={handleSearch}
+                       className="w-full h-10 md:h-11 pl-10 pr-2 border border-neutral-300 rounded-8 placeholder:text-neutral-800"/>
                 <SearchIcon className="w-5 h-5 absolute top-1/2 -translate-y-1/2 left-2.5"/>
             </div>
         </div>
@@ -62,7 +91,7 @@ function ButtonGroup(): JSX.Element {
     return (
         <div className="flex flex-row gap-x-2.5 md:gap-x-4 items-center justify-between relative" ref={ref}>
             <button onClick={(): void => setIsAddDialogOpen(true, null)}
-                className="w-10 md:w-auto h-10 md:h-11 flex md:flex-row md:gap-x-1 items-center justify-center md:justify-between md:px-4 rounded-8 bg-teal-700 text-neutral-0 cursor-pointer"
+                    className="w-10 md:w-auto h-10 md:h-11 flex md:flex-row md:gap-x-1 items-center justify-center md:justify-between md:px-4 rounded-8 bg-teal-700 text-neutral-0 cursor-pointer"
             >
                 <AddIcon className="w-5 h-5"/>
                 <p className="max-md:hidden text-preset-3 text-neutral-0 dark:text-neutral-d-0">Add Bookmark</p>
@@ -86,7 +115,7 @@ function ButtonGroup(): JSX.Element {
 function AvatarDropdown(): JSX.Element {
     const { theme, setTheme } = useThemeContext()
     const { logout } = useAuthContext()
-    
+
     return (
         <div className="w-62 flex flex-col gap-y-1 p-0 rounded-8 bg-neutral-0 border border-neutral-100">
             <div className="flex px-4 py-3 border border-neutral-100 items-center justify-center">
@@ -104,7 +133,7 @@ function AvatarDropdown(): JSX.Element {
                         <ThemeIcon className="w-4 h-4"/>
                         <p className="text-preset-4 text-neutral-800">Theme</p>
                     </div>
-                    <button 
+                    <button
                         onClick={(): void => setTheme(theme === "light" ? "dark" : "light")}
                         className="flex flex-row p-0.5 rounded-4 bg-neutral-300 border border-neutral-300 items-center cursor-pointer"
                     >

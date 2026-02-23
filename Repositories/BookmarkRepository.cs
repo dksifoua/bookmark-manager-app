@@ -6,6 +6,14 @@ namespace bookmark_manager_app.Repositories;
 
 public class BookmarkRepository(BookmarkDbContext context)
 {
+    public async Task<IEnumerable<Bookmark>> GetAllByUserIdAndSearchTermAsync(long userId, string searchTerm) =>
+        await context.Bookmarks.AsNoTracking()
+            // ReSharper disable once EntityFramework.UnsupportedServerSideFunctionCall
+            .Where(b => b.UserId == userId && b.SearchVector.Matches(EF.Functions.WebSearchToTsQuery(searchTerm)))
+            .Include(bt => bt.Tags)
+            .Include(bt => bt.Visits)
+            .ToListAsync();
+
     public async Task<bool> ExistsByBookmarkId(long bookmarkId) =>
         await context.Bookmarks.AsNoTracking().AnyAsync(x => x.BookmarkId == bookmarkId);
 

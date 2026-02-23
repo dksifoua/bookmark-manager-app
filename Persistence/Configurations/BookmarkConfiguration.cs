@@ -11,6 +11,11 @@ public class BookmarkConfiguration : IEntityTypeConfiguration<Bookmark>
         builder.ToTable("bookmarks");
         builder.HasKey(x => x.BookmarkId);
         builder.HasIndex(x => new { x.UserId, x.Title, x.Url }).IsUnique();
+        builder.HasGeneratedTsVectorColumn(
+            x => x.SearchVector,
+            "english",
+            x => new { x.Title, x.Description }
+        ).HasIndex(x => x.SearchVector).HasMethod("gin");
 
         builder.Property(x => x.Title).IsRequired().HasMaxLength(200);
         builder.Property(x => x.Url).IsRequired().HasMaxLength(2048);
@@ -19,12 +24,12 @@ public class BookmarkConfiguration : IEntityTypeConfiguration<Bookmark>
         builder.Property(x => x.IsArchived).HasDefaultValue(false);
         builder.Property(x => x.CreationTime).ValueGeneratedOnAdd();
         builder.Property(x => x.LastModifiedTime).ValueGeneratedOnUpdate();
-        
+
         builder.HasOne(x => x.User)
             .WithMany(x => x.Bookmarks)
             .HasForeignKey(x => x.UserId)
             .OnDelete(DeleteBehavior.Cascade);
-        
+
         builder.HasMany(x => x.Tags)
             .WithMany(x => x.Bookmarks)
             .UsingEntity(join => join.ToTable("bookmark_tags"));

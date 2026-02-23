@@ -1,3 +1,5 @@
+using NpgsqlTypes;
+
 namespace bookmark_manager_app.Models;
 
 public class Bookmark : BaseModel
@@ -17,6 +19,8 @@ public class Bookmark : BaseModel
     public bool IsArchived { get; init; }
     
     public User? User { get; init; }
+    
+    public NpgsqlTsVector SearchVector { get; init; } = NpgsqlTsVector.Empty;
     
     public ICollection<Tag> Tags { get; init; } = new List<Tag>();
     public ICollection<Visit> Visits { get; init; } = new List<Visit>();

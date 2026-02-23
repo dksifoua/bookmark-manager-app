@@ -19,12 +19,13 @@ export function BookmarkTagInput({ tags, tagSuggestions, error, setTags }: {
                     {
                         tags.map((tag: string, index: number): JSX.Element => (
                             <div key={index}
-                                 className="bg-teal-700 text-neutral-0 px-2 py-1 rounded-8 flex items-center gap-x-1.5 text-preset-4"
+                                 className="bg-teal-700 text-neutral-0 dark:text-neutral-d-0 px-2 py-1 rounded-8 flex items-center gap-x-1.5 text-preset-4"
                             >
                                 {tag}
                                 <button
-                                    onClick={(): void => setTags(tags.filter((_: string, i: number): boolean => i !== index))}
-                                    className="text-neutral-0 cursor-pointer"
+                                    type="button"
+                                    onClick={(): void => setTags([...tags.filter((_: string, i: number): boolean => i !== index)])}
+                                    className="text-neutral-0 dark:text-neutral-d-0 cursor-pointer"
                                 >
                                     ×
                                 </button>

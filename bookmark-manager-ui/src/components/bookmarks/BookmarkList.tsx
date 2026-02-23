@@ -14,9 +14,10 @@ export function BookmarkList(): JSX.Element {
     const ref = useRef<HTMLDivElement>(null)
     const [isDropdownOpen, setIsDropdownOpen] = useState<boolean>(false)
 
-    const { headerTitle, sortBookmarksBy, tagFilters, filterArchivedBookmarks } = useGlobalStore(
+    const { headerTitle, searchQuery, sortBookmarksBy, tagFilters, filterArchivedBookmarks } = useGlobalStore(
         useShallow((store: GlobalStore) => ({
             headerTitle: store.headerTitle,
+            searchQuery: store.searchQuery,
             sortBookmarksBy: store.sortBookmarksBy,
             tagFilters: store.tagFilters,
             filterArchivedBookmarks: store.filterArchivedBookmarks,
@@ -24,8 +25,8 @@ export function BookmarkList(): JSX.Element {
     )
 
     const { data: bookmarks, isFetching, isError, error } = useQuery({
-        queryKey: ["bookmarks"],
-        queryFn: fetchBookmarks,
+        queryKey: ["bookmarks", searchQuery],
+        queryFn: async (): Promise<Bookmark[]> => fetchBookmarks(searchQuery),
         select: (data: Bookmark[]): Bookmark[] =>
             [
                 ...data

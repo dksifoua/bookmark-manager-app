@@ -134,7 +134,7 @@ export function BookmarkAddContainer({ closeModal }: { closeModal: () => void })
                     {
                         isPending ?? <LoadingIcon className="w-4 h-4"/>
                     }
-                    <p className="text-preset-3 text-neutral-0">Add Bookmark</p>
+                    <p className="text-preset-3 text-neutral-0 dark:text-neutral-d-0">Add Bookmark</p>
                 </button>
             </div>
         </form>

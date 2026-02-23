@@ -144,7 +144,7 @@ export function BookmarkUpdateContainer({ bookmark, closeModal }: {
                     {
                         isPending ?? <LoadingIcon className="w-4 h-4"/>
                     }
-                    <p className="text-preset-3 text-neutral-0">Save Bookmark</p>
+                    <p className="text-preset-3 text-neutral-0 dark:text-neutral-d-0">Save Bookmark</p>
                 </button>
             </div>
         </form>

@@ -65,6 +65,15 @@ public class BookmarkController(
         return Ok(bookmarks.Select(GetBookmarkResponse.FromModel));
     }
 
+    [HttpGet("search", Name = nameof(GetAllByUserIdAndSearchTermAsync))]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<GetBookmarkResponse>))]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized, Type = typeof(ProblemDetails))]
+    public async Task<ActionResult<IEnumerable<GetBookmarkResponse>>> GetAllByUserIdAndSearchTermAsync([FromQuery] string query)
+    {
+        var bookmarks = await bookmarkService.GetAllByUserIdAndSearchTermAsync(query);
+        return Ok(bookmarks.Select(GetBookmarkResponse.FromModel));
+    }
+
     [HttpPatch("{id:long}/pin")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized, Type = typeof(ProblemDetails))]
