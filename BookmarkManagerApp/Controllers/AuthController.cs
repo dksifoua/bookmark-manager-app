@@ -1,9 +1,7 @@
 using BookmarkManagerApp.Controllers.Requests;
 using BookmarkManagerApp.Controllers.Responses;
-using BookmarkManagerApp.Exceptions;
 using BookmarkManagerApp.Services;
 using FluentValidation;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BookmarkManagerApp.Controllers;

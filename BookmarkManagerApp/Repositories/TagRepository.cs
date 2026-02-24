@@ -1,14 +1,12 @@
 using BookmarkManagerApp.Models;
 using BookmarkManagerApp.Persistence;
+using BookmarkManagerApp.Repositories.Contracts;
 using Microsoft.EntityFrameworkCore;
 
 namespace BookmarkManagerApp.Repositories;
 
-public class TagRepository(BookmarkDbContext context)
+public class TagRepository(BookmarkDbContext context) : ITagRepository
 {
-    public async Task<bool> ExistsByName(string name) =>
-        await context.Tags.AsNoTracking().AnyAsync(t => t.Name == name);
-
     public async Task<IEnumerable<Tag>> GetByNamesForUpdate(IEnumerable<string> names) =>
         await context.Tags.Where(t => names.Contains(t.Name)).ToListAsync();
 

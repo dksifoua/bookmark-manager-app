@@ -3,6 +3,7 @@ using System.Text;
 using BookmarkManagerApp.Exceptions.Handlers;
 using BookmarkManagerApp.Persistence;
 using BookmarkManagerApp.Repositories;
+using BookmarkManagerApp.Repositories.Contracts;
 using BookmarkManagerApp.Services;
 using BookmarkManagerApp.Services.Utils;
 using FluentValidation;
@@ -47,7 +48,7 @@ builder.Services.AddSingleton<PasswordHasher<IdentityUser>>();
 
 builder.Services.AddScoped<UserRepository>();
 builder.Services.AddScoped<BookmarkRepository>();
-builder.Services.AddScoped<TagRepository>();
+builder.Services.AddScoped<ITagRepository, TagRepository>();
 builder.Services.AddScoped<VisitRepository>();
 
 builder.Services.AddScoped<UserService>();

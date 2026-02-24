@@ -3,6 +3,7 @@ on:
   push:
     branches:
       - main
+      - develop
 
 # Sets permissions of the GITHUB_TOKEN to allow deployment to GitHub Pages
 permissions:
@@ -14,30 +15,29 @@ permissions:
 concurrency:
   group: "pages"
   cancel-in-progress: false
-  
+
 jobs:
 
   build:
     runs-on: ubuntu-latest
-    
+    if: github.ref == 'refs/heads/main'
     environment: Deployment
-    
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
-      
+
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
-        
+
       - name: Build migration image (local)
         uses: docker/build-push-action@v6
         with:
           context: .
-          file: ./migration.Dockerfile
+          file: ./BookmarkManagerApp/DockerfileMigration
           load: true
           tags: bookmark-manager-migration:ci
           push: false
-            
+
       - name: Run migrations against external DB
         run: |
           docker run --rm \
@@ -49,14 +49,35 @@ jobs:
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_PASSWORD }}
-      
+
       - name: Build and push the Docker image for the API
         uses: docker/build-push-action@v6
         with:
           context: .
-          file: ./Dockerfile
+          file: ./BookmarkManagerApp/Dockerfile
           push: true
           tags: ${{ secrets.DOCKERHUB_USERNAME }}/bookmark-manager-api:latest
+  
+  test:
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/develop'
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 10.0
+
+      - name: Install dependencies
+        run: dotnet restore
+
+      - name: Build
+        run: dotnet build --no-restore
+
+      - name: Test
+        run: dotnet test --no-build
 
   deploy:
     runs-on: ubuntu-latest
@@ -87,10 +108,10 @@ jobs:
         uses: actions/upload-pages-artifact@v4
         with:
           path: ./bookmark-manager-ui/dist
-          
+
       - name: Deploy API to Render
         run: curl -X POST ${{ secrets.RENDER_DEPLOY_HOOK }}
-      
+
       - name: Deploy UI to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
