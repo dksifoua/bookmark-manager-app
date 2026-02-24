@@ -1,0 +1,16 @@
+<Solution>
+    <Folder Name="/Solution Items/">
+        <File Path="README.md"/>
+        <File Path="LICENSE"/>
+        <File Path="bookmark-manager-app.slnx"/>
+        <File Path=".gitignore"/>
+        <File Path=".env"/>
+        <File Path="compose.yaml"/>
+        <File Path="BookmarkManagerApp/BookmarkManagerApp.csproj"/>
+        <File Path="BookmarkManagerApp.UnitTests/BookmarkManagerApp.UnitTests.csproj"/>
+        <File Path="BookmarkManagerApp.IntegrationTests/BookmarkManagerApp.IntegrationTests.csproj"/>
+    </Folder>
+    <Project Path="BookmarkManagerApp/BookmarkManagerApp.csproj"/>
+    <Project Path="BookmarkManagerApp.UnitTests/BookmarkManagerApp.UnitTests.csproj"/>
+    <Project Path="BookmarkManagerApp.IntegrationTests/BookmarkManagerApp.IntegrationTests.csproj"/>
+</Solution>

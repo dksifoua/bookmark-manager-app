@@ -1,0 +1,124 @@
+@bookmark_manager_app_HostAddress = http://localhost:5140/api
+// @bookmark_manager_app_HostAddress = http://localhost:8080/api
+@cookie = token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiJiNTRhYjY4MS1iZTcyLTQwZWMtYTk3Zi0wOGI1ZWNiYzc0MDgiLCJzdWIiOiIxIiwiZW1haWwiOiJkaW1pdHJpLnNpZm91YUBnbWFpbC5jb20iLCJuYW1lIjoiRGltaXRyaSBTaWZvdWEiLCJuYmYiOjE3NzE5NTI1MzEsImV4cCI6MTc3MTk1NjEzMSwiaWF0IjoxNzcxOTUyNTMxLCJpc3MiOiJib29rbWFyay1tYW5hZ2VyLWFwaSIsImF1ZCI6ImJvb2ttYXJrLW1hbmFnZXItY2xpZW50In0.WhhseqoULdMXLSn7pSQpDJZorrmyGq2cj80sf1jaL9A; max-age=3600; path=/; samesite=strict; httponly
+
+###
+GET {{bookmark_manager_app_HostAddress}}/health
+Accept: application/json
+
+###
+POST {{bookmark_manager_app_HostAddress}}/auth/register
+Content-Type: application/json
+Accept: application/json
+
+{
+    "fullname": "Dimitri Sifoua",
+    "email": "dimitri.sifoua@gmail.com",
+    "password": "Password123"
+}
+
+###
+POST {{bookmark_manager_app_HostAddress}}/auth/login
+Content-Type: application/json
+Accept: application/json
+
+{
+    "email": "dimitri.sifoua@gmail.com",
+    "password": "Password123"
+}
+
+###
+POST {{bookmark_manager_app_HostAddress}}/api/auth/logout
+Accept: application/json
+Cookie: {{cookie}}
+
+###
+GET {{bookmark_manager_app_HostAddress}}/bookmarks
+Accept: application/json
+Cookie: {{cookie}}
+
+###
+GET {{bookmark_manager_app_HostAddress}}/bookmarks/search?query=css
+Accept: application/json
+Cookie: {{cookie}}
+
+###
+POST {{bookmark_manager_app_HostAddress}}/bookmarks
+Content-Type: application/json
+Accept: application/json
+Cookie: {{cookie}}
+
+{
+    "title": "Claude",
+    "url": "https://claude.ai",
+    "description": "An AI assistant created by Anthropic that can help with analysis, writing, coding, math, and creative tasks through natural conversation.",
+    "tags": [
+        "Tools",
+        "AI",
+        "Learning"  
+    ]
+}
+
+###
+POST {{bookmark_manager_app_HostAddress}}/bookmarks
+Content-Type: application/json
+Accept: application/json
+Cookie: {{cookie}}
+
+{
+    "title": "Refactoring.Guru",
+    "url": "https://refactoring.guru",
+    "description": "Refactoring.Guru makes it easy for you to discover everything you need to know about refactoring, design patterns, SOLID principles, and other smart programming topics.",
+    "tags": [
+        "Learning",
+        "Design Patterns"
+    ]
+}
+
+###
+DELETE {{bookmark_manager_app_HostAddress}}/bookmarks/1
+Accept: application/json
+Cookie: {{cookie}}
+
+###
+GET {{bookmark_manager_app_HostAddress}}/bookmarks/18
+Accept: application/json
+Cookie: {{cookie}}
+
+###
+PUT {{bookmark_manager_app_HostAddress}}/bookmarks/18
+Content-Type: application/json
+Accept: application/json
+Cookie: {{cookie}}
+
+{
+    "title": "React Cheatsheets",
+    "url": "https://react-typescript-cheatsheet.netlify.app/",
+    "description": "Cheatsheets for experienced React developers getting started with TypeScript",
+    "tags": [
+        "Learning",
+        "React",
+        "Practice"
+    ]
+}
+
+###
+PATCH {{bookmark_manager_app_HostAddress}}/bookmarks/1/pin
+Accept: application/json
+Cookie: {{cookie}}
+
+###
+POST {{bookmark_manager_app_HostAddress}}/visits
+Content-Type: application/json
+Accept: application/json
+Cookie: {{cookie}}
+
+{
+    "bookmarkId": 1,
+    "visitTime": "2026-01-31T19:49:19.462909+00:00"
+}
+
+###
+GET {{bookmark_manager_app_HostAddress}}/tags
+Accept: application/json
+Cookie: {{cookie}}

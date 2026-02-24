@@ -28,6 +28,12 @@ Users are able to:
 - Toggle between light and dark color themes
 - View the optimal layout for the interface depending on their device's screen size
 
+## Local Installation
+
+```bash
+docker compose build --no-cache && docker compose up
+```
+
 ## Database diagram
 
 ![Database diagram](images/database-diagram.png)

@@ -5,7 +5,6 @@ using BookmarkManagerApp.Persistence;
 using BookmarkManagerApp.Repositories;
 using BookmarkManagerApp.Services;
 using BookmarkManagerApp.Services.Utils;
-using dotenv.net;
 using FluentValidation;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
@@ -14,7 +13,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Scalar.AspNetCore;
 
-DotEnv.Load();
 
 var builder = WebApplication.CreateBuilder(args);
 
