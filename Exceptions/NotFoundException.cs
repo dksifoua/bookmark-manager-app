@@ -1,3 +1,3 @@
-namespace bookmark_manager_app.Exceptions;
+namespace BookmarkManagerApp.Exceptions;
 
 public sealed class NotFoundException(string message) : ApiException(message, StatusCodes.Status404NotFound);

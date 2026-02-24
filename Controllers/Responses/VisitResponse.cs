@@ -1,6 +1,6 @@
-using bookmark_manager_app.Models;
+using BookmarkManagerApp.Models;
 
-namespace bookmark_manager_app.Controllers.Responses;
+namespace BookmarkManagerApp.Controllers.Responses;
 
 public record VisitResponse(long BookmarkId, DateTimeOffset VisitTime)
 {

@@ -1,10 +1,10 @@
 using System.Security.Claims;
 using System.Text;
-using bookmark_manager_app.Exceptions.Handlers;
-using bookmark_manager_app.Persistence;
-using bookmark_manager_app.Repositories;
-using bookmark_manager_app.Services;
-using bookmark_manager_app.Services.Utils;
+using BookmarkManagerApp.Exceptions.Handlers;
+using BookmarkManagerApp.Persistence;
+using BookmarkManagerApp.Repositories;
+using BookmarkManagerApp.Services;
+using BookmarkManagerApp.Services.Utils;
 using dotenv.net;
 using FluentValidation;
 using Microsoft.AspNetCore.Authentication.JwtBearer;

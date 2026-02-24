@@ -30,7 +30,6 @@ export function Header(): JSX.Element {
 }
 
 function SearchBar(): JSX.Element {
-    const [searchTerm, setSearchTerm] = useState<string>("")
     const [enableSearch, setEnableSearch] = useState<boolean>(false)
     const { searchQuery, setSearchQuery, setIsMobileSidebarOpen } = useGlobalStore(
         useShallow((store: GlobalStore) => ({
@@ -39,6 +38,7 @@ function SearchBar(): JSX.Element {
             setIsMobileSidebarOpen: store.setIsMobileSidebarOpen,
         }))
     )
+    const [searchTerm, setSearchTerm] = useState<string>(searchQuery)
     useQuery({
         queryKey: ["bookmarks", searchQuery],
         queryFn: async (): Promise<Bookmark[]> => fetchBookmarks(searchQuery),

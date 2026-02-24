@@ -1,12 +1,12 @@
-using bookmark_manager_app.Controllers.Requests;
-using bookmark_manager_app.Controllers.Responses;
-using bookmark_manager_app.Models;
-using bookmark_manager_app.Services;
+using BookmarkManagerApp.Controllers.Requests;
+using BookmarkManagerApp.Controllers.Responses;
+using BookmarkManagerApp.Models;
+using BookmarkManagerApp.Services;
 using FluentValidation;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-namespace bookmark_manager_app.Controllers;
+namespace BookmarkManagerApp.Controllers;
 
 [ApiController]
 [Authorize]

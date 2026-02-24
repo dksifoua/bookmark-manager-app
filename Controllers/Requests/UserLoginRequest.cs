@@ -1,3 +1,3 @@
-namespace bookmark_manager_app.Controllers.Requests;
+namespace BookmarkManagerApp.Controllers.Requests;
 
 public record UserLoginRequest(string Email, string Password);

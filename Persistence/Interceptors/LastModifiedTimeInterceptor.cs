@@ -1,8 +1,8 @@
-using bookmark_manager_app.Models;
+using BookmarkManagerApp.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 
-namespace bookmark_manager_app.Persistence.Interceptors;
+namespace BookmarkManagerApp.Persistence.Interceptors;
 
 public class LastModifiedTimeInterceptor : SaveChangesInterceptor
 {

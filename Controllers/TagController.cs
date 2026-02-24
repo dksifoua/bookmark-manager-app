@@ -1,9 +1,9 @@
-using bookmark_manager_app.Controllers.Responses;
-using bookmark_manager_app.Services;
+using BookmarkManagerApp.Controllers.Responses;
+using BookmarkManagerApp.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-namespace bookmark_manager_app.Controllers;
+namespace BookmarkManagerApp.Controllers;
 
 [ApiController]
 [Authorize]

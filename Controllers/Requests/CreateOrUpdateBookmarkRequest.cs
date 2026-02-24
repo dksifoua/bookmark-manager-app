@@ -1,6 +1,6 @@
-using bookmark_manager_app.Services;
+using BookmarkManagerApp.Services;
 
-namespace bookmark_manager_app.Controllers.Requests;
+namespace BookmarkManagerApp.Controllers.Requests;
 
 public record CreateOrUpdateBookmarkRequest(string Title, string Url, string Description, string[] Tags)
 {

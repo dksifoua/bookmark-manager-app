@@ -1,4 +1,4 @@
-namespace bookmark_manager_app.Models;
+namespace BookmarkManagerApp.Models;
 
 public sealed class User : BaseModel
 {

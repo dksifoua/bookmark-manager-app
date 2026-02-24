@@ -1,8 +1,8 @@
-using bookmark_manager_app.Exceptions;
+using BookmarkManagerApp.Exceptions;
 using FluentValidation;
 using FluentValidation.Results;
 
-namespace bookmark_manager_app.Controllers.Validators;
+namespace BookmarkManagerApp.Controllers.Validators;
 
 public class DefaultRequestValidator<T> : AbstractValidator<T>
 {

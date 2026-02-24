@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 
-namespace bookmark_manager_app.Exceptions.Handlers;
+namespace BookmarkManagerApp.Exceptions.Handlers;
 
 public class UnauthorizedExceptionHandler(ILogger<ValidationExceptionHandler> logger) : IExceptionHandler
 {

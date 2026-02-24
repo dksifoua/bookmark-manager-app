@@ -1,8 +1,8 @@
-using bookmark_manager_app.Models;
-using bookmark_manager_app.Persistence.Interceptors;
+using BookmarkManagerApp.Models;
+using BookmarkManagerApp.Persistence.Interceptors;
 using Microsoft.EntityFrameworkCore;
 
-namespace bookmark_manager_app.Persistence;
+namespace BookmarkManagerApp.Persistence;
 
 public class BookmarkDbContext(DbContextOptions options) : DbContext(options)
 {

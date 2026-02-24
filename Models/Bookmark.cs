@@ -1,6 +1,6 @@
 using NpgsqlTypes;
 
-namespace bookmark_manager_app.Models;
+namespace BookmarkManagerApp.Models;
 
 public class Bookmark : BaseModel
 {

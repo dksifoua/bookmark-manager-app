@@ -1,9 +1,9 @@
-using bookmark_manager_app.Exceptions;
-using bookmark_manager_app.Models;
-using bookmark_manager_app.Repositories;
-using bookmark_manager_app.Services.Utils;
+using BookmarkManagerApp.Exceptions;
+using BookmarkManagerApp.Models;
+using BookmarkManagerApp.Repositories;
+using BookmarkManagerApp.Services.Utils;
 
-namespace bookmark_manager_app.Services;
+namespace BookmarkManagerApp.Services;
 
 public class BookmarkService(
     BookmarkRepository bookmarkRepository,

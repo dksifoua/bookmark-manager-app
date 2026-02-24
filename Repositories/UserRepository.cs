@@ -1,8 +1,8 @@
-using bookmark_manager_app.Models;
-using bookmark_manager_app.Persistence;
+using BookmarkManagerApp.Models;
+using BookmarkManagerApp.Persistence;
 using Microsoft.EntityFrameworkCore;
 
-namespace bookmark_manager_app.Repositories;
+namespace BookmarkManagerApp.Repositories;
 
 public class UserRepository(BookmarkDbContext context)
 {

@@ -1,7 +1,7 @@
-using bookmark_manager_app.Controllers.Requests;
+using BookmarkManagerApp.Controllers.Requests;
 using FluentValidation;
 
-namespace bookmark_manager_app.Controllers.Validators;
+namespace BookmarkManagerApp.Controllers.Validators;
 
 public class UserRegistrationRequestValidator : DefaultRequestValidator<UserRegistrationRequest>
 {

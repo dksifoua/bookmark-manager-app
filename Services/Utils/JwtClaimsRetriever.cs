@@ -1,7 +1,7 @@
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 
-namespace bookmark_manager_app.Services.Utils;
+namespace BookmarkManagerApp.Services.Utils;
 
 public static class JwtClaimRetriever
 {

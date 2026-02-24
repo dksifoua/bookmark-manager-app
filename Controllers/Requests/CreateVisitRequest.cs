@@ -1,3 +1,3 @@
-namespace bookmark_manager_app.Controllers.Requests;
+namespace BookmarkManagerApp.Controllers.Requests;
 
 public record CreateVisitRequest(long BookmarkId, DateTimeOffset VisitTime);
