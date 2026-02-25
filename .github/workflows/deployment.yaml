@@ -60,7 +60,6 @@ jobs:
   
   test:
     runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/develop'
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -77,7 +76,7 @@ jobs:
         run: dotnet build --no-restore
 
       - name: Test
-        run: dotnet test --no-build
+        run: dotnet test --no-build  -- --coverage --coverage-output-format cobertura --coverage-output coverage.cobertura.xml
 
   deploy:
     runs-on: ubuntu-latest

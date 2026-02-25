@@ -46,10 +46,10 @@ builder.Services.AddDbContext<BookmarkDbContext>(options =>
 
 builder.Services.AddSingleton<PasswordHasher<IdentityUser>>();
 
-builder.Services.AddScoped<UserRepository>();
+builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<BookmarkRepository>();
 builder.Services.AddScoped<ITagRepository, TagRepository>();
-builder.Services.AddScoped<VisitRepository>();
+builder.Services.AddScoped<IVisitRepository, VisitRepository>();
 
 builder.Services.AddScoped<UserService>();
 builder.Services.AddScoped<AuthService>();

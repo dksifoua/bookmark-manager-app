@@ -3,14 +3,14 @@ using System.Security.Claims;
 using System.Text;
 using BookmarkManagerApp.Exceptions;
 using BookmarkManagerApp.Models;
-using BookmarkManagerApp.Repositories;
+using BookmarkManagerApp.Repositories.Contracts;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
 
 namespace BookmarkManagerApp.Services;
 
 public class AuthService(
-    UserRepository userRepository,
+    IUserRepository userRepository,
     PasswordHasher<IdentityUser> passwordHasher,
     IConfiguration configuration)
 {

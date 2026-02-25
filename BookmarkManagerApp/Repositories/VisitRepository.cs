@@ -1,10 +1,11 @@
 using BookmarkManagerApp.Models;
 using BookmarkManagerApp.Persistence;
+using BookmarkManagerApp.Repositories.Contracts;
 using Microsoft.EntityFrameworkCore;
 
 namespace BookmarkManagerApp.Repositories;
 
-public class VisitRepository(BookmarkDbContext context)
+public class VisitRepository(BookmarkDbContext context) : IVisitRepository
 {
     public async Task<bool> ExistsByBookmarkIdAndCreationTime(long bookmarkId, DateTimeOffset creationTime) =>
         await context.Visits.AsNoTracking().AnyAsync(x => x.BookmarkId == bookmarkId && x.VisitTime == creationTime);
