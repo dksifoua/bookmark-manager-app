@@ -1,5 +1,6 @@
 # Bookmark Manager Application
-[![Deployment](https://github.com/dksifoua/bookmark-manager-app/actions/workflows/deployment.yaml/badge.svg)](https://github.com/dksifoua/bookmark-manager-app/actions/workflows/deployment.yaml)
+[![Deployment](https://github.com/dksifoua/bookmark-manager-app/actions/workflows/deployment.yaml/badge.svg?branch=main)](https://github.com/dksifoua/bookmark-manager-app/actions/workflows/deployment.yaml)
+[![codecov](https://codecov.io/gh/dksifoua/bookmark-manager-app/branch/develop/graph/badge.svg?token=DTVXcTpGCf)](https://codecov.io/gh/dksifoua/bookmark-manager-app)
 ![GitHub repo size](https://img.shields.io/github/repo-size/dksifoua/bookmark-manager-app)
 ![GitHub License](https://img.shields.io/github/license/dksifoua/bookmark-manager-app)
 ![GitHub top language](https://img.shields.io/github/languages/top/dksifoua/bookmark-manager-app)
