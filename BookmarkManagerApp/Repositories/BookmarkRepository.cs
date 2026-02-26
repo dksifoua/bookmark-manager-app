@@ -1,10 +1,11 @@
 using BookmarkManagerApp.Models;
 using BookmarkManagerApp.Persistence;
+using BookmarkManagerApp.Repositories.Contracts;
 using Microsoft.EntityFrameworkCore;
 
 namespace BookmarkManagerApp.Repositories;
 
-public class BookmarkRepository(BookmarkDbContext context)
+public class BookmarkRepository(BookmarkDbContext context) : IBookmarkRepository
 {
     public async Task<IEnumerable<Bookmark>> GetAllByUserIdAndSearchTermAsync(long userId, string searchTerm) =>
         await context.Bookmarks.AsNoTracking()
