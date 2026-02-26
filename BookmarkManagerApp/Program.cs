@@ -3,9 +3,9 @@ using System.Text;
 using BookmarkManagerApp.Exceptions.Handlers;
 using BookmarkManagerApp.Persistence;
 using BookmarkManagerApp.Repositories;
+using BookmarkManagerApp.Repositories.Contracts;
 using BookmarkManagerApp.Services;
 using BookmarkManagerApp.Services.Utils;
-using dotenv.net;
 using FluentValidation;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
@@ -14,7 +14,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Scalar.AspNetCore;
 
-DotEnv.Load();
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -47,10 +46,10 @@ builder.Services.AddDbContext<BookmarkDbContext>(options =>
 
 builder.Services.AddSingleton<PasswordHasher<IdentityUser>>();
 
-builder.Services.AddScoped<UserRepository>();
-builder.Services.AddScoped<BookmarkRepository>();
-builder.Services.AddScoped<TagRepository>();
-builder.Services.AddScoped<VisitRepository>();
+builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddScoped<IBookmarkRepository, BookmarkRepository>();
+builder.Services.AddScoped<ITagRepository, TagRepository>();
+builder.Services.AddScoped<IVisitRepository, VisitRepository>();
 
 builder.Services.AddScoped<UserService>();
 builder.Services.AddScoped<AuthService>();
@@ -171,6 +170,17 @@ var app = builder.Build();
 
 app.MapOpenApi();
 app.MapScalarApiReference();
+
+// Badge-style root endpoint
+app.MapGet("/", () => Results.Json(new
+{
+    schemaVersion = 1,
+    label = "Render",
+    message = "live",
+    color = "green",
+    namedLogo = "render"
+}));
+
 app.UseCors("AllowFrontend");
 app.UseAuthentication();
 app.UseAuthorization();

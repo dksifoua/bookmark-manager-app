@@ -18,7 +18,7 @@
   migration:
     build:
       context: .
-      dockerfile: migration.Dockerfile
+      dockerfile: BookmarkManagerApp/DockerfileMigration
     image: bookmark-manager-database-migration
     container_name: migration
     environment:
@@ -31,7 +31,7 @@
   api:
     build:
       context: .
-      dockerfile: Dockerfile
+      dockerfile: BookmarkManagerApp/Dockerfile
     image: bookmark-manager-api
     container_name: api
     environment:
@@ -40,12 +40,12 @@
       Jwt__Issuer: bookmark-manager-api
       Jwt__Audience: bookmark-manager-client
       Jwt__DurationInMinutes: 60
-      AllowedCorsOrigins__0: "http://localhost:3000"
+      AllowedCorsOrigins__0: "http://localhost:8080"
     depends_on:
       migration:
         condition: service_completed_successfully
     ports:
-      - "8080:8080"
+      - "8081:8080"
     healthcheck:
       test: [ "CMD-SHELL", "bash -lc 'echo >/dev/tcp/127.0.0.1/8080'" ]
       interval: 10s
@@ -58,11 +58,11 @@
       context: bookmark-manager-ui/
       dockerfile: Dockerfile
       args:
-        VITE_BOOKMARK_MANAGER_API_URL: http://localhost:8080/api
-    image: bookmark-manager-ui 
+        VITE_BOOKMARK_MANAGER_API_URL: http://localhost:8081/api
+    image: bookmark-manager-ui
     container_name: ui
     ports:
-      - "3000:80"
+      - "8080:80"
     depends_on:
       api:
         condition: service_healthy

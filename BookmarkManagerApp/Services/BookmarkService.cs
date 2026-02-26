@@ -1,14 +1,14 @@
 using BookmarkManagerApp.Exceptions;
 using BookmarkManagerApp.Models;
-using BookmarkManagerApp.Repositories;
+using BookmarkManagerApp.Repositories.Contracts;
 using BookmarkManagerApp.Services.Utils;
 
 namespace BookmarkManagerApp.Services;
 
 public class BookmarkService(
-    BookmarkRepository bookmarkRepository,
+    IBookmarkRepository bookmarkRepository,
     UserContext userContext,
-    TagRepository tagRepository)
+    ITagRepository tagRepository)
 {
     public async Task UpdateAsync(long bookmarkId, CreateOrUpdateBookmarkCommand command)
     {

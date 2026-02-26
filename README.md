@@ -1,10 +1,9 @@
 # Bookmark Manager Application
 [![Deployment](https://github.com/dksifoua/bookmark-manager-app/actions/workflows/deployment.yaml/badge.svg)](https://github.com/dksifoua/bookmark-manager-app/actions/workflows/deployment.yaml)
-![GitHub repo size](https://img.shields.io/github/repo-size/dksifoua/bookmark-manager-app)
+[![codecov](https://codecov.io/gh/dksifoua/bookmark-manager-app/graph/badge.svg?token=DTVXcTpGCf)](https://codecov.io/gh/dksifoua/bookmark-manager-app)
+[![Docker Automated build](https://img.shields.io/docker/automated/dksifoua/bookmark-manager-api.svg?logo=docker)](https://hub.docker.com/r/dksifoua/bookmark-manager-api/tags)
+![Docker Image Version](https://img.shields.io/docker/v/dksifoua/bookmark-manager-api)
 ![GitHub License](https://img.shields.io/github/license/dksifoua/bookmark-manager-app)
-![GitHub top language](https://img.shields.io/github/languages/top/dksifoua/bookmark-manager-app)
-![GitHub commit activity](https://img.shields.io/github/commit-activity/t/dksifoua/bookmark-manager-app)
-![GitHub Repo stars](https://img.shields.io/github/stars/dksifoua/bookmark-manager-app)
 
 Fully functional bookmark manager with creation, edit, archive, search, and filter features.
 
@@ -27,6 +26,12 @@ Users are able to:
 - Sort bookmarks by "Recently added," "Recently visited," or "Most visited"
 - Toggle between light and dark color themes
 - View the optimal layout for the interface depending on their device's screen size
+
+## Local Installation
+
+```bash
+docker compose build --no-cache && docker compose up
+```
 
 ## Database diagram
 

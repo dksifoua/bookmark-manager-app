@@ -1,10 +1,11 @@
 using BookmarkManagerApp.Exceptions;
 using BookmarkManagerApp.Models;
 using BookmarkManagerApp.Repositories;
+using BookmarkManagerApp.Repositories.Contracts;
 
 namespace BookmarkManagerApp.Services;
 
-public class VisitService(VisitRepository visitRepository)
+public class VisitService(IVisitRepository visitRepository)
 {
     public async Task<Visit> CreateAsync(Visit visit)
     {
