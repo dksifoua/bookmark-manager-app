@@ -5,6 +5,7 @@
         <File Path="bookmark-manager-app.slnx" />
         <File Path=".gitignore" />
         <File Path=".env" />
+        <File Path="codecov.yaml" />
         <File Path="compose.yaml" />
         <File Path="BookmarkManagerApp/BookmarkManagerApp.csproj" />
         <File Path="BookmarkManagerApp.UnitTests/BookmarkManagerApp.UnitTests.csproj" />

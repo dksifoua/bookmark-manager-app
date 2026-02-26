@@ -1,8 +1,8 @@
 # Bookmark Manager Application
-[![Deployment](https://github.com/dksifoua/bookmark-manager-app/actions/workflows/deployment.yaml/badge.svg)](https://github.com/dksifoua/bookmark-manager-app/actions/workflows/deployment.yaml)
+![Endpoint Badge](https://img.shields.io/endpoint?url=https%3A%2F%2Fbookmark-manager-api-latest.onrender.com%2F)
+[![Build](https://github.com/dksifoua/bookmark-manager-app/actions/workflows/build.yaml/badge.svg)](https://github.com/dksifoua/bookmark-manager-app/actions/workflows/build.yaml)
 [![codecov](https://codecov.io/gh/dksifoua/bookmark-manager-app/graph/badge.svg?token=DTVXcTpGCf)](https://codecov.io/gh/dksifoua/bookmark-manager-app)
 [![Docker Automated build](https://img.shields.io/docker/automated/dksifoua/bookmark-manager-api.svg?logo=docker)](https://hub.docker.com/r/dksifoua/bookmark-manager-api/tags)
-![Docker Image Version](https://img.shields.io/docker/v/dksifoua/bookmark-manager-api)
 ![GitHub License](https://img.shields.io/github/license/dksifoua/bookmark-manager-app)
 
 Fully functional bookmark manager with creation, edit, archive, search, and filter features.

@@ -13,4 +13,4 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
       - name: Run a script
-        run: curl https://bookmark-manager-api-latest.onrender.com
+        run: curl https://bookmark-manager-api-latest.onrender.com/api/health
