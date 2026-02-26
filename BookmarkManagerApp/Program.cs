@@ -170,6 +170,17 @@ var app = builder.Build();
 
 app.MapOpenApi();
 app.MapScalarApiReference();
+
+// Badge-style root endpoint
+app.MapGet("/", () => Results.Json(new
+{
+    schemaVersion = 1,
+    label = "Render",
+    message = "live",
+    color = "green",
+    namedLogo = "render"
+}));
+
 app.UseCors("AllowFrontend");
 app.UseAuthentication();
 app.UseAuthorization();

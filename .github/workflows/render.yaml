@@ -1,0 +1,16 @@
+name: Render
+
+on:
+  schedule:
+    - cron: '*/14 * * * *'
+  # Optional: Allows manual triggering from the GitHub UI
+  workflow_dispatch:
+
+jobs:
+  run_task:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      - name: Run a script
+        run: curl https://bookmark-manager-api-latest.onrender.com
