@@ -40,12 +40,12 @@
       Jwt__Issuer: bookmark-manager-api
       Jwt__Audience: bookmark-manager-client
       Jwt__DurationInMinutes: 60
-      AllowedCorsOrigins__0: "http://localhost:8080"
+      AllowedCorsOrigins__0: "http://localhost"
     depends_on:
       migration:
         condition: service_completed_successfully
     ports:
-      - "8081:8080"
+      - "8080:8080"
     healthcheck:
       test: [ "CMD-SHELL", "bash -lc 'echo >/dev/tcp/127.0.0.1/8080'" ]
       interval: 10s
@@ -58,11 +58,11 @@
       context: bookmark-manager-ui/
       dockerfile: Dockerfile
       args:
-        VITE_BOOKMARK_MANAGER_API_URL: http://localhost:8081/api
+        VITE_BOOKMARK_MANAGER_API_URL: http://localhost:8080/api
     image: bookmark-manager-ui
     container_name: ui
     ports:
-      - "8080:80"
+      - "80:80"
     depends_on:
       api:
         condition: service_healthy

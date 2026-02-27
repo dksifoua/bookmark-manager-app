@@ -30,7 +30,7 @@ export function AuthProvider({ children }: { children: ReactNode }): ReactNode {
                 navigate("/", { replace: true })
             })
             .catch((e) => {
-                console.log("Login failed:", error)
+                console.log("Login failed:", e)
                 if (e instanceof ApiError) {
                     setError({ ...error, login: e.response })
                 }
