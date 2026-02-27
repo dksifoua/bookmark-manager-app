@@ -8,10 +8,21 @@ import { useAuthContext } from "@/hooks/auth.hook"
 import { UnauthorizedApiError } from "@/api/errors/UnauthorizedApiError"
 import type { Bookmark } from "@/api/bookmarks/schema"
 import { fetchBookmarks } from "@/api/bookmarks"
+import { fetchTags } from "@/api/tags"
+import type { Tag } from "@/api/tags/schema"
 
-function buildTag2count({ bookmarks }: { bookmarks: Bookmark[] | undefined }): Map<string, number> {
+function buildTag2count({ bookmarks, tags }: {
+    bookmarks: Bookmark[] | undefined,
+    tags: Tag[] | undefined
+}): Map<string, number> {
     const tag2count: Map<string, number> = new Map()
     if (!bookmarks) return tag2count
+
+    if (tags) {
+        for (const tag of tags) {
+            tag2count.set(tag.name, 0)
+        }
+    }
 
     for (const bookmark of bookmarks) {
         for (const tag of bookmark.tags) {
@@ -40,7 +51,11 @@ export function Sidebar({ openSidebar }: { openSidebar?: () => void }): JSX.Elem
                     .filter((bookmark: Bookmark): boolean => tagFilters.every((filter: string): boolean => bookmark.tags.includes(filter)))
             ]
     })
-    const tag2count = buildTag2count({ bookmarks })
+    const { data: tags } = useQuery({
+        queryKey: ["tags"],
+        queryFn: fetchTags,
+    })
+    const tag2count = buildTag2count({ bookmarks, tags })
 
     const { logout } = useAuthContext()
     useEffect(() => {
