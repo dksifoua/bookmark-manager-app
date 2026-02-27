@@ -11,6 +11,8 @@ namespace BookmarkManagerApp.Controllers;
 public class TagController(TagService tagService) : ControllerBase
 {
     [HttpGet]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<TagResponse>))]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized, Type = typeof(ProblemDetails))]
     public async Task<ActionResult<IEnumerable<TagResponse>>> RetrieveAllAsync()
     {
         var tags = await tagService.GetTagsAsync();
